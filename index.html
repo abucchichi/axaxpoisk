@@ -1,0 +1,57 @@
+
+<style>
+    body {
+    background-color: black;
+    color: purple;
+    margin: 0; /* Remove default margin */
+    }
+
+    #movieContainer {
+        max-width: 100%; /* Make sure the container doesn't overflow on small screens */
+    }
+
+</style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axaxpoisk</title>
+</head>
+<body>
+    
+    <h1>xaxa</h1>
+    <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
+    <button onclick="getMovieData()">view</button>
+    <div id="movieContainer"></div>
+
+    <script>
+        function getMovieData() {
+            const movieIdValue = $('#movieIdInput').val();
+            $.ajax({
+                url: 'https://w2w.kpfr.cc/kinobox/index.php',
+                crossDomain: true,
+                data: {
+                    'kinopoisk': movieIdValue
+                }
+            }).done(function(response) {
+                console.log(response);
+                const iframeUrl = response.data[0].iframeUrl;
+                const movieId = extractMovieId(iframeUrl);
+                viewMovie(movieId);
+            });
+        }
+        function extractMovieId(iframeUrl) {
+            const urlParts = iframeUrl.split('/');
+            return urlParts[urlParts.length - 1];
+        }
+        function viewMovie(movieId) {
+            const iframeUrl = `https://api.embr.ws/embed/movie/${movieId}`;
+            const iframe = `<iframe src="${iframeUrl}" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
+            document.getElementById('movieContainer').innerHTML = iframe;
+        }
+    </script>
+</body>
+</html>
