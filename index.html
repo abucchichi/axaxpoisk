@@ -1,3 +1,15 @@
+<style>
+    body {
+        background-color: black;
+        color: purple;
+        margin: 0; /* Remove default margin */
+    }
+
+    #movieContainer {
+        max-width: 100%; /* Make sure the container doesn't overflow on small screens */
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,70 +18,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>axaxpoisk</title>
-
-    <style>
-        body {
-            background-color: black;
-            color: purple;
-            margin: 0; /* Remove default margin */
-        }
-
-        #movieContainer {
-            max-width: 100%; /* Make sure the container doesn't overflow on small screens */
-        }
-    </style>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 
 <body>
-
     <h1>xaxa</h1>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     <button onclick="getMovieData()">view</button>
     <div id="movieContainer"></div>
 
     <script>
-        function process_input(input_str) {
-            if (input_str.startsWith('/')) {
-                // Input is in search bar format, extract the ID
-                const id_from_search_bar = input_str.slice(1);
-                process_id_from_search_bar(id_from_search_bar);
-            } else {
-                // Input is a regular string, process it as usual
+        // Function to get URL parameter by name
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // Function to check if movie ID is in the URL and load it
+        function loadMovieFromURL() {
+            const movieIdFromURL = getParameterByName('kinopoisk');
+            if (movieIdFromURL) {
+                $('#movieIdInput').val(movieIdFromURL);
                 getMovieData();
             }
         }
 
-        function process_id_from_search_bar(id_from_search_bar) {
-            // Implement your logic to handle the ID from the search bar
-            $.ajax({
-                url: 'https://w2w.kpfr.cc/kinobox/index.php',
-                crossDomain: true,
-                data: {
-                    'kinopoisk': id_from_search_bar
-                }
-            }).done(function(response) {
-                console.log(response);
-                const iframeUrl = response.data[0].iframeUrl;
-                const movieId = extractMovieId(iframeUrl);
-
-                viewMovie(movieId);
-            });
-        }
+        // Load movie from URL when the page loads
+        $(document).ready(function () {
+            loadMovieFromURL();
+        });
 
         function getMovieData() {
-            // Extract ID from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const movieIdValue = urlParams.get('kinopoisk') || $('#movieIdInput').val();
-
+            const movieIdValue = $('#movieIdInput').val();
             $.ajax({
                 url: 'https://w2w.kpfr.cc/kinobox/index.php',
                 crossDomain: true,
                 data: {
                     'kinopoisk': movieIdValue
                 }
-            }).done(function(response) {
+            }).done(function (response) {
                 console.log(response);
                 const iframeUrl = response.data[0].iframeUrl;
                 const movieId = extractMovieId(iframeUrl);
@@ -88,9 +79,6 @@
             const iframe = `<iframe src="${iframeUrl}" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
         }
-
-        // Call getMovieData when the page loads to handle initial input from the URL
-        window.onload = getMovieData;
     </script>
 </body>
 
