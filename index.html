@@ -33,18 +33,21 @@
         });
 
         function loadMovieFromURL() {
-            const movieIdFromURL = getMovieIdFromURL();
+            const movieIdFromURL = getParameterByName('');
             if (movieIdFromURL) {
                 $('#movieIdInput').val(movieIdFromURL);
                 getMovieData();
             }
         }
 
-        function getMovieIdFromURL() {
-            const pathSegments = window.location.pathname.split('/');
-            // Assuming the movie ID is the last segment of the path
-            const movieId = pathSegments[pathSegments.length - 1];
-            return movieId || null;
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
 
         function getMovieData() {
