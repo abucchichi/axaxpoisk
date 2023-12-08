@@ -1,13 +1,14 @@
 
 <style>
     body {
-    background-color: black;
-    color: purple;
-    margin: 0; /* Remove default margin */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     }
-
+    
     #movieContainer {
-        max-width: 100%; /* Make sure the container doesn't overflow on small screens */
+        max-width: 100%;
+        overflow-x: hidden; 
     }
 
 </style>
@@ -49,7 +50,7 @@
         }
         function viewMovie(movieId) {
             const iframeUrl = `https://api.embr.ws/embed/movie/${movieId}`;
-            const iframe = `<iframe src="${iframeUrl}" width="800" height="600" frameborder="0" allowfullscreen></iframe>`;
+            const iframe = `<iframe src="${iframeUrl}" width="600" height="450" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
         }
     </script>
