@@ -1,7 +1,7 @@
 <style>
     body {
         background-color: black;
-        color: purple;
+        color: orange;
         margin: 0; /* Remove default margin */
     }
 
@@ -25,6 +25,7 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,12 +33,13 @@
     <style>
         #detailedFilmName {
             font-size: 24px;
+            font-weight: bold;
+            font-style: inherit;
         }
     </style>
 </head>
 
 <body>
-   
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     <button onclick="getMovieData()">view</button>
