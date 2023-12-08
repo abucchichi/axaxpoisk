@@ -59,7 +59,10 @@
         }
 
         function getMovieData() {
-            const movieIdValue = $('#movieIdInput').val();
+            // Extract ID from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const movieIdValue = urlParams.get('kinopoisk') || $('#movieIdInput').val();
+
             $.ajax({
                 url: 'https://w2w.kpfr.cc/kinobox/index.php',
                 crossDomain: true,
@@ -85,6 +88,9 @@
             const iframe = `<iframe src="${iframeUrl}" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
         }
+
+        // Call getMovieData when the page loads to handle initial input from the URL
+        window.onload = getMovieData;
     </script>
 </body>
 
