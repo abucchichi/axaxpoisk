@@ -8,6 +8,17 @@
     #movieContainer {
         max-width: 100%; /* Make sure the container doesn't overflow on small screens */
     }
+
+    #filmName {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    #detailedFilmName {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!DOCTYPE html>
@@ -18,10 +29,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>axaxpoisk</title>
+    <style>
+        #detailedFilmName {
+            font-size: 36px;
+        }
+    </style>
 </head>
 
 <body>
     <h1>xaxa</h1>
+    <div id="filmName"></div>
+    <div id="detailedFilmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     <button onclick="getMovieData()">view</button>
     <div id="movieContainer"></div>
@@ -62,8 +80,11 @@
                 console.log(response);
                 const iframeUrl = response.data[0].iframeUrl;
                 const movieId = extractMovieId(iframeUrl);
+                const filmName = response.data[0].nameRu;
 
                 viewMovie(movieId);
+                displayFilmName(filmName);
+                getMovieDetails(movieIdValue); // Pass movieIdValue to getMovieDetails
             });
         }
 
@@ -76,6 +97,29 @@
             const iframeUrl = `https://api.embr.ws/embed/movie/${movieId}`;
             const iframe = `<iframe src="${iframeUrl}" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
+        }
+
+        function displayFilmName(filmName) {
+            document.getElementById('filmName')
+        }
+
+        function getMovieDetails(movieId) {
+            $.ajax({
+                url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
+                crossDomain: true,
+                headers: {
+                    'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
+                },
+                contentType: 'application/json'
+            }).done(function (response) {
+                console.log(response);
+                const detailedFilmName = response.nameRu;
+                displayDetailedFilmName(detailedFilmName);
+            });
+        }
+
+        function displayDetailedFilmName(detailedFilmName) {
+            document.getElementById('detailedFilmName').innerHTML = `${detailedFilmName}`;
         }
     </script>
 </body>
