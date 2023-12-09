@@ -25,7 +25,6 @@
 <html lang="en">
 
 <head>
-    <base href="/">
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -54,19 +53,12 @@
         });
 
         function loadMovieFromURL() {
-    const movieIdFromURL = getMovieIdFromPath();
-    if (movieIdFromURL) {
-        $('#movieIdInput').val(movieIdFromURL);
-        getMovieData();
-    }
-}
-
-function getMovieIdFromPath() {
-    const pathArray = window.location.pathname.split('/');
-    const movieIndex = pathArray.indexOf('film') + 1;
-    return movieIndex < pathArray.length ? pathArray[movieIndex] : null;
-}
-
+            const movieIdFromURL = getParameterByName('');
+            if (movieIdFromURL) {
+                $('#movieIdInput').val(movieIdFromURL);
+                getMovieData();
+            }
+        }
 
         function getParameterByName(name, url) {
             if (!url) url = window.location.href;
@@ -105,7 +97,7 @@ function getMovieIdFromPath() {
 
         function viewMovie(movieId) {
             const iframeUrl = `https://api.embr.ws/embed/movie/${movieId}`;
-            const iframe = `<iframe src="${iframeUrl}" width="1280" height="720" frameborder="0" allowfullscreen></iframe>`;
+            const iframe = `<iframe src="${iframeUrl}" width="600" height="450" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
         }
 
