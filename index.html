@@ -320,6 +320,15 @@ function displaySimilarMovies(items) {
     });
 }
 
+function handleUrlChange() {
+    loadMovieFromURL();
+}
+
+// Call the function on initial page load
+handleUrlChange();
+
+// Call the function when the URL changes
+$(window).on('popstate', handleUrlChange);
 
     </script>
 </body>
