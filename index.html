@@ -1,8 +1,29 @@
-<style>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>axaxpoisk</title>
+    <style>
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 999;
+            max-width: 200px;
+        }
     body {
         background-color: black;
-        color: orange;
+        color: rgb(204, 123, 17);
         margin: 0;
+
     }
 
     #movieContainer {
@@ -19,18 +40,7 @@
         font-size: 18px;
         margin-bottom: 10px;
     }
-</style>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>axaxpoisk</title>
-    <style>
         #detailedFilmName {
             font-size: 24px;
             font-weight: bold;
@@ -60,6 +70,38 @@
             max-width: 600;
             color: rgb(21, 206, 36)
         }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #movieBlok {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .movie {
+            margin: 10px;
+            padding: 10px;
+            background-color: #000000;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            
+        }
+
+        .movie img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+        
+        .movie p {
+            margin: 10px 0 0;
+        }
     </style>
 </head>
 
@@ -73,6 +115,8 @@
     <br><div id="shortdescription"></div></br>
     <div id="description"></div>
    <br> <div id="slogan"></div></br>
+   <div id="movieBlok"></div>
+
     <script>
         $(document).ready(function () {
             // Load movie from URL when the page loads
@@ -99,6 +143,14 @@
 
         function getMovieData() {
     const movieIdValue = $('#movieIdInput').val();
+    const newUrl = `?=${movieIdValue}`;
+
+    // Update the URL without triggering a page reload
+    window.history.pushState({ path: newUrl }, '', newUrl);
+
+    // Reload the page or trigger navigation to the new URL
+    // window.location.href = newUrl;  // Uncomment this line if you want to reload the page
+
     $.ajax({
         url: 'https://w3w.kpfr.cc/kinobox/index.php',
         crossDomain: true,
@@ -108,7 +160,6 @@
     }).done(function (response) {
         console.log(response);
 
-
         if (response.data && response.data.length > 0) {
             const iframeUrl = response.data[0].iframeUrl;
             const movieId = extractMovieId(iframeUrl);
@@ -117,10 +168,9 @@
             viewMovie(movieId);
             displayFilmName(filmName);
             getMovieDetails(movieIdValue);
+            getSimilarMovies(movieIdValue);
         } else {
-
             console.error('No movie data found');
-
         }
     });
 }
@@ -168,7 +218,7 @@
     if (detailedFilmName !== null) {
         element.innerHTML = `${detailedFilmName}`;
     } else {
-        element.innerHTML = ''; 
+        element.innerHTML = ''; // Set the content to an empty string
     }
 }
 
@@ -207,8 +257,71 @@ function displayshortdescription(shortdescription) {
         element.innerHTML = '';
     }
 }
-    </script>
+
+        $(document).ready(function () {
+            getSimilarMovies();
+        });
+        function getSimilarMovies(movieId) {
+    const apiKey = '1892d305-6fc2-4bf4-ba23-8e164d2d0691';
+    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
+
+    $.ajax({
+        url: apiUrl,
+        headers: {
+            'X-API-KEY': apiKey,
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+            displaySimilarMovies(response.items);
+        },
+        error: function (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
     
+function displaySimilarMovies(items) {
+    const movieBlok = $('#movieBlok');
+
+    // Clear existing content in the movieBlok
+    movieBlok.empty();
+
+    items.forEach(function (item) {
+        const nameRu = item.nameRu;
+        const posterUrl = item.posterUrl;
+        const filmId = item.filmId
+
+        // Create HTML elements to display movie information
+        const movieElement = $('<div>').addClass('movie');
+        const nameElement = $('<p>').text(nameRu);
+        const filmElement = $('<p>').text(filmId);
+        const posterElement = $('<img>').attr('src', posterUrl);
+
+        // Add hover effects to make it look clickable
+        posterElement.hover(
+            function() {
+                $(this).css({'cursor': 'pointer', 'transform': 'scale(1.1)'});
+            },
+            function() {
+                $(this).css({'cursor': 'auto', 'transform': 'scale(1)'});
+            }
+        );
+
+        // Add click event listener to the posterElement
+        posterElement.click(function() {
+            // When the poster is clicked, trigger getMovieData with the filmId
+            $('#movieIdInput').val(filmId);
+            getMovieData();
+        });
+
+        // Append elements to the container
+        movieElement.append(posterElement, nameElement, filmElement);
+        movieBlok.append(movieElement);
+    });
+}
+
+
+    </script>
 </body>
 
 </html>
