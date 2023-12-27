@@ -2,11 +2,11 @@
     body {
         background-color: black;
         color: orange;
-        margin: 0; /* Remove default margin */
+        margin: 0;
     }
 
     #movieContainer {
-        max-width: 100%; /* Make sure the container doesn't overflow on small screens */
+        max-width: 100%; 
     }
 
     #filmName {
@@ -42,6 +42,12 @@
             max-width: 600;
             color: rgb(217, 231, 19);
         }
+        #shortdescription {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(24, 209, 169);
+        }
         #year {
             font-size: 18px;
             font-style: inherit;
@@ -64,8 +70,9 @@
     <div id="detailedFilmName"></div>
     <div id="movieContainer"></div>
     <div id="year"></div>
-    <br><div id="description"></div></br>
-    <div id="slogan"></div>
+    <br><div id="shortdescription"></div></br>
+    <div id="description"></div>
+   <br> <div id="slogan"></div></br>
     <script>
         $(document).ready(function () {
             // Load movie from URL when the page loads
@@ -91,24 +98,32 @@
         }
 
         function getMovieData() {
-            const movieIdValue = $('#movieIdInput').val();
-            $.ajax({
-                url: 'https://w3w.kpfr.cc/kinobox/index.php',
-                crossDomain: true,
-                data: {
-                    'kinopoisk': movieIdValue
-                }
-            }).done(function (response) {
-                console.log(response);
-                const iframeUrl = response.data[0].iframeUrl;
-                const movieId = extractMovieId(iframeUrl);
-                const filmName = response.data[0].nameRu;
-
-                viewMovie(movieId);
-                displayFilmName(filmName);
-                getMovieDetails(movieIdValue); // Pass movieIdValue to getMovieDetails
-            });
+    const movieIdValue = $('#movieIdInput').val();
+    $.ajax({
+        url: 'https://w3w.kpfr.cc/kinobox/index.php',
+        crossDomain: true,
+        data: {
+            'kinopoisk': movieIdValue
         }
+    }).done(function (response) {
+        console.log(response);
+
+
+        if (response.data && response.data.length > 0) {
+            const iframeUrl = response.data[0].iframeUrl;
+            const movieId = extractMovieId(iframeUrl);
+            const filmName = response.data[0].nameRu;
+
+            viewMovie(movieId);
+            displayFilmName(filmName);
+            getMovieDetails(movieIdValue);
+        } else {
+
+            console.error('No movie data found');
+
+        }
+    });
+}
 
         function extractMovieId(iframeUrl) {
             const urlParts = iframeUrl.split('/');
@@ -139,25 +154,59 @@
                 const description = response.description;
                 const year = response.year;
                 const slogan = response.slogan;
+                const shortdescription = response.shortDescription;
                 displayDetailedFilmName(detailedFilmName);
                 displaydescription(description);
-                displayyear(year)
-                displayslogan(slogan)
+                displayyear(year);
+                displayslogan(slogan);
+                displayshortdescription(shortdescription);
             });
         }
 
         function displayDetailedFilmName(detailedFilmName) {
-            document.getElementById('detailedFilmName').innerHTML = `${detailedFilmName}`;
-        }
-        function displaydescription(description) {
-            document.getElementById('description').innerHTML = `${description}`;
-        }
-        function displayyear(year) {
-            document.getElementById('year').innerHTML = `${year}`;
-        }
-        function displayslogan(slogan) {
-            document.getElementById('slogan').innerHTML = `${slogan}`;
-        }
+    const element = document.getElementById('detailedFilmName');
+    if (detailedFilmName !== null) {
+        element.innerHTML = `${detailedFilmName}`;
+    } else {
+        element.innerHTML = ''; 
+    }
+}
+
+function displaydescription(description) {
+    const element = document.getElementById('description');
+    if (description !== null) {
+        element.innerHTML = `${description}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+function displayyear(year) {
+    const element = document.getElementById('year');
+    if (year !== null) {
+        element.innerHTML = `${year}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+function displayslogan(slogan) {
+    const element = document.getElementById('slogan');
+    if (slogan !== null) {
+        element.innerHTML = `${slogan}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+function displayshortdescription(shortdescription) {
+    const element = document.getElementById('shortdescription');
+    if (shortdescription !== null) {
+        element.innerHTML = `${shortdescription}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
     </script>
     
 </body>
