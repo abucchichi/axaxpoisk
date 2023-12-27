@@ -36,6 +36,24 @@
             font-weight: bold;
             font-style: inherit;
         }
+        #description {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(217, 231, 19);
+        }
+        #year {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(228, 12, 12)
+        }
+        #slogan {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(21, 206, 36)
+        }
     </style>
 </head>
 
@@ -45,7 +63,9 @@
     <button onclick="getMovieData()">view</button>
     <div id="detailedFilmName"></div>
     <div id="movieContainer"></div>
-
+    <div id="year"></div>
+    <br><div id="description"></div></br>
+    <div id="slogan"></div>
     <script>
         $(document).ready(function () {
             // Load movie from URL when the page loads
@@ -116,14 +136,30 @@
             }).done(function (response) {
                 console.log(response);
                 const detailedFilmName = response.nameRu;
+                const description = response.description;
+                const year = response.year;
+                const slogan = response.slogan;
                 displayDetailedFilmName(detailedFilmName);
+                displaydescription(description);
+                displayyear(year)
+                displayslogan(slogan)
             });
         }
 
         function displayDetailedFilmName(detailedFilmName) {
             document.getElementById('detailedFilmName').innerHTML = `${detailedFilmName}`;
         }
+        function displaydescription(description) {
+            document.getElementById('description').innerHTML = `Описание: ${description}`;
+        }
+        function displayyear(year) {
+            document.getElementById('year').innerHTML = `Год: ${year}`;
+        }
+        function displayslogan(slogan) {
+            document.getElementById('slogan').innerHTML = `Слоган: ${slogan}`;
+        }
     </script>
+    
 </body>
 
 </html>
