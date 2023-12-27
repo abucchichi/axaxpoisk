@@ -132,14 +132,14 @@
         }
 
         function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
         function getMovieData() {
     const movieIdValue = $('#movieIdInput').val();
@@ -195,7 +195,7 @@
                 url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
                 crossDomain: true,
                 headers: {
-                    'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
+                    'x-api-key': '91951d55-e967-4d62-878f-07e6433c01c0'
                 },
                 contentType: 'application/json'
             }).done(function (response) {
@@ -262,7 +262,7 @@ function displayshortdescription(shortdescription) {
             getSimilarMovies();
         });
         function getSimilarMovies(movieId) {
-    const apiKey = '1892d305-6fc2-4bf4-ba23-8e164d2d0691';
+    const apiKey = '91951d55-e967-4d62-878f-07e6433c01c0';
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
 
     $.ajax({
@@ -308,11 +308,18 @@ function displaySimilarMovies(items) {
         );
 
         // Add click event listener to the posterElement
-        posterElement.click(function() {
-            // When the poster is clicked, trigger getMovieData with the filmId
-            $('#movieIdInput').val(filmId);
-            getMovieData();
-        });
+        posterElement.click(function (event) {
+    // Check if the Ctrl key is pressed (you can change 'Ctrl' to 'Shift', 'Alt', etc.)
+    if (event.ctrlKey) {
+        // Open a new tab or window with the movie details page
+        const movieDetailsUrl = 'index.html?=' + filmId; // Replace with the actual URL or route to your movie details page
+        window.open(movieDetailsUrl);
+    } else {
+        // Handle the click without opening a new tab
+        $('#movieIdInput').val(filmId);
+        getMovieData();
+    }
+});
 
         // Append elements to the container
         movieElement.append(posterElement, nameElement, filmElement);
@@ -329,6 +336,7 @@ handleUrlChange();
 
 // Call the function when the URL changes
 $(window).on('popstate', handleUrlChange);
+// Add click event listener to the posterElement
 
     </script>
 </body>
