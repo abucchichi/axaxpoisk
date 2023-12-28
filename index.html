@@ -23,6 +23,7 @@
         background-color: black;
         color: rgb(204, 123, 17);
         margin: 0;
+        font-family: Arial, sans-serif;
 
     }
 
@@ -70,12 +71,7 @@
             max-width: 600;
             color: rgb(21, 206, 36)
         }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000000;
-            margin: 0;
-       
-        }
+
 
         #movieBlok {
             display: flex;
@@ -107,6 +103,35 @@
         color: rgb(238, 207, 29); 
 
     }
+    #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #actorsContainer {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.actor {
+    margin: 10px;
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 150px;
+}
+
+.actor img {
+    max-width: 100px;
+    height: 150px;
+    border-radius: 5px;
+}
+
     </style>
 </head>
 
@@ -117,13 +142,15 @@
     <button onclick="getMovieData()">view</button>
     <button onclick="getRandomMovie()">random</button> <!-- Add this button -->
     <div id="detailedFilmName"></div>
+    
     <div id="movieContainer"></div>
+    
     <div id="year"></div>
     <br><div id="shortdescription"></div></br>
     <div id="description"></div>
    <br> <div id="slogan"></div></br>
    <div id="movieBlok"></div>
-
+   <div id="actorsContainer" style="float: left; padding: 10px;"></div>
     <script>
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
@@ -149,10 +176,53 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-        function getMovieData() {
-    const movieIdValue = $('#movieIdInput').val();
-    const newUrl = `?=${movieIdValue}`;
+     function getMovieActors(movieId) {
+            const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=${movieId}`;
 
+            $.ajax({
+                url: apiUrl,
+                headers: {
+                    'X-API-KEY': apiKey,
+                    'Content-Type': 'application/json'
+                },
+                success: function (response) {
+                    displayMovieActors(response);
+                },
+                error: function (error) {
+                    console.error('Error fetching actors data:', error);
+                }
+            });
+        }
+
+        function displayMovieActors(actors) {
+            const actorsContainer = $('#actorsContainer');
+
+            // Clear existing content in the actorsContainer
+            actorsContainer.empty();
+
+            actors.slice(0, 10).forEach(function (actor) {
+                const name = actor.nameRu;
+                const staffId = actor.staffId
+                
+                const posterUrl = actor.posterUrl;
+                const profession = actor.professionText;
+                const description = actor.description;
+                const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
+                const nameElement = $('<p>').text(name);
+                const professionElement = $('<p>').text(profession);
+                const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
+                const descriptionElement = $('<p>').text(description);
+                // Append elements to the container
+                actorElement.append(posterElement, nameElement, descriptionElement);
+                actorsContainer.append(actorElement);
+            });
+        }
+
+        // Call the function when the movie data is loaded
+        function getMovieData() {
+            const movieIdValue = $('#movieIdInput').val();
+    const newUrl = `?=${movieIdValue}`;
+            
     // Update the URL without triggering a page reload
     window.history.pushState({ path: newUrl }, '', newUrl);
 
@@ -177,6 +247,7 @@
             displayFilmName(filmName);
             getMovieDetails(movieIdValue);
             getSimilarMovies(movieIdValue);
+            getMovieActors(movieIdValue);
         } else {
             console.error('No movie data found');
         }
@@ -344,6 +415,13 @@ $.getJSON('movies.json', function(data) {
     getMovieData();
 });
 }
+
+$(document).on('click', '.actor', function() {
+    const staffId = $(this).data('staff-id');
+    window.location.href = `actor_movies.html?staffId=${staffId}`;
+});
+
+
     </script>
 </body>
 
