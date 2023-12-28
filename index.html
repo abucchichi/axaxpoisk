@@ -106,6 +106,7 @@
 </head>
 
 <body>
+    
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     <button onclick="getMovieData()">view</button>
@@ -118,6 +119,7 @@
    <div id="movieBlok"></div>
 
     <script>
+        const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
             // Load movie from URL when the page loads
             loadMovieFromURL();
@@ -195,7 +197,7 @@
                 url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
                 crossDomain: true,
                 headers: {
-                    'x-api-key': '91951d55-e967-4d62-878f-07e6433c01c0'
+                    'x-api-key': apiKey
                 },
                 contentType: 'application/json'
             }).done(function (response) {
@@ -262,7 +264,6 @@ function displayshortdescription(shortdescription) {
             getSimilarMovies();
         });
         function getSimilarMovies(movieId) {
-    const apiKey = '91951d55-e967-4d62-878f-07e6433c01c0';
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
 
     $.ajax({
@@ -310,15 +311,16 @@ function displaySimilarMovies(items) {
         // Add click event listener to the posterElement
         posterElement.click(function (event) {
     // Check if the Ctrl key is pressed (you can change 'Ctrl' to 'Shift', 'Alt', etc.)
-    if (event.ctrlKey) {
-        // Open a new tab or window with the movie details page
-        const movieDetailsUrl = 'index.html?=' + filmId; // Replace with the actual URL or route to your movie details page
-        window.open(movieDetailsUrl);
-    } else {
-        // Handle the click without opening a new tab
-        $('#movieIdInput').val(filmId);
-        getMovieData();
+    if (!event.ctrlKey) {
+        // Navigate to the movie details page without opening a new tab
+        window.location.href = 'index.html?=' + filmId; // Replace with the actual URL or route to your movie details page
     }
+});
+
+// Open the movie details page in a new tab when right-clicking on the image
+posterElement.on('contextmenu', function (event) {
+    const movieDetailsUrl = 'index.html?=' + filmId; // Replace with the actual URL or route to your movie details page
+    window.open(movieDetailsUrl);
 });
 
         // Append elements to the container
