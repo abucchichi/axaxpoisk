@@ -103,8 +103,8 @@
             margin: 10px 0 0;
         }
         .movie-link {
-        text-decoration: none; /* Remove underline from links */
-        color: rgb(238, 207, 29); /* Inherit text color from parent */
+        text-decoration: none; 
+        color: rgb(238, 207, 29); 
 
     }
     </style>
@@ -298,7 +298,8 @@ function displaySimilarMovies(items) {
         const filmId = item.filmId;
 
         // Create an anchor element to wrap the image and text
-        const movieLink = $('<a>').attr('href', 'index.html?=' + filmId).addClass('movie-link');
+        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+
 
 
         // Create HTML elements to display movie information
