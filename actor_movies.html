@@ -75,18 +75,21 @@ $('body').on('click', '.clickable-actor', function () {
         });
 
         // Function to fetch actor details based on staffId
-        function fetchAndDisplayActorDetails(staffId) {
-            // Clear existing content in actorMoviesContainer
-            $('#actorMoviesContainer').empty();
+// Function to fetch actor details based on staffId
+// Function to fetch actor details based on staffId
+function fetchAndDisplayActorDetails(staffId) {
+    // Clear existing content in both searchResultsContainer and actorMoviesContainer
+    $('#searchResults').empty();
+    $('#actorMoviesContainer').empty();
 
-            const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff/${staffId}`;
-            $.ajax({
-                url: apiUrl,
-                headers: {
-                    'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-                    'Content-Type': 'application/json'
-                },
-                success: async function (response) {
+    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff/${staffId}`;
+    $.ajax({
+        url: apiUrl,
+        headers: {
+            'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+            'Content-Type': 'application/json'
+        },
+        success: async function (response) {
                     // Filter out movies with null iframeUrl
                     const filteredMovies = await Promise.all(
                         response.films.map(async (movie) => {
@@ -103,13 +106,13 @@ $('body').on('click', '.clickable-actor', function () {
                     // Display actor movies
                     displayActorMovies(response);
                 },
-                error: function (error) {
-                    console.error('Error fetching actor details:', error);
-                    // Hide loading message in case of an error
-                    $('#loadingMessage').hide();
-                }
-            });
+        error: function (error) {
+            console.error('Error fetching actor details:', error);
+            // Hide loading message in case of an error
+            $('#loadingMessage').hide();
         }
+    });
+}
 
         // Function to check iframeUrl for a movie
         async function checkIframeUrl(filmId) {
@@ -155,6 +158,7 @@ $('body').on('click', '.clickable-actor', function () {
                     // Display search results
                     displaySearchResults(response.items);
                     searchResultsContainer.empty();
+                    
                 },
                 error: function (error) {
                     console.error('Error fetching actor search data:', error);
@@ -181,7 +185,7 @@ searchResults.forEach(function (actor) {
     const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor');
     actorElement.data('kinopoisk-id', actor.kinopoiskId);
     actorElement.data('staff-id', actor.kinopoiskId);
-
+        
     // Append actor element to container
     searchResultsContainer.append(actorElement);
 });
@@ -201,6 +205,7 @@ $('body').on('click', '.clickable-actor', function () {
             // Show loading message when a name is clicked
             $('#loadingMessage').show();
             // Clear search results
+            
             $('#searchResults').empty();
             // Update the URL with the kinopoiskId
             window.location.href = `?staffId=${kinopoiskId}`;
@@ -217,7 +222,7 @@ $('body').on('click', '.clickable-actor', function () {
         function displayActorMovies(actorData) {
             const actorName = actorData.nameRu;
             const actorMoviesContainer = $('#actorMoviesContainer');
-
+            $('#actorMoviesContainer').empty();
             // Clear search results
             $('#searchResults').empty();
 
