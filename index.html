@@ -115,6 +115,7 @@
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     <button onclick="getMovieData()">view</button>
+    <button onclick="getRandomMovie()">random</button> <!-- Add this button -->
     <div id="detailedFilmName"></div>
     <div id="movieContainer"></div>
     <div id="year"></div>
@@ -325,7 +326,24 @@ handleUrlChange();
 // Call the function when the URL changes
 $(window).on('popstate', handleUrlChange);
 // Add click event listener to the posterElement
+function getRandomMovie() {
+// Load movie IDs from the JSON file
+$.getJSON('movies.json', function(data) {
+    const movieIds = data.movieIds;
 
+    // Generate a random index to select a random movie ID
+    const randomIndex = Math.floor(Math.random() * movieIds.length);
+
+    // Get the random movie ID
+    const randomMovieId = movieIds[randomIndex];
+
+    // Set the random movie ID in the input field
+    $('#movieIdInput').val(randomMovieId);
+
+    // Call the getMovieData function to display the random movie
+    getMovieData();
+});
+}
     </script>
 </body>
 
