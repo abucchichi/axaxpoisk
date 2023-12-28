@@ -80,7 +80,7 @@
         #movieBlok {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-around;
+            justify-content:baseline;
         }
 
         .movie {
@@ -95,13 +95,18 @@
 
         .movie img {
             max-width: 100px;
-            height: auto;
+            height: 150px;
             border-radius: 5px;
         }
         
         .movie p {
             margin: 10px 0 0;
         }
+        .movie-link {
+        text-decoration: none; /* Remove underline from links */
+        color: rgb(238, 207, 29); /* Inherit text color from parent */
+
+    }
     </style>
 </head>
 
@@ -290,7 +295,11 @@ function displaySimilarMovies(items) {
     items.forEach(function (item) {
         const nameRu = item.nameRu;
         const posterUrl = item.posterUrl;
-        const filmId = item.filmId
+        const filmId = item.filmId;
+
+        // Create an anchor element to wrap the image and text
+        const movieLink = $('<a>').attr('href', 'index.html?=' + filmId).addClass('movie-link');
+
 
         // Create HTML elements to display movie information
         const movieElement = $('<div>').addClass('movie');
@@ -298,34 +307,10 @@ function displaySimilarMovies(items) {
         const filmElement = $('<p>').text(filmId);
         const posterElement = $('<img>').attr('src', posterUrl);
 
-        // Add hover effects to make it look clickable
-        posterElement.hover(
-            function() {
-                $(this).css({'cursor': 'pointer', 'transform': 'scale(1.1)'});
-            },
-            function() {
-                $(this).css({'cursor': 'auto', 'transform': 'scale(1)'});
-            }
-        );
-
-        // Add click event listener to the posterElement
-        posterElement.click(function (event) {
-    // Check if the Ctrl key is pressed (you can change 'Ctrl' to 'Shift', 'Alt', etc.)
-    if (!event.ctrlKey) {
-        // Navigate to the movie details page without opening a new tab
-        window.location.href = 'index.html?=' + filmId; // Replace with the actual URL or route to your movie details page
-    }
-});
-
-// Open the movie details page in a new tab when right-clicking on the image
-posterElement.on('contextmenu', function (event) {
-    const movieDetailsUrl = 'index.html?=' + filmId; // Replace with the actual URL or route to your movie details page
-    window.open(movieDetailsUrl);
-});
-
         // Append elements to the container
-        movieElement.append(posterElement, nameElement, filmElement);
-        movieBlok.append(movieElement);
+        movieElement.append(posterElement, nameElement);
+        movieLink.append(movieElement);
+        movieBlok.append(movieLink);
     });
 }
 
