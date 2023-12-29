@@ -1,3 +1,5 @@
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -6,274 +8,527 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>actor movies</title>
+    <title>axaxpoisk</title>
     <style>
-        body {
-            background-color: black;
-            color: rgb(238, 207, 29);
-            margin: 0;
-            font-size: 25px;
-            font-style: bold;
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 999;
+            max-width: 200px;
+        }
+    body {
+        background-color: black;
+        color: rgb(204, 123, 17);
+        margin: 0;
+        font-family: Arial, sans-serif;
+
+    }
+
+    #movieContainer {
+        max-width: 100%; 
+    }
+
+    #filmName {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    #detailedFilmName {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+        #detailedFilmName {
+            font-size: 24px;
+            font-weight: bold;
+            font-style: inherit;
+        }
+        #description {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(217, 231, 19);
+        }
+        #shortdescription {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(24, 209, 169);
+        }
+        #year {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(228, 12, 12)
+        }
+        #slogan {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(21, 206, 36)
         }
 
-        #loadingMessage {
-            display: none;
+
+        #movieBlok {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content:baseline;
         }
-        .clickable-actor,
-.clickable-movie {
+
+        .movie {
+            margin: 10px;
+            padding: 10px;
+            background-color: #000000;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            
+        }
+
+        .movie img {
+            max-width: 100px;
+            height: 150px;
+            border-radius: 5px;
+        }
+        
+        .movie p {
+            margin: 10px 0 0;
+        }
+        .movie-link {
+        text-decoration: none; 
+        color: rgb(238, 207, 29); 
+
+    }
+    #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #actorsContainer {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: baseline;
+    margin-top: 20px;
+}
+
+.actor {
+    margin: 10px;
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 150px;
+}
+
+.actor img {
+    max-width: 100px;
+    height: 150px;
+    border-radius: 5px;
+}
+.actor-link {
     text-decoration: none;
-    color: rgb(238, 207, 29); /* Link color */
-    cursor: pointer;
+    color: rgb(12, 196, 95); /* Link color */
 }
 
-.clickable-actor:hover,
-.clickable-movie:hover {
-    color: #fff; /* Change link color on hover if needed */
-}
     </style>
 </head>
 
 <body>
-    <h1 id="actorName"></h1>
-    <input type="text" id="searchBar" placeholder="enter actor name">
-    <div id="loadingMessage">loading...</div>
-    <div id="actorMoviesContainer"></div>
-    <div id="searchResults"></div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
+    <div id="filmName"></div>
+    <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
+    <button onclick="getMovieData()">view</button>
+    <input type="text" id="searchInput" placeholder="search by film name" inputmode="text">
+    <button onclick="searchMovies()">search</button>
+    <button onclick="window.location.href='./actor_movies.html'">search by actor</button>
+    <button onclick="getRandomMovie()">random</button> 
+    <div id="detailedFilmName"></div>
+    
+    <div id="movieContainer"></div>
+    
+    <div id="year"></div>
+    <br><div id="shortdescription"></div></br>
+    <div id="description"></div>
+   <br> <div id="slogan"></div></br>
+   <div id="movieBlok"></div>
+   <div id="actorsContainer" style="float: left; padding: 10px;"></div>
     <script>
+        const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
-            // Flag to track whether loading message is displayed
-            let isLoading = false;
-
-            // Show loading message
-            $('#loadingMessage').show();
-
-            // Fetch actorId from URL query parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const staffId = urlParams.get('staffId');
-
-            // Fetch actor details using staffId
-            fetchAndDisplayActorDetails(staffId);
-
-            // Search bar input event
-            $('#searchBar').on('input', function () {
-                const actorName = $(this).val();
-                if (actorName.trim() !== '') {
-                    // Perform actor search
-                    searchActor(actorName);
-                } else {
-                    // Clear search results and display default content
-                    $('#searchResults').empty(); // Clear search results
-                    // Fetch actor details using staffId if search bar is empty
-                    fetchAndDisplayActorDetails(staffId);
-                }
-            });
-
-            // Click event handler for clickable actor elements
-            // Click event handler for clickable actor elements
-$('body').on('click', '.clickable-actor', function () {
-    if (!isLoading) {
-        isLoading = true;
-        const kinopoiskId = $(this).data('kinopoisk-id'); // Use kinopoiskId instead of staff-id
-        // Show loading message when a name is clicked
-        $('#loadingMessage').show();
-        // Clear search results
-        $('#searchResults').empty();
-        // Update the URL with the kinopoiskId
-        window.location.href = `?staffId=${kinopoiskId}`;
-    }
-});
+            // Load movie from URL when the page loads
+            loadMovieFromURL();
         });
 
-        // Function to fetch actor details based on staffId
-// Function to fetch actor details based on staffId
-// Function to fetch actor details based on staffId
-async function fetchAndDisplayActorDetails(staffId) {
-    // Clear existing content in both searchResultsContainer and actorMoviesContainer
-    $('#searchResults').empty();
-    $('#actorMoviesContainer').empty();
-
-    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff/${staffId}`;
-    try {
-        const response = await $.ajax({
-            url: apiUrl,
-            headers: {
-                'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        // Filter out movies where professionKey is not "ACTOR"
-        const actorMovies = response.films.filter(movie => movie.professionKey === 'ACTOR');
-
-        // Filter out movies with null iframeUrl
-        const filteredMovies = await Promise.all(
-            actorMovies.map(async (movie) => {
-                return await checkIframeUrl(movie.filmId);
-            })
-        );
-
-        // Update actorData with filtered movies
-        const finalActorMovies = actorMovies.filter((_, index) => filteredMovies[index]);
-
-        // Hide loading message
-        $('#loadingMessage').hide();
-
-        // Display actor movies
-        displayActorMovies({ ...response, films: finalActorMovies });
-    } catch (error) {
-        console.error('Error fetching actor details:', error);
-        // Hide loading message in case of an error
-        $('#loadingMessage').hide();
-    }
-}
-
-        // Function to check iframeUrl for a movie
-        async function checkIframeUrl(filmId) {
-            const iframeUrlApiUrl = `https://w3w.kpfr.cc/kinobox/index.php?kinopoisk=${filmId}`;
-
-            try {
-                const iframeUrlResponse = await $.ajax({
-                    url: iframeUrlApiUrl,
-                    async: true,
-                });
-
-                // Check if iframeUrl is not null
-                return iframeUrlResponse.data[0].iframeUrl !== null;
-            } catch (error) {
-                console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
-                return false;
+        function loadMovieFromURL() {
+            const movieIdFromURL = getParameterByName('');
+            if (movieIdFromURL) {
+                $('#movieIdInput').val(movieIdFromURL);
+                getMovieData();
             }
         }
 
-        // Function to search for actors
-// Function to search for actors
-function searchActor(actorName) {
-    // Show loading message
-    $('#loadingMessage').show();
+        function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 
-    // Clear existing content in both searchResultsContainer and actorMoviesContainer
-    $('#searchResults').empty();
-    $('#actorMoviesContainer').empty();
+     function getMovieActors(movieId) {
+            const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=${movieId}`;
 
-    const searchUrl = 'https://kinopoiskapiunofficial.tech/api/v1/persons';
-    const searchParams = {
-        name: actorName,
-        page: '1',
-    };
+            $.ajax({
+                url: apiUrl,
+                headers: {
+                    'X-API-KEY': apiKey,
+                    'Content-Type': 'application/json'
+                },
+                success: function (response) {
+                    displayMovieActors(response);
+                },
+                error: function (error) {
+                    console.error('Error fetching actors data:', error);
+                }
+            });
+        }
+
+        function displayMovieActors(actors) {
+    const actorsContainer = $('#actorsContainer');
+
+    // Clear existing content in the actorsContainer
+    actorsContainer.empty();
+
+    // Filter actors with the professionKey ACTOR
+    const filteredActors = actors.filter(actor => actor.professionKey === 'ACTOR');
+
+    filteredActors.slice(0, 21).forEach(function (actor) {
+        const name = actor.nameRu;
+        const staffId = actor.staffId;
+        const posterUrl = actor.posterUrl;
+        const profession = actor.professionText;
+        const description = actor.description;
+        const actorLink = $('<a>').attr('href', `actor_movies.html?staffId=${staffId}`).addClass('actor-link');
+
+        const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
+        const nameElement = $('<p>').text(name);
+        const professionElement = $('<p>').text(profession);
+        const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
+        const descriptionElement = $('<p>').text(description);
+        
+        // Append elements to the container
+        actorElement.append(posterElement, nameElement, descriptionElement);
+        actorLink.append(actorElement);
+        actorsContainer.append(actorLink);
+    });
+}
+        // Call the function when the movie data is loaded
+        function getMovieData() {
+            const movieIdValue = $('#movieIdInput').val();
+    const newUrl = `?=${movieIdValue}`;
+            
+    // Update the URL without triggering a page reload
+    window.history.pushState({ path: newUrl }, '', newUrl);
+
+    // Reload the page or trigger navigation to the new URL
+    // window.location.href = newUrl;  // Uncomment this line if you want to reload the page
 
     $.ajax({
-        url: searchUrl,
-        headers: {
-            'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-            'Content-Type': 'application/json'
-        },
-        data: searchParams,
-        success: function (response) {
-            // Hide loading message
-            $('#loadingMessage').hide();
+        url: 'https://w3w.kpfr.cc/kinobox/index.php',
+        crossDomain: true,
+        data: {
+            'kinopoisk': movieIdValue
+        }
+    }).done(function (response) {
+        console.log(response);
 
-            // Display search results
-            displaySearchResults(response.items);
-        },
-        error: function (error) {
-            console.error('Error fetching actor search data:', error);
-            // Hide loading message in case of an error
-            $('#loadingMessage').hide();
+        if (response.data && response.data.length > 0) {
+            const iframeUrl = response.data[0].iframeUrl;
+            const movieId = extractMovieId(iframeUrl);
+            const filmName = response.data[0].nameRu;
+
+            viewMovie(movieId);
+            displayFilmName(filmName);
+            getMovieDetails(movieIdValue);
+            getSimilarMovies(movieIdValue);
+            getMovieActors(movieIdValue);
+        } else {
+            console.error('No movie data found');
         }
     });
 }
 
-// Function to display search results
-// Function to display search results
-function displaySearchResults(searchResults) {
-    const searchResultsContainer = $('#searchResults');
-    // Clear previous search results
-    searchResultsContainer.empty();
-    searchResults = searchResults.filter(actor => actor.kinopoiskId);
-
-
-
-// Inside the displaySearchResults function
-// Inside the displaySearchResults function
-searchResults.forEach(function (actor) {
-    // Create a clickable element for each search result
-    const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor');
-    actorElement.data('kinopoisk-id', actor.kinopoiskId);
-    actorElement.data('staff-id', actor.kinopoiskId);
-
-    // Append actor element to container
-    searchResultsContainer.append(actorElement);
-});
-
-
-    // Prepend search results to the actorMoviesContainer
-
-    // Add click event handler for clickable actor elements using event delegation
-// Click event handler for clickable actor elements
-$('body').on('click', '.clickable-actor', function () {
-    if (!isLoading) {
-        isLoading = true;
-        const kinopoiskId = $(this).data('kinopoisk-id');
-
-        // Check if kinopoiskId is defined before updating the URL
-        if (kinopoiskId !== undefined) {
-            // Show loading message when a name is clicked
-            $('#loadingMessage').show();
-            // Clear search results
-            $('#searchResults').empty();
-            // Update the URL with the kinopoiskId
-            window.location.href = `?staffId=${kinopoiskId}`;
-        } else {
-            console.log('KinopoiskId is undefined for this entry.');
+        function extractMovieId(iframeUrl) {
+            const urlParts = iframeUrl.split('/');
+            return urlParts[urlParts.length - 1];
         }
+
+        function viewMovie(movieId) {
+            const iframeUrl = `https://api.embr.ws/embed/movie/${movieId}`;
+            const iframe = `<iframe src="${iframeUrl}" width="600" height="450" frameborder="0" allowfullscreen></iframe>`;
+            document.getElementById('movieContainer').innerHTML = iframe;
+        }
+
+        function displayFilmName(filmName) {
+            document.getElementById('filmName')
+        }
+
+        function getMovieDetails(movieId) {
+            $.ajax({
+                url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
+                crossDomain: true,
+                headers: {
+                    'x-api-key': apiKey
+                },
+                contentType: 'application/json'
+            }).done(function (response) {
+                console.log(response);
+                const detailedFilmName = response.nameRu;
+                const description = response.description;
+                const year = response.year;
+                const slogan = response.slogan;
+                const shortdescription = response.shortDescription;
+                displayDetailedFilmName(detailedFilmName);
+                displaydescription(description);
+                displayyear(year);
+                displayslogan(slogan);
+                displayshortdescription(shortdescription);
+            });
+        }
+
+        function displayDetailedFilmName(detailedFilmName) {
+    const element = document.getElementById('detailedFilmName');
+    if (detailedFilmName !== null) {
+        element.innerHTML = `${detailedFilmName}`;
+    } else {
+        element.innerHTML = ''; // Set the content to an empty string
     }
+}
+
+function displaydescription(description) {
+    const element = document.getElementById('description');
+    if (description !== null) {
+        element.innerHTML = `${description}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+function displayyear(year) {
+    const element = document.getElementById('year');
+    if (year !== null) {
+        element.innerHTML = `${year}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+function displayslogan(slogan) {
+    const element = document.getElementById('slogan');
+    if (slogan !== null) {
+        element.innerHTML = `${slogan}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+function displayshortdescription(shortdescription) {
+    const element = document.getElementById('shortdescription');
+    if (shortdescription !== null) {
+        element.innerHTML = `${shortdescription}`;
+    } else {
+        element.innerHTML = '';
+    }
+}
+
+        $(document).ready(function () {
+            getSimilarMovies();
+        });
+        function getSimilarMovies(movieId) {
+    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
+
+    $.ajax({
+        url: apiUrl,
+        headers: {
+            'X-API-KEY': apiKey,
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+            displaySimilarMovies(response.items);
+        },
+        error: function (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
+    
+function displaySimilarMovies(items) {
+    const movieBlok = $('#movieBlok');
+
+    // Clear existing content in the movieBlok
+    movieBlok.empty();
+
+    items.forEach(function (item) {
+        const nameRu = item.nameRu;
+        const posterUrl = item.posterUrl;
+        const filmId = item.filmId;
+
+        // Create an anchor element to wrap the image and text
+        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+
+
+
+        // Create HTML elements to display movie information
+        const movieElement = $('<div>').addClass('movie');
+        const nameElement = $('<p>').text(nameRu);
+        const filmElement = $('<p>').text(filmId);
+        const posterElement = $('<img>').attr('src', posterUrl);
+
+        // Append elements to the container
+        movieElement.append(posterElement, nameElement);
+        movieLink.append(movieElement);
+        movieBlok.append(movieLink);
+    });
+}
+
+function handleUrlChange() {
+    loadMovieFromURL();
+}
+
+// Call the function on initial page load
+handleUrlChange();
+
+// Call the function when the URL changes
+$(window).on('popstate', handleUrlChange);
+// Add click event listener to the posterElement
+function getRandomMovie() {
+// Load movie IDs from the JSON file
+$.getJSON('movies.json', function(data) {
+    const movieIds = data.movieIds;
+
+    // Generate a random index to select a random movie ID
+    const randomIndex = Math.floor(Math.random() * movieIds.length);
+
+    // Get the random movie ID
+    const randomMovieId = movieIds[randomIndex];
+
+    // Set the random movie ID in the input field
+    $('#movieIdInput').val(randomMovieId);
+
+    // Call the getMovieData function to display the random movie
+    getMovieData();
 });
 }
 
-
-        // Function to display actor movies
-        function displayActorMovies(actorData) {
-            const actorName = actorData.nameRu;
-            const actorMoviesContainer = $('#actorMoviesContainer');
-
-            // Clear search results
-            $('#searchResults').empty();
-
-            // Display actor name
-            $('#actorName').text(actorName);
-
-            // Reverse the order of movies
-            const reversedMovies = actorData.films.slice().reverse();
-
-            // Create a set to keep track of unique movie names
-            const uniqueMovieNames = new Set();
-
-            // Display actor movies
-            reversedMovies.forEach(function (movie) {
-    // Check if the movie name is not a duplicate
-    if (!uniqueMovieNames.has(movie.nameRu)) {
-        // Create a clickable element for each movie
-        const movieElement = $('<div>').addClass('clickable-movie');
-        const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.description}`).addClass('movie-info');
-        movieElement.append(movieInfo);
-        movieElement.data('film-id', movie.filmId);
-
-        // Append movie element to container
-        actorMoviesContainer.append(movieElement);
-
-        // Add the movie name to the set
-        uniqueMovieNames.add(movie.nameRu);
-    }
+$(document).on('click', '.actor', function() {
+    const staffId = $(this).data('staff-id');
+    window.location.href = `actor_movies.html?staffId=${staffId}`;
 });
-    // Add click event handler for clickable movie elements
-$('.clickable-movie').on('click', function () {
-    const filmId = $(this).data('film-id');
-    // Navigate back to index.html with the filmId in the view field
-    window.location.href = `index.html?=${filmId}`;
-});
+
+function searchMovies() {
+    // Clear the current displayed movie and its details
+    clearMovieDetails();
+
+    const searchQuery = $('#searchInput').val();
+
+    // Make a request to search films by keyword
+    $.ajax({
+        url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
+        data: {
+            keyword: searchQuery,
+            page: '1',
+        },
+        headers: {
+            'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+        },
+        success: function (response) {
+            // Use Promise.all to wait for all requests to complete
+            const promises = response.films.map(movie => checkIframeUrlValidity(movie.filmId));
+            
+            Promise.all(promises)
+                .then(results => {
+                    // Filter movies with valid iframeUrl
+                    const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
+                    displaySearchResults(moviesWithValidIframe);
+                })
+                .catch(error => console.error('Error fetching iframeUrl data:', error));
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
 }
-        
+
+// Function to check iframeUrl validity on the external site
+// Function to check iframeUrl validity on the external site
+function checkIframeUrlValidity(filmId) {
+    const iframeUrlApiUrl = `https://w3w.kpfr.cc/kinobox/index.php?kinopoisk=${filmId}`;
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: iframeUrlApiUrl,
+            success: function (response) {
+                // Check if iframeUrl is null or undefined
+                resolve(response.data && response.data.length > 0 && response.data[0].iframeUrl !== null && response.data[0].iframeUrl !== undefined);
+            },
+            error: function (error) {
+                console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
+                reject(error);
+            }
+        });
+    });
+}
+function clearMovieDetails() {
+    // Clear the movie container
+    $('#movieContainer').empty();
+
+    // Clear detailed film information
+    $('#filmName').empty();
+    $('#detailedFilmName').empty();
+    $('#year').empty();
+    $('#shortdescription').empty();
+    $('#description').empty();
+    $('#slogan').empty();
+    $('#actorsContainer').empty();
+
+}
+function displaySearchResults(films) {
+    const movieBlok = $('#movieBlok');
+
+    // Clear existing content in the movieBlok
+    movieBlok.empty();
+
+    films.forEach(function (film) {
+        const nameRu = film.nameRu;
+        const posterUrl = film.posterUrl;
+        const filmId = film.filmId;
+        const filmYear = film.year;
+
+        // Create an anchor element to wrap the image and text
+        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+
+        // Create HTML elements to display movie information
+        const movieElement = $('<div>').addClass('movie');
+        const nameElement = $('<p>').text(nameRu);
+        const filmElement = $('<p>').text(filmId);
+        const nameYear = $('<p>').text(filmYear);
+        const posterElement = $('<img>').attr('src', posterUrl);
+
+        // Append elements to the container
+        movieElement.append(posterElement, nameElement, nameYear);
+        movieLink.append(movieElement);
+        movieBlok.append(movieLink);
+    });
+}
+
     </script>
 </body>
 
