@@ -144,12 +144,12 @@
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     <button onclick="getMovieData()">view</button>
-    <button onclick="window.location.href='./actor_movies.html'">search by actor</button>
+    <input type="text" id="searchInput" placeholder="search by keywords" inputmode="text">
+    <button onclick="searchMovies()">search</button>
     <button onclick="getRandomMovie()">random</button> 
+    <button onclick="window.location.href='./actor_movies.html'">search by actor</button>
     <div id="detailedFilmName"></div>
-    
     <div id="movieContainer"></div>
-    
     <div id="year"></div>
     <br><div id="shortdescription"></div></br>
     <div id="description"></div>
@@ -431,6 +431,100 @@ $(document).on('click', '.actor', function() {
     window.location.href = `actor_movies.html?staffId=${staffId}`;
 });
 
+function searchMovies() {
+    clearMovieDetails();
+
+    const searchQuery = $('#searchInput').val();
+
+    // Make a request to search films by keyword
+    $.ajax({
+        url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
+        data: {
+            keyword: searchQuery,
+            page: '1',
+        },
+        headers: {
+            'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+        },
+        success: function (response) {
+            // Use Promise.all to wait for all requests to complete
+            const promises = response.films.map(movie => checkIframeUrlValidity(movie.filmId));
+            
+            Promise.all(promises)
+                .then(results => {
+                    // Filter movies with valid iframeUrl
+                    const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
+                    displaySearchResults(moviesWithValidIframe);
+                })
+                .catch(error => console.error('Error fetching iframeUrl data:', error));
+        },
+        error: function (error) {
+            console.error('Error fetching search results:', error);
+        }
+    });
+}
+
+// Function to check iframeUrl validity on the external site
+// Function to check iframeUrl validity on the external site
+function checkIframeUrlValidity(filmId) {
+    const iframeUrlApiUrl = `https://w3w.kpfr.cc/kinobox/index.php?kinopoisk=${filmId}`;
+
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: iframeUrlApiUrl,
+            success: function (response) {
+                // Check if iframeUrl is null or undefined
+                resolve(response.data && response.data.length > 0 && response.data[0].iframeUrl !== null && response.data[0].iframeUrl !== undefined);
+            },
+            error: function (error) {
+                console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
+                reject(error);
+            }
+        });
+    });
+}
+function clearMovieDetails() {
+    // Clear the movie container
+    $('#movieContainer').empty();
+
+    // Clear detailed film information
+    $('#filmName').empty();
+    $('#detailedFilmName').empty();
+    $('#year').empty();
+    $('#shortdescription').empty();
+    $('#description').empty();
+    $('#slogan').empty();
+    $('#actorsContainer').empty();
+
+}
+function displaySearchResults(films) {
+    const movieBlok = $('#movieBlok');
+
+    // Clear existing content in the movieBlok
+    movieBlok.empty();
+
+    films.forEach(function (film) {
+        const nameRu = film.nameRu;
+        const posterUrl = film.posterUrl;
+        const filmId = film.filmId;
+        const filmYear = film.year;
+
+        // Create an anchor element to wrap the image and text
+        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+
+        // Create HTML elements to display movie information
+        const movieElement = $('<div>').addClass('movie');
+        const nameElement = $('<p>').text(nameRu);
+        const filmElement = $('<p>').text(filmId);
+        const nameYear = $('<p>').text(filmYear);
+        const posterElement = $('<img>').attr('src', posterUrl);
+
+        // Append elements to the container
+        movieElement.append(posterElement, nameElement, nameYear);
+        movieLink.append(movieElement);
+        movieBlok.append(movieLink);
+    });
+}
 
     </script>
 </body>
