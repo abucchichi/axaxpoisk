@@ -1,7 +1,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
@@ -195,29 +195,32 @@
         }
 
         function displayMovieActors(actors) {
-            const actorsContainer = $('#actorsContainer');
+    const actorsContainer = $('#actorsContainer');
 
-            // Clear existing content in the actorsContainer
-            actorsContainer.empty();
+    // Clear existing content in the actorsContainer
+    actorsContainer.empty();
 
-            actors.slice(0, 10).forEach(function (actor) {
-                const name = actor.nameRu;
-                const staffId = actor.staffId
-                
-                const posterUrl = actor.posterUrl;
-                const profession = actor.professionText;
-                const description = actor.description;
-                const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
-                const nameElement = $('<p>').text(name);
-                const professionElement = $('<p>').text(profession);
-                const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
-                const descriptionElement = $('<p>').text(description);
-                // Append elements to the container
-                actorElement.append(posterElement, nameElement, descriptionElement);
-                actorsContainer.append(actorElement);
-            });
-        }
+    // Filter actors with the professionKey ACTOR
+    const filteredActors = actors.filter(actor => actor.professionKey === 'ACTOR');
 
+    filteredActors.slice(0, 21).forEach(function (actor) {
+        const name = actor.nameRu;
+        const staffId = actor.staffId;
+
+        const posterUrl = actor.posterUrl;
+        const profession = actor.professionText;
+        const description = actor.description;
+        const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
+        const nameElement = $('<p>').text(name);
+        const professionElement = $('<p>').text(profession);
+        const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
+        const descriptionElement = $('<p>').text(description);
+        
+        // Append elements to the container
+        actorElement.append(posterElement, nameElement, descriptionElement);
+        actorsContainer.append(actorElement);
+    });
+}
         // Call the function when the movie data is loaded
         function getMovieData() {
             const movieIdValue = $('#movieIdInput').val();
