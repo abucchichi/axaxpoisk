@@ -131,7 +131,10 @@
     height: 150px;
     border-radius: 5px;
 }
-
+.actor-link {
+    text-decoration: none;
+    color: rgb(12, 196, 95); /* Link color */
+}
     </style>
 </head>
 
@@ -206,10 +209,11 @@
     filteredActors.slice(0, 21).forEach(function (actor) {
         const name = actor.nameRu;
         const staffId = actor.staffId;
-
         const posterUrl = actor.posterUrl;
         const profession = actor.professionText;
         const description = actor.description;
+        const actorLink = $('<a>').attr('href', `actor_movies.html?staffId=${staffId}`).addClass('actor-link');
+
         const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
         const nameElement = $('<p>').text(name);
         const professionElement = $('<p>').text(profession);
@@ -218,7 +222,8 @@
         
         // Append elements to the container
         actorElement.append(posterElement, nameElement, descriptionElement);
-        actorsContainer.append(actorElement);
+        actorLink.append(actorElement);
+        actorsContainer.append(actorLink);
     });
 }
         // Call the function when the movie data is loaded
