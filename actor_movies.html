@@ -24,8 +24,8 @@
 
 <body>
     <h1 id="actorName"></h1>
-    <input type="text" id="searchBar" placeholder="Enter actor name">
-    <div id="loadingMessage">Loading...</div>
+    <input type="text" id="searchBar" placeholder="enter actor name">
+    <div id="loadingMessage">loading...</div>
     <div id="actorMoviesContainer"></div>
     <div id="searchResults"></div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -59,7 +59,6 @@
             });
 
             // Click event handler for clickable actor elements
-            // Click event handler for clickable actor elements
 $('body').on('click', '.clickable-actor', function () {
     if (!isLoading) {
         isLoading = true;
@@ -74,44 +73,46 @@ $('body').on('click', '.clickable-actor', function () {
 });
         });
 
-        // Function to fetch actor details based on staffId
+
 // Function to fetch actor details based on staffId
-// Function to fetch actor details based on staffId
-function fetchAndDisplayActorDetails(staffId) {
+async function fetchAndDisplayActorDetails(staffId) {
     // Clear existing content in both searchResultsContainer and actorMoviesContainer
     $('#searchResults').empty();
     $('#actorMoviesContainer').empty();
 
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff/${staffId}`;
-    $.ajax({
-        url: apiUrl,
-        headers: {
-            'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-            'Content-Type': 'application/json'
-        },
-        success: async function (response) {
-                    // Filter out movies with null iframeUrl
-                    const filteredMovies = await Promise.all(
-                        response.films.map(async (movie) => {
-                            return await checkIframeUrl(movie.filmId);
-                        })
-                    );
+    try {
+        const response = await $.ajax({
+            url: apiUrl,
+            headers: {
+                'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+                'Content-Type': 'application/json'
+            }
+        });
 
-                    // Update actorData with filtered movies
-                    response.films = response.films.filter((_, index) => filteredMovies[index]);
+        // Filter out movies where professionKey is not "ACTOR"
+        const actorMovies = response.films.filter(movie => movie.professionKey === 'ACTOR');
 
-                    // Hide loading message
-                    $('#loadingMessage').hide();
+        // Filter out movies with null iframeUrl
+        const filteredMovies = await Promise.all(
+            actorMovies.map(async (movie) => {
+                return await checkIframeUrl(movie.filmId);
+            })
+        );
 
-                    // Display actor movies
-                    displayActorMovies(response);
-                },
-        error: function (error) {
-            console.error('Error fetching actor details:', error);
-            // Hide loading message in case of an error
-            $('#loadingMessage').hide();
-        }
-    });
+        // Update actorData with filtered movies
+        const finalActorMovies = actorMovies.filter((_, index) => filteredMovies[index]);
+
+        // Hide loading message
+        $('#loadingMessage').hide();
+
+        // Display actor movies
+        displayActorMovies({ ...response, films: finalActorMovies });
+    } catch (error) {
+        console.error('Error fetching actor details:', error);
+        // Hide loading message in case of an error
+        $('#loadingMessage').hide();
+    }
 }
 
         // Function to check iframeUrl for a movie
@@ -133,42 +134,43 @@ function fetchAndDisplayActorDetails(staffId) {
         }
 
         // Function to search for actors
-        function searchActor(actorName) {
-            // Show loading message
-            $('#loadingMessage').show();
+// Function to search for actors
+function searchActor(actorName) {
+    // Show loading message
+    $('#loadingMessage').show();
 
-            // Fetch actor details using actorName
-            const searchUrl = 'https://kinopoiskapiunofficial.tech/api/v1/persons';
-            const searchParams = {
-                name: actorName,
-                page: '1',
-            };
+    // Clear existing content in both searchResultsContainer and actorMoviesContainer
+    $('#searchResults').empty();
+    $('#actorMoviesContainer').empty();
 
-            $.ajax({
-                url: searchUrl,
-                headers: {
-                    'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-                    'Content-Type': 'application/json'
-                },
-                data: searchParams,
-                success: function (response) {
-                    // Hide loading message
-                    $('#loadingMessage').hide();
+    const searchUrl = 'https://kinopoiskapiunofficial.tech/api/v1/persons';
+    const searchParams = {
+        name: actorName,
+        page: '1',
+    };
 
-                    // Display search results
-                    displaySearchResults(response.items);
-                    searchResultsContainer.empty();
-                    
-                },
-                error: function (error) {
-                    console.error('Error fetching actor search data:', error);
-                    // Hide loading message in case of an error
-                    $('#loadingMessage').hide();
-                }
-            });
+    $.ajax({
+        url: searchUrl,
+        headers: {
+            'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+            'Content-Type': 'application/json'
+        },
+        data: searchParams,
+        success: function (response) {
+            // Hide loading message
+            $('#loadingMessage').hide();
+
+            // Display search results
+            displaySearchResults(response.items);
+        },
+        error: function (error) {
+            console.error('Error fetching actor search data:', error);
+            // Hide loading message in case of an error
+            $('#loadingMessage').hide();
         }
+    });
+}
 
-// Function to display search results
 // Function to display search results
 function displaySearchResults(searchResults) {
     const searchResultsContainer = $('#searchResults');
@@ -178,7 +180,6 @@ function displaySearchResults(searchResults) {
 
 
 
-// Inside the displaySearchResults function
 // Inside the displaySearchResults function
 searchResults.forEach(function (actor) {
     // Create a clickable element for each search result
@@ -191,10 +192,7 @@ searchResults.forEach(function (actor) {
 });
 
 
-    // Prepend search results to the actorMoviesContainer
 
-    // Add click event handler for clickable actor elements using event delegation
-// Click event handler for clickable actor elements
 $('body').on('click', '.clickable-actor', function () {
     if (!isLoading) {
         isLoading = true;
@@ -222,30 +220,44 @@ $('body').on('click', '.clickable-actor', function () {
         function displayActorMovies(actorData) {
             const actorName = actorData.nameRu;
             const actorMoviesContainer = $('#actorMoviesContainer');
-            $('#actorMoviesContainer').empty();
+
             // Clear search results
             $('#searchResults').empty();
 
             // Display actor name
             $('#actorName').text(actorName);
 
+            // Reverse the order of movies
+            const reversedMovies = actorData.films.slice().reverse();
+
+            // Create a set to keep track of unique movie names
+            const uniqueMovieNames = new Set();
+
             // Display actor movies
-            actorData.films.forEach(function (movie) {
-                // Create a clickable element for each movie
-                const movieElement = $('<div>').text(movie.nameRu).addClass('clickable-movie');
-                movieElement.data('film-id', movie.filmId);
+            reversedMovies.forEach(function (movie) {
+                // Check if the movie name is not a duplicate
+                if (!uniqueMovieNames.has(movie.nameRu)) {
+                    // Create a clickable element for each movie
+                    const movieElement = $('<div>').addClass('clickable-movie');
+                    const movieInfo = $('<div>').text(`${movie.nameRu} ${movie.rating}`).addClass('movie-info');
+                    movieElement.append(movieInfo);
+                    movieElement.data('film-id', movie.filmId);
 
-                // Append movie element to container
-                actorMoviesContainer.append(movieElement);
+                    // Append movie element to container
+                    actorMoviesContainer.append(movieElement);
+
+                    // Add the movie name to the set
+                    uniqueMovieNames.add(movie.nameRu);
+                }
             });
 
-            // Add click event handler for clickable movie elements
-            $('.clickable-movie').on('click', function () {
-                const filmId = $(this).data('film-id');
-                // Navigate back to index.html with the filmId in the view field
-                window.location.href = `index.html?=${filmId}`;
-            });
-        }
+    // Add click event handler for clickable movie elements
+    $('.clickable-movie').on('click', function () {
+        const filmId = $(this).data('film-id');
+        // Navigate back to index.html with the filmId in the view field
+        window.location.href = `index.html?=${filmId}`;
+    });
+}
         
     </script>
 </body>
