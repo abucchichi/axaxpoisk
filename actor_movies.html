@@ -255,7 +255,7 @@ $('body').on('click', '.clickable-actor', function () {
     if (!uniqueMovieNames.has(movie.nameRu)) {
         // Create a clickable element for each movie
         const movieElement = $('<div>').addClass('clickable-movie');
-        const movieInfo = $('<div>').text(`${movie.nameRu} ${movie.rating}`).addClass('movie-info');
+        const movieInfo = $('<div>').text(`${movie.nameRu} ${movie.rating} ${movie.description}`).addClass('movie-info');
         movieElement.append(movieInfo);
         movieElement.data('film-id', movie.filmId);
 
