@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Search</title>
+  <style>
+    body {
+      background-color: black;
+      color: rgb(204, 123, 17);
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #results {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .movie {
+      margin: 10px;
+      padding: 10px;
+      background-color: #000000;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 150px;
+    }
+
+    .movie img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .movie p {
+      margin: 10px 0 0;
+    }
+
+    .movie-link {
+      text-decoration: none;
+      color: rgb(238, 207, 29);
+    }
+
+    #loadMoreContainer {
+      text-align: center;
+      margin-top: 20px;
+      display: none; /* Initially hide the container */
+    }
+
+    #loadMore {
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #optionsContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: baseline;
+      margin-top: 20px;
+    }
+
+    #optionsContainer label {
+      margin-right: 10px;
+    }
+
+    #optionsContainer select {
+      width: 150px;
+    }
+  </style>
+</head>
+<body>
+  <div id="optionsContainer">
+    <label for="countries">Countries:</label>
+    <select id="countries">
+      <option value="">Select Country</option>
+    </select>
+
+    <label for="genres">Genres:</label>
+    <select id="genres">
+      <option value="">Select Genre</option>
+    </select>
+
+    <label for="ratingFrom">Rating From:</label>
+    <select id="ratingFrom">
+      <option value="">Select Rating From</option>
+      <option value="10">10</option>
+      <option value="9">9</option>
+      <option value="8">8</option>
+      <option value="7">7</option>
+      <option value="6">6</option>
+      <option value="5">5</option>
+      <option value="4">4</option>
+      <option value="3">3</option>
+      <option value="2">2</option>
+      <option value="1">1</option>
+    </select>
+
+    <label for="yearFrom">Year From:</label>
+    <select id="yearFrom">
+      <option value="">Select Year From</option>
+      <!-- Add year options as needed -->
+      <!-- Example: -->
+      <option value="1900">1900</option>
+      <option value="1950">1950</option>
+      <!-- ... -->
+      <option value="2023">2023</option>
+    </select>
+
+    <label for="yearTo">Year To:</label>
+    <select id="yearTo">
+      <option value="">Select Year To</option>
+      <!-- Add year options as needed -->
+      <!-- Example: -->
+      <option value="1900">1900</option>
+      <option value="1950">1950</option>
+      <!-- ... -->
+      <option value="2023">2023</option>
+    </select>
+
+    <button onclick="searchMovies()">Search Movies</button>
+  </div>
+
+  <div id="results"></div>
+  
+  <div id="loadMoreContainer">
+    <button id="loadMore" onclick="loadMore()">Load More</button>
+  </div>
+
+  <script>
+    var currentPage = 1;
+    var loadMoreContainer = document.getElementById('loadMoreContainer');
+
+    // Load countries and genres from JSON file
+    fetch('data.json') // Replace with the actual path
+      .then(response => response.json())
+      .then(data => {
+        // Populate country dropdown
+        const countryDropdown = document.getElementById('countries');
+        data.countries.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.country;
+          countryDropdown.appendChild(option);
+        });
+
+        // Populate genre dropdown
+        const genreDropdown = document.getElementById('genres');
+        data.genres.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.id;
+          option.textContent = item.genre;
+          genreDropdown.appendChild(option);
+        });
+      });
+
+    function searchMovies() {
+      currentPage = 1;
+      var countries = document.getElementById('countries').value;
+      var genres = document.getElementById('genres').value;
+      var ratingFrom = document.getElementById('ratingFrom').value;
+      var yearFrom = document.getElementById('yearFrom').value;
+      var yearTo = document.getElementById('yearTo').value;
+      $.ajax({
+        url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
+        crossDomain: true,
+        headers: {
+          'authority': 'kinopoiskapiunofficial.tech',
+          'accept': 'application/json',
+          'accept-language': 'en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7',
+          'cookie': '_ym_uid=1703706535668953649; _ym_d=1703706535; _ym_isad=1',
+          'referer': 'https://kinopoiskapiunofficial.tech/documentation/api/',
+          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'same-origin',
+          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
+        },
+        data: {
+          'countries': countries,
+          'genres': genres,
+          'order': 'NUM_VOTE',
+          'type': 'ALL',
+          'ratingFrom': ratingFrom,
+          'ratingTo': 10,
+          'yearFrom': yearFrom,
+          'yearTo': yearTo,
+          'page': currentPage
+        }
+      }).done(function(response) {
+        displayResults(response);
+      });
+    }
+
+    function loadMore() {
+      currentPage++;
+      var countries = document.getElementById('countries').value;
+      var genres = document.getElementById('genres').value;
+      var ratingFrom = document.getElementById('ratingFrom').value;
+      var yearFrom = document.getElementById('yearFrom').value;
+      var yearTo = document.getElementById('yearTo').value;
+      $.ajax({
+        url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
+        crossDomain: true,
+        headers: {
+          'authority': 'kinopoiskapiunofficial.tech',
+          'accept': 'application/json',
+          'accept-language': 'en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7',
+          'cookie': '_ym_uid=1703706535668953649; _ym_d=1703706535; _ym_isad=1',
+          'referer': 'https://kinopoiskapiunofficial.tech/documentation/api/',
+          'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'same-origin',
+          'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
+        },
+        data: {
+          'countries': countries,
+          'genres': genres,
+          'order': 'RATING',
+          'type': 'ALL',
+          'ratingFrom': ratingFrom,
+          'ratingTo': 10,
+          'yearFrom': yearFrom,
+          'yearTo': yearTo,
+          'page': currentPage
+        }
+      }).done(function(response) {
+        displayResults(response);
+      });
+    }
+
+    function displayResults(response) {
+      var resultsContainer = document.getElementById('results');
+      var loadMoreButton = document.getElementById('loadMore');
+
+      if (response && response.items && response.items.length > 0) {
+        response.items.forEach(function(movie) {
+          if (!movie.nameRu || movie.ratingKinopoisk === null) {
+            return;
+          }
+
+          var movieHtml = '<div class="movie">';
+          movieHtml += '<h2 class="movie-title">' + (movie.nameRu || movie.nameEn) + '</h2>';
+          movieHtml += '<img src="' + movie.posterUrl + '" alt="Movie Poster">';
+          movieHtml += '<p>Kinopoisk ID: ' + movie.kinopoiskId + '</p>';
+          movieHtml += '<p>Kinopoisk Rating: ' + movie.ratingKinopoisk + '</p>';
+          movieHtml += '<a href="#" class="movie-link">Details</a>';
+          movieHtml += '</div>';
+
+          resultsContainer.innerHTML += movieHtml;
+        });
+
+        loadMoreContainer.style.display = 'block';
+      } else {
+        loadMoreContainer.style.display = 'none';
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</body>
+</html>
