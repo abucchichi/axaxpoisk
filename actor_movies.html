@@ -10,15 +10,26 @@
     <style>
         body {
             background-color: black;
-            color: rgb(204, 123, 17);
+            color: rgb(238, 207, 29);
             margin: 0;
-            font-size: 30px;
+            font-size: 25px;
             font-style: bold;
         }
 
         #loadingMessage {
             display: none;
         }
+        .clickable-actor,
+.clickable-movie {
+    text-decoration: none;
+    color: rgb(238, 207, 29); /* Link color */
+    cursor: pointer;
+}
+
+.clickable-actor:hover,
+.clickable-movie:hover {
+    color: #fff; /* Change link color on hover if needed */
+}
     </style>
 </head>
 
@@ -59,6 +70,7 @@
             });
 
             // Click event handler for clickable actor elements
+            // Click event handler for clickable actor elements
 $('body').on('click', '.clickable-actor', function () {
     if (!isLoading) {
         isLoading = true;
@@ -73,7 +85,8 @@ $('body').on('click', '.clickable-actor', function () {
 });
         });
 
-
+        // Function to fetch actor details based on staffId
+// Function to fetch actor details based on staffId
 // Function to fetch actor details based on staffId
 async function fetchAndDisplayActorDetails(staffId) {
     // Clear existing content in both searchResultsContainer and actorMoviesContainer
@@ -172,6 +185,7 @@ function searchActor(actorName) {
 }
 
 // Function to display search results
+// Function to display search results
 function displaySearchResults(searchResults) {
     const searchResultsContainer = $('#searchResults');
     // Clear previous search results
@@ -181,29 +195,32 @@ function displaySearchResults(searchResults) {
 
 
 // Inside the displaySearchResults function
+// Inside the displaySearchResults function
 searchResults.forEach(function (actor) {
     // Create a clickable element for each search result
     const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor');
     actorElement.data('kinopoisk-id', actor.kinopoiskId);
     actorElement.data('staff-id', actor.kinopoiskId);
-        
+
     // Append actor element to container
     searchResultsContainer.append(actorElement);
 });
 
 
+    // Prepend search results to the actorMoviesContainer
 
+    // Add click event handler for clickable actor elements using event delegation
+// Click event handler for clickable actor elements
 $('body').on('click', '.clickable-actor', function () {
     if (!isLoading) {
         isLoading = true;
         const kinopoiskId = $(this).data('kinopoisk-id');
-        
+
         // Check if kinopoiskId is defined before updating the URL
         if (kinopoiskId !== undefined) {
             // Show loading message when a name is clicked
             $('#loadingMessage').show();
             // Clear search results
-            
             $('#searchResults').empty();
             // Update the URL with the kinopoiskId
             window.location.href = `?staffId=${kinopoiskId}`;
@@ -212,7 +229,6 @@ $('body').on('click', '.clickable-actor', function () {
         }
     }
 });
-
 }
 
 
@@ -235,28 +251,27 @@ $('body').on('click', '.clickable-actor', function () {
 
             // Display actor movies
             reversedMovies.forEach(function (movie) {
-                // Check if the movie name is not a duplicate
-                if (!uniqueMovieNames.has(movie.nameRu)) {
-                    // Create a clickable element for each movie
-                    const movieElement = $('<div>').addClass('clickable-movie');
-                    const movieInfo = $('<div>').text(`${movie.nameRu} ${movie.rating}`).addClass('movie-info');
-                    movieElement.append(movieInfo);
-                    movieElement.data('film-id', movie.filmId);
+    // Check if the movie name is not a duplicate
+    if (!uniqueMovieNames.has(movie.nameRu)) {
+        // Create a clickable element for each movie
+        const movieElement = $('<div>').addClass('clickable-movie');
+        const movieInfo = $('<div>').text(`${movie.nameRu} ${movie.rating}`).addClass('movie-info');
+        movieElement.append(movieInfo);
+        movieElement.data('film-id', movie.filmId);
 
-                    // Append movie element to container
-                    actorMoviesContainer.append(movieElement);
+        // Append movie element to container
+        actorMoviesContainer.append(movieElement);
 
-                    // Add the movie name to the set
-                    uniqueMovieNames.add(movie.nameRu);
-                }
-            });
-
+        // Add the movie name to the set
+        uniqueMovieNames.add(movie.nameRu);
+    }
+});
     // Add click event handler for clickable movie elements
-    $('.clickable-movie').on('click', function () {
-        const filmId = $(this).data('film-id');
-        // Navigate back to index.html with the filmId in the view field
-        window.location.href = `index.html?=${filmId}`;
-    });
+$('.clickable-movie').on('click', function () {
+    const filmId = $(this).data('film-id');
+    // Navigate back to index.html with the filmId in the view field
+    window.location.href = `index.html?=${filmId}`;
+});
 }
         
     </script>
