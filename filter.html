@@ -16,7 +16,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
+
       margin-top: 20px;
     }
 
@@ -61,7 +61,7 @@
     }
     #optionsContainer {
       display: flex;
-      flex-wrap: wrap;
+
       justify-content: baseline;
       margin-top: 20px;
     }
@@ -84,7 +84,7 @@
 }
   </style>
 </head>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
 <body>
   <div id="optionsContainer">
     <label for="countries">countries:</label>
@@ -250,8 +250,8 @@
           var movieHtml = '<div class="movie">';
           movieHtml += '<a href="index.html?=' + movie.kinopoiskId + '">';
           movieHtml += '<img src="' + movie.posterUrl + '" alt="Movie Poster">';
-          movieHtml += '<h2 class="movie-title">' + (movie.nameRu || movie.nameEn) + '</h3>';
-          movieHtml += '<p> ' + movie.year + ' | ' + movie.ratingKinopoisk + '</p>';
+          movieHtml += '<h3 class="movie-title">' + (movie.nameRu || movie.nameEn) + '</h3>';
+         
           movieHtml += '</div>';
 
           resultsContainer.innerHTML += movieHtml;
