@@ -135,7 +135,36 @@
     text-decoration: none;
     color: rgb(12, 196, 95); /* Link color */
 }
+.movie {
+  margin: 10px;
+  padding: 10px;
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 150px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 
+.movie:hover {
+  transform: scale(1.05); /* Increase the size on hover */
+  box-shadow: 0 0 15px rgb(238, 207, 29); /* Add glow effect on hover */
+}
+.actor {
+  margin: 10px;
+  padding: 10px;
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 150px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.actor:hover {
+  transform: scale(1.05); /* Increase the size on hover */
+  box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
+}
     </style>
 </head>
 
@@ -147,7 +176,7 @@
     <input type="text" id="searchInput" placeholder="search by keywords" inputmode="text">
     <button onclick="searchMovies()">search</button>
     <button onclick="window.location.href='./filter.html'">filter</button>
-    <button onclick="window.location.href='./actor_movies.html'">search by actor</button>
+    <button onclick="window.location.href='./actor_movies.html'">actors</button>
     <button onclick="getRandomMovie()">random</button> 
     <div id="detailedFilmName"></div>
     <div id="movieContainer"></div>
@@ -465,7 +494,6 @@ function searchMovies() {
     });
 }
 
-// Function to check iframeUrl validity on the external site
 // Function to check iframeUrl validity on the external site
 function checkIframeUrlValidity(filmId) {
     const iframeUrlApiUrl = `https://w3w.kpfr.cc/kinobox/index.php?kinopoisk=${filmId}`;
