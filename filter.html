@@ -113,20 +113,7 @@
       <option value="">select genre</option>
     </select>
 
-    <label for="ratingFrom"></label>
-    <select id="ratingFrom">
-      <option value="">select rating from</option>
-      <option value="10">10</option>
-      <option value="9">9</option>
-      <option value="8">8</option>
-      <option value="7">7</option>
-      <option value="6">6</option>
-      <option value="5">5</option>
-      <option value="4">4</option>
-      <option value="3">3</option>
-      <option value="2">2</option>
-      <option value="1">1</option>
-    </select>
+
 
     <label for="yearFrom"></label>
     <select id="yearFrom">
@@ -197,7 +184,6 @@
   currentPage = 1;
   var countries = document.getElementById('countries').value;
   var genres = document.getElementById('genres').value;
-  var ratingFrom = document.getElementById('ratingFrom').value;
   var yearFrom = document.getElementById('yearFrom').value;
   var yearTo = document.getElementById('yearTo').value;
   var resultsContainer = document.getElementById('results');
@@ -213,7 +199,7 @@
       'genres': genres,
       'order': 'NUM_VOTE',
       'type': 'ALL',
-      'ratingFrom': ratingFrom,
+      'ratingFrom': 1,
       'ratingTo': 10,
       'yearFrom': yearFrom,
       'yearTo': yearTo,
@@ -228,7 +214,6 @@ function loadMore() {
   currentPage++;
   var countries = document.getElementById('countries').value;
   var genres = document.getElementById('genres').value;
-  var ratingFrom = document.getElementById('ratingFrom').value;
   var yearFrom = document.getElementById('yearFrom').value;
   var yearTo = document.getElementById('yearTo').value;
   $.ajax({
@@ -242,7 +227,7 @@ function loadMore() {
       'genres': genres,
       'order': 'NUM_VOTE',
       'type': 'ALL',
-      'ratingFrom': ratingFrom,
+      'ratingFrom': 1,
       'ratingTo': 10,
       'yearFrom': yearFrom,
       'yearTo': yearTo,
