@@ -63,7 +63,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: baseline;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     #optionsContainer label {
@@ -82,22 +82,24 @@
 .movie a:visited {
   color: rgb(12, 196, 95);
 }
+
   </style>
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
 <body>
   <div id="optionsContainer">
-    <label for="countries">countries:</label>
+    <label for="countries"></label>
     <select id="countries">
       <option value="">select country</option>
     </select>
 
-    <label for="genres">genres:</label>
+    <label for="genres"></label>
     <select id="genres">
       <option value="">select genre</option>
     </select>
 
-    <label for="ratingFrom">rating from:</label>
+    <label for="ratingFrom"></label>
     <select id="ratingFrom">
       <option value="">select rating from</option>
       <option value="10">10</option>
@@ -112,13 +114,13 @@
       <option value="1">1</option>
     </select>
 
-    <label for="yearFrom">year from:</label>
+    <label for="yearFrom"></label>
     <select id="yearFrom">
       <option value="">select year from</option>
 
     </select>
 
-    <label for="yearTo">year to:</label>
+    <label for="yearTo"></label>
     <select id="yearTo">
       <option value="">select year to</option>
 
@@ -129,7 +131,7 @@
 
   <div id="results"></div>
   
-  <div id="loadMoreContainer">
+  <div id="loadMoreContainer"> 
     <button id="loadMore" onclick="loadMore()">load more</button>
   </div>
 
@@ -150,7 +152,7 @@
       yeartoDropdown.add(option);
     }
     var currentPage = 1;
-    var loadMoreContainer = document.getElementById('loadMoreContainer');
+    var loadMoreContainer = document.getElementById('loadMoreContainer'); // Corrected ID to match the HTML
 
     // Load countries and genres from JSON file
     fetch('data.json') // Replace with the actual path
@@ -177,95 +179,130 @@
         
       });
 
-    function searchMovies() {
-      currentPage = 1;
-      var countries = document.getElementById('countries').value;
-      var genres = document.getElementById('genres').value;
-      var ratingFrom = document.getElementById('ratingFrom').value;
-      var yearFrom = document.getElementById('yearFrom').value;
-      var yearTo = document.getElementById('yearTo').value;
-      var resultsContainer = document.getElementById('results');
-      resultsContainer.innerHTML = '';
-      $.ajax({
-        url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
-        crossDomain: true,
-        headers: {
-          'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
-        },
-        data: {
-          'countries': countries,
-          'genres': genres,
-          'order': 'NUM_VOTE',
-          'type': 'ALL',
-          'ratingFrom': ratingFrom,
-          'ratingTo': 10,
-          'yearFrom': yearFrom,
-          'yearTo': yearTo,
-          'page': currentPage
-        }
-      }).done(function(response) {
-        displayResults(response);
-      });
+      function searchMovies() {
+  currentPage = 1;
+  var countries = document.getElementById('countries').value;
+  var genres = document.getElementById('genres').value;
+  var ratingFrom = document.getElementById('ratingFrom').value;
+  var yearFrom = document.getElementById('yearFrom').value;
+  var yearTo = document.getElementById('yearTo').value;
+  var resultsContainer = document.getElementById('results');
+  resultsContainer.innerHTML = '';
+  $.ajax({
+    url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
+    crossDomain: true,
+    headers: {
+      'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
+    },
+    data: {
+      'countries': countries,
+      'genres': genres,
+      'order': 'NUM_VOTE',
+      'type': 'ALL',
+      'ratingFrom': ratingFrom,
+      'ratingTo': 10,
+      'yearFrom': yearFrom,
+      'yearTo': yearTo,
+      'page': currentPage
     }
+  }).done(async function(response) {
+    await displayResultsWithIframeCheck(response);
+  });
+}
 
-    function loadMore() {
-      currentPage++;
-      var countries = document.getElementById('countries').value;
-      var genres = document.getElementById('genres').value;
-      var ratingFrom = document.getElementById('ratingFrom').value;
-      var yearFrom = document.getElementById('yearFrom').value;
-      var yearTo = document.getElementById('yearTo').value;
-      $.ajax({
-        url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
-        crossDomain: true,
-        headers: {
-          'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
-        },
-        data: {
-          'countries': countries,
-          'genres': genres,
-          'order': 'NUM_VOTE',
-          'type': 'ALL',
-          'ratingFrom': ratingFrom,
-          'ratingTo': 10,
-          'yearFrom': yearFrom,
-          'yearTo': yearTo,
-          'page': currentPage
-        }
-      }).done(function(response) {
-        displayResults(response);
-      });
+function loadMore() {
+  currentPage++;
+  var countries = document.getElementById('countries').value;
+  var genres = document.getElementById('genres').value;
+  var ratingFrom = document.getElementById('ratingFrom').value;
+  var yearFrom = document.getElementById('yearFrom').value;
+  var yearTo = document.getElementById('yearTo').value;
+  $.ajax({
+    url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
+    crossDomain: true,
+    headers: {
+      'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
+    },
+    data: {
+      'countries': countries,
+      'genres': genres,
+      'order': 'NUM_VOTE',
+      'type': 'ALL',
+      'ratingFrom': ratingFrom,
+      'ratingTo': 10,
+      'yearFrom': yearFrom,
+      'yearTo': yearTo,
+      'page': currentPage
     }
+  }).done(async function(response) {
+    await displayResultsWithIframeCheck(response);
+  });
+}
 
-    function displayResults(response) {
-      var resultsContainer = document.getElementById('results');
-      var loadMoreButton = document.getElementById('loadMore');
+async function displayResultsWithIframeCheck(response) {
+  var resultsContainer = document.getElementById('results');
+  var loadMoreContainer = document.getElementById('loadMoreContainer'); // Corrected ID to match the HTML
+  var loadMoreButton = document.getElementById('loadMore'); // Corrected ID to match the HTML
 
-      if (response && response.items && response.items.length > 0) {
-        response.items.forEach(function(movie) {
-          if (!movie.nameRu || movie.ratingKinopoisk === null) {
-            return;
-          }
+  if (response && response.items && response.items.length > 0) {
+    var moviesWithValidIframe = await Promise.all(
+      response.items.map(async function (movie) {
+        if (!movie.nameRu || movie.ratingKinopoisk === null) {
+          return null; // Skip invalid movies
+        }
 
+        var hasValidIframe = await checkIframeUrl(movie.kinopoiskId);
+
+        if (hasValidIframe) {
           var movieHtml = '<div class="movie">';
           movieHtml += '<a href="index.html?=' + movie.kinopoiskId + '">';
           movieHtml += '<img src="' + movie.posterUrl + '" alt="Movie Poster">';
           movieHtml += '<h3 class="movie-title">' + (movie.nameRu || movie.nameEn) + '</h3>';
-         
           movieHtml += '</div>';
 
           resultsContainer.innerHTML += movieHtml;
-        });
+          return movie;
+        } else {
+          return null; // Skip movies with null iframeUrl
+        }
+      })
+    );
 
-        loadMoreContainer.style.display = 'block';
-      } else {
-        loadMoreContainer.style.display = 'none';
-      }
+    // Filter out null entries (movies with invalid data)
+    var validMovies = moviesWithValidIframe.filter(movie => movie !== null);
+
+    if (validMovies.length > 0) {
+      loadMoreContainer.style.display = 'block';
+    } else {
+      loadMoreContainer.style.display = 'none';
     }
+  } else {
+    loadMoreContainer.style.display = 'none';
+  }
+}
+
+
+// Function to check iframeUrl for a movie
+async function checkIframeUrl(filmId) {
+  const iframeUrlApiUrl = `https://w3w.kpfr.cc/kinobox/index.php?kinopoisk=${filmId}`;
+
+  try {
+    const iframeUrlResponse = await $.ajax({
+      url: iframeUrlApiUrl,
+      async: true,
+    });
+
+    // Check if iframeUrl is not null
+    return iframeUrlResponse.data[0].iframeUrl !== null;
+  } catch (error) {
+    console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
+    return false;
+  }
+}
+
 
 
   </script>
 
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </body>
 </html>
