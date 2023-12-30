@@ -20,21 +20,35 @@
             display: none;
         }
         .clickable-actor,
-.clickable-movie {
-    text-decoration: none;
-    color: rgb(238, 207, 29); /* Link color */
-    cursor: pointer;
-}
+    .clickable-movie {
+        text-decoration: none;
+        color: rgb(238, 207, 29); /* Link color */
+        cursor: pointer;
+    }
 
-.clickable-actor:hover,
-.clickable-movie:hover {
-    color: #fff; /* Change link color on hover if needed */
-}
+    .clickable-actor:hover{
+        color: #fff; /* Change link color on hover if needed */
+    }
+
+    .movie-link:hover {
+        color: #fff; /* Change link color on hover if needed */
+    }
+
+        .movie-link {
+        text-decoration: none;
+        color: rgb(238, 207, 29); /* Link color */
+        cursor: pointer;
+        text-decoration: none; 
+        color: rgb(238, 207, 29); 
+        transform: scale(1.05); /* Increase the size on hover */
+    box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
+    }
+    
     </style>
 </head>
 
 <body>
-    <h1 id="actorName"></h1>
+    <h3 id="actorName"></h3>
     <input type="text" id="searchBar" placeholder="enter actor name">
     <div id="loadingMessage">loading...</div>
     <div id="actorMoviesContainer"></div>
@@ -146,7 +160,6 @@ async function fetchAndDisplayActorDetails(staffId) {
             }
         }
 
-        // Function to search for actors
 // Function to search for actors
 function searchActor(actorName) {
     // Show loading message
@@ -253,24 +266,36 @@ $('body').on('click', '.clickable-actor', function () {
             reversedMovies.forEach(function (movie) {
     // Check if the movie name is not a duplicate
     if (!uniqueMovieNames.has(movie.nameRu)) {
-        // Create a clickable element for each movie
-        const movieElement = $('<div>').addClass('clickable-movie');
-        const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.description}`).addClass('movie-info');
-        movieElement.append(movieInfo);
-        movieElement.data('film-id', movie.filmId);
+    // Create a clickable element for each movie
+    const movieElement = $('<div>').addClass('clickable-movie');
+    
+    // Create a link element
+    const movieLink = $('<a>').attr('href', `./index.html?=${movie.filmId}`).addClass('movie-link');
 
-        // Append movie element to container
-        actorMoviesContainer.append(movieElement);
+    // Create a div for movie info and append it to the link
+    const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.description}`).addClass('movie-info');
+    movieLink.append(movieInfo);
 
-        // Add the movie name to the set
-        uniqueMovieNames.add(movie.nameRu);
-    }
+    // Append the link to the movie element
+    movieElement.append(movieLink);
+    movieElement.data('film-id', movie.filmId);
+
+    // Append movie element to container
+    actorMoviesContainer.append(movieElement);
+
+    // Add the movie name to the set
+    uniqueMovieNames.add(movie.nameRu);
+}
 });
     // Add click event handler for clickable movie elements
-$('.clickable-movie').on('click', function () {
+    $('.clickable-movie').on('click', function (event) {
     const filmId = $(this).data('film-id');
-    // Navigate back to index.html with the filmId in the view field
-    window.location.href = `index.html?=${filmId}`;
+    
+    // Prevent the default behavior to stop the normal navigation
+    event.preventDefault();
+
+    // Open the link in a new tab
+    window.open(`index.html?=${filmId}`, '_blank');
 });
 }
         
