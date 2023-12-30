@@ -165,6 +165,19 @@
   transform: scale(1.05); /* Increase the size on hover */
   box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
 }
+#movieIdInput {
+    display: none; /* or visibility: hidden; */
+}
+#searchInput {
+    width: 100px; /* Set your desired width */
+    height: 20px; /* Set your desired height */
+    font-size: 14px; /* Set your desired font size */
+}
+
+/* Optional: Add some padding for better visual appearance */
+#searchInput {
+    padding: 5px;
+}
     </style>
 </head>
 
@@ -172,8 +185,8 @@
     
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
-    <button onclick="getMovieData()">view</button>
-    <input type="text" id="searchInput" placeholder="search by keywords" inputmode="text">
+
+    <input type="text" id="searchInput" placeholder="id / keywords" inputmode="text">
     <button onclick="searchMovies()">search</button>
     <button onclick="window.location.href='./filter.html'">filter</button>
     <button onclick="window.location.href='./actor_movies.html'">actors</button>
@@ -428,14 +441,34 @@ function displaySimilarMovies(items) {
 }
 
 function handleUrlChange() {
-    loadMovieFromURL();
-}
+        const movieIdFromURL = getParameterByName(''); // Modify this to get the correct parameter name
+        if (movieIdFromURL) {
+            // Update the movie ID/keywords input field
+            $('#searchInput').val(movieIdFromURL);
+            // Trigger the search function
+            searchMovies();
+        }
+    }
 
-// Call the function on initial page load
-handleUrlChange();
+    // Call the function on initial page load
+    handleUrlChange();
 
-// Call the function when the URL changes
-$(window).on('popstate', handleUrlChange);
+    // Call the function when the URL changes
+    $(window).on('popstate', handleUrlChange);
+
+    // Your existing JavaScript code
+
+    // Function to get parameter value from the URL
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
 // Add click event listener to the posterElement
 function getRandomMovie() {
 // Load movie IDs from the JSON file
@@ -460,38 +493,52 @@ $(document).on('click', '.actor', function() {
     const staffId = $(this).data('staff-id');
     window.location.href = `actor_movies.html?staffId=${staffId}`;
 });
-
 function searchMovies() {
     clearMovieDetails();
 
     const searchQuery = $('#searchInput').val();
 
-    // Make a request to search films by keyword
-    $.ajax({
-        url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
-        data: {
-            keyword: searchQuery,
-            page: '1',
-        },
-        headers: {
-            'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-        },
-        success: function (response) {
-            // Use Promise.all to wait for all requests to complete
-            const promises = response.films.map(movie => checkIframeUrlValidity(movie.filmId));
-            
-            Promise.all(promises)
-                .then(results => {
-                    // Filter movies with valid iframeUrl
-                    const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
-                    displaySearchResults(moviesWithValidIframe);
-                })
-                .catch(error => console.error('Error fetching iframeUrl data:', error));
-        },
-        error: function (error) {
-            console.error('Error fetching search results:', error);
-        }
-    });
+    // Check if the input is a number
+    if (!isNaN(searchQuery)) {
+        // If it's a number, search by ID
+        $('#movieIdInput').val(searchQuery);
+        getMovieData();
+    } else {
+        // If it's not a number, search by keywords
+
+        // Use history.pushState to update the URL without triggering a page reload
+        const newUrl = `?search=${encodeURIComponent(searchQuery)}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+
+        $('#movieBlok').empty();
+
+        // Make a request to search films by keyword
+        $.ajax({
+            url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
+            data: {
+                keyword: searchQuery,
+                page: '1',
+            },
+            headers: {
+                'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+            },
+            success: function (response) {
+                // Use Promise.all to wait for all requests to complete
+                const promises = response.films.map(movie => checkIframeUrlValidity(movie.filmId));
+
+                Promise.all(promises)
+                    .then(results => {
+                        // Filter movies with valid iframeUrl
+                        const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
+                        displaySearchResults(moviesWithValidIframe);
+                    })
+                    .catch(error => console.error('Error fetching iframeUrl data:', error));
+            },
+            error: function (error) {
+                console.error('Error fetching search results:', error);
+            }
+        });
+    }
 }
 
 // Function to check iframeUrl validity on the external site
@@ -554,7 +601,14 @@ function displaySearchResults(films) {
         movieBlok.append(movieLink);
     });
 }
+function handleEnterKey(event) {
+        if (event.key === 'Enter') {
+            searchMovies();
+        }
+    }
 
+    // Bind event listener to the input field
+    $('#searchInput').on('keypress', handleEnterKey);
     </script>
 </body>
 
