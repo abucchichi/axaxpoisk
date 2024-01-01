@@ -178,6 +178,10 @@
 #searchInput {
     padding: 5px;
 }
+.hideable {
+    
+            display: block; /* You can use inline, inline-block, flex, etc. based on your layout */
+        }
     </style>
 </head>
 
@@ -191,19 +195,27 @@
     <a href="./filter.html"><button>filter</button></a>
     <a href="./actor_movies.html"><button>actors</button></a>
     <button onclick="getRandomMovie()">random</button> 
-    <div id="detailedFilmName"></div>
+    <button id="toggleButton" onclick="toggleElements()">-</button>
+    <div class = 'hideable' id="detailedFilmName"></div>
     <div id="movieContainer"></div>
-    <div id="year"></div>
-    <br><div id="shortdescription"></div></br>
-    <div id="description"></div>
-   <br> <div id="slogan"></div></br>
-   <div id="movieBlok"></div>
-   <div id="actorsContainer" style="float: left; padding: 10px;"></div>
+    <div class = 'hideable' id="year"></div>
+    <br><div class = 'hideable' id="shortdescription"></div></br>
+    <div class = 'hideable' id="description"></div>
+   <br> <div class = 'hideable' id="slogan"></div></br>
+   <div class = 'hideable' id="movieBlok"></div>
+   <div class = 'hideable' id="actorsContainer" style="float: left; padding: 10px;"></div>
     <script>
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
+            getSimilarMovies(movieId);
             // Load movie from URL when the page loads
             loadMovieFromURL();
+            $(document).on('click', '.similar-movie-link', function (event) {
+        event.preventDefault();
+        const movieId = $(this).data('movie-id');
+        // Handle similar movie click
+        handleSimilarMovieClick(movieId);
+    });
         });
 
         function loadMovieFromURL() {
@@ -390,9 +402,6 @@ function displayshortdescription(shortdescription) {
     }
 }
 
-        $(document).ready(function () {
-            getSimilarMovies();
-        });
         function getSimilarMovies(movieId) {
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
 
@@ -606,9 +615,19 @@ function handleEnterKey(event) {
             searchMovies();
         }
     }
-
+    function handleSimilarMovieClick(movieId) {
+    clearMovieDetails();
+    // Call functions to get and display movie data
+    getMovieData(movieId);
+    getSimilarMovies(movieId);
+    // Add other necessary logic
+}
     // Bind event listener to the input field
     $('#searchInput').on('keypress', handleEnterKey);
+    function toggleElements() {
+            // Toggle visibility of all elements with class .hideable
+            $('.hideable').not('.toggleButton').toggle();
+        }
     </script>
 </body>
 
