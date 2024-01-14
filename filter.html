@@ -45,20 +45,7 @@
       color: rgb(238, 207, 29);
     }
 
-    #loadMoreContainer {
-      text-align: center;
-      margin-top: 20px;
-      display: none; /* Initially hide the container */
-    }
 
-    #loadMore {
-      padding: 10px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
     #optionsContainer {
       display: flex;
       flex-wrap: wrap;
@@ -132,9 +119,7 @@
 
   <div id="results"></div>
   
-  <div id="loadMoreContainer"> 
-    <button id="loadMore" onclick="loadMore()">load more</button>
-  </div>
+
 
   <script>
     
@@ -153,7 +138,7 @@
       yeartoDropdown.add(option);
     }
     var currentPage = 1;
-    var loadMoreContainer = document.getElementById('loadMoreContainer'); // Corrected ID to match the HTML
+
 
     // Load countries and genres from JSON file
     fetch('data.json') // Replace with the actual path
@@ -188,6 +173,25 @@
   var yearTo = document.getElementById('yearTo').value;
   var resultsContainer = document.getElementById('results');
   resultsContainer.innerHTML = '';
+
+  // Define the number of pages you want to load
+  var numberOfPagesToLoad = 5;
+
+  // Load the first page immediately
+  fetchAndDisplayResults(countries, genres, yearFrom, yearTo, currentPage);
+
+  // Use a timer to load subsequent pages
+  var loadMoreTimer = setInterval(function () {
+    currentPage++;
+    if (currentPage <= numberOfPagesToLoad) {
+      fetchAndDisplayResults(countries, genres, yearFrom, yearTo, currentPage);
+    } else {
+      clearInterval(loadMoreTimer); // Stop the timer when all pages are loaded
+    }
+  }, 1000); // Adjust the interval as needed
+}
+
+function fetchAndDisplayResults(countries, genres, yearFrom, yearTo, page) {
   $.ajax({
     url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
     crossDomain: true,
@@ -203,45 +207,20 @@
       'ratingTo': 10,
       'yearFrom': yearFrom,
       'yearTo': yearTo,
-      'page': currentPage
+      'page': page
     }
-  }).done(async function(response) {
-    await displayResultsWithIframeCheck(response);
+  }).done(function(response) {
+    displayResultsWithIframeCheck(response);
   });
 }
 
-function loadMore() {
-  currentPage++;
-  var countries = document.getElementById('countries').value;
-  var genres = document.getElementById('genres').value;
-  var yearFrom = document.getElementById('yearFrom').value;
-  var yearTo = document.getElementById('yearTo').value;
-  $.ajax({
-    url: 'https://kinopoiskapiunofficial.tech/api/v2.2/films',
-    crossDomain: true,
-    headers: {
-      'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67'
-    },
-    data: {
-      'countries': countries,
-      'genres': genres,
-      'order': 'NUM_VOTE',
-      'type': 'ALL',
-      'ratingFrom': 1,
-      'ratingTo': 10,
-      'yearFrom': yearFrom,
-      'yearTo': yearTo,
-      'page': currentPage
-    }
-  }).done(async function(response) {
-    await displayResultsWithIframeCheck(response);
-  });
-}
+// Keep the loadMore function as is since it will handle subsequent "Load More" clicks if needed
+
+
 
 async function displayResultsWithIframeCheck(response) {
   var resultsContainer = document.getElementById('results');
-  var loadMoreContainer = document.getElementById('loadMoreContainer'); // Corrected ID to match the HTML
-  var loadMoreButton = document.getElementById('loadMore'); // Corrected ID to match the HTML
+
 
   if (response && response.items && response.items.length > 0) {
     var moviesWithValidIframe = await Promise.all(
