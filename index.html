@@ -295,7 +295,7 @@
     // window.location.href = newUrl;  // Uncomment this line if you want to reload the page
 
     $.ajax({
-        url: 'https://w1.kpfr.space/kinobox/index.php',
+        url: 'https://w1.kpfr.wiki/kinobox/index.php',
         crossDomain: true,
         data: {
             'kinopoisk': movieIdValue
@@ -552,7 +552,7 @@ function searchMovies() {
 
 // Function to check iframeUrl validity on the external site
 function checkIframeUrlValidity(filmId) {
-    const iframeUrlApiUrl = `https://w1.kpfr.space/kinobox/index.php?kinopoisk=${filmId}`;
+    const iframeUrlApiUrl = `https://w1.kpfr.wiki/kinobox/index.php?kinopoisk=${filmId}`;
 
     return new Promise((resolve, reject) => {
         $.ajax({
