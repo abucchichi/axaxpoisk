@@ -1,3 +1,4 @@
+<script src="central.js"></script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,14 +125,14 @@
   <script>
     
         var yearDropdown = document.getElementById('yearFrom');
-    for (var year = 2024; year >= 1900; year--) {
+    for (var year = 2023; year >= 1900; year--) {
       var option = document.createElement('option');
       option.value = year;
       option.text = year;
       yearDropdown.add(option);
     }
     var yeartoDropdown = document.getElementById('yearTo');
-    for (var year = 2024; year >= 1900; year--) {
+    for (var year = 2023; year >= 1900; year--) {
       var option = document.createElement('option');
       option.value = year;
       option.text = year;
@@ -262,7 +263,7 @@ async function displayResultsWithIframeCheck(response) {
 
 // Function to check iframeUrl for a movie
 async function checkIframeUrl(filmId) {
-  const iframeUrlApiUrl = `https://w1.kpfr.wiki/kinobox/index.php?kinopoisk=${filmId}`;
+  const iframeUrlApiUrl = `https://${myLink}/kinobox/index.php?kinopoisk=${filmId}`;
 
   try {
     const iframeUrlResponse = await $.ajax({
