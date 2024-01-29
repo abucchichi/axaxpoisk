@@ -144,7 +144,7 @@ async function fetchAndDisplayActorDetails(staffId) {
 
         // Function to check iframeUrl for a movie
         async function checkIframeUrl(filmId) {
-            const iframeUrlApiUrl = `https://w1.kpfr.space/kinobox/index.php?kinopoisk=${filmId}`;
+            const iframeUrlApiUrl = `https://w1.kpfr.wiki/kinobox/index.php?kinopoisk=${filmId}`;
 
             try {
                 const iframeUrlResponse = await $.ajax({
