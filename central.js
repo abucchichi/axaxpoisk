@@ -1,1 +1,1 @@
-var myLink = "api.linktodo.ws";
+var myLink = "w2.kpfr.wiki";
