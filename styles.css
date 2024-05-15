@@ -1,0 +1,173 @@
+
+        .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 999;
+            max-width: 200px;
+        }
+    body {
+        background-color: black;
+        color: rgb(204, 123, 17);
+        margin: 0;
+        font-family: Arial, sans-serif;
+
+    }
+
+    #movieContainer {
+        max-width: 100%; 
+    }
+
+    #filmName {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    #detailedFilmName {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+        #detailedFilmName {
+            font-size: 24px;
+            font-weight: bold;
+            font-style: inherit;
+        }
+        #description {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(217, 231, 19);
+        }
+        #shortdescription {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(24, 209, 169);
+        }
+        #year {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(228, 12, 12)
+        }
+        #slogan {
+            font-size: 18px;
+            font-style: inherit;
+            max-width: 600;
+            color: rgb(21, 206, 36)
+        }
+
+
+        #movieBlok {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content:baseline;
+        }
+
+        .movie {
+            margin: 10px;
+            padding: 10px;
+            background-color: #000000;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            
+        }
+
+        .movie img {
+            max-width: 100px;
+            height: 150px;
+            border-radius: 5px;
+        }
+        
+        .movie p {
+            margin: 10px 0 0;
+        }
+        .movie-link {
+        text-decoration: none; 
+        color: rgb(238, 207, 29); 
+
+    }
+    #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #actorsContainer {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    justify-content: baseline;
+    margin-top: 20px;
+}
+
+.actor {
+    margin: 10px;
+    padding: 10px;
+    background-color: #000000;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 150px;
+}
+
+.actor img {
+    max-width: 100px;
+    height: 150px;
+    border-radius: 5px;
+}
+.actor-link {
+    text-decoration: none;
+    color: rgb(12, 196, 95); /* Link color */
+}
+.movie {
+  margin: 10px;
+  padding: 10px;
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 150px;
+
+}
+
+.movie:hover {
+  transform: scale(1.05); /* Increase the size on hover */
+  box-shadow: 0 0 15px rgb(238, 207, 29); /* Add glow effect on hover */
+}
+.actor {
+  margin: 10px;
+  padding: 10px;
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 150px;
+
+}
+
+.actor:hover {
+  transform: scale(1.05); /* Increase the size on hover */
+  box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
+}
+#movieIdInput {
+    display: none; /* or visibility: hidden; */
+}
+#searchInput {
+    width: 100px; /* Set your desired width */
+    height: 20px; /* Set your desired height */
+    font-size: 14px; /* Set your desired font size */
+}
+
+/* Optional: Add some padding for better visual appearance */
+#searchInput {
+    padding: 5px;
+}
+.hideable {
+    
+            display: block; /* You can use inline, inline-block, flex, etc. based on your layout */
+        }
