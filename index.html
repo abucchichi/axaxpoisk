@@ -1,4 +1,3 @@
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="central.js"></script>
 <!DOCTYPE html>
@@ -17,9 +16,10 @@
     
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
-
+    
     <input type="text" id="searchInput" placeholder="id / keywords" inputmode="text">
     <button onclick="searchMovies()">search</button>
+    
     <a href="./filter.html"><button>filter</button></a>
     <a href="./actor_movies.html"><button>actors</button></a>
     <button onclick="getRandomMovie()">random</button> 
@@ -137,7 +137,7 @@
             const movieId = extractMovieId(iframeUrl);
             const filmName = response.data[0].nameRu;
 
-            viewMovie(movieId);
+            viewMovie(movieId,iframeUrl);
             displayFilmName(filmName);
             getMovieDetails(movieIdValue);
             getSimilarMovies(movieIdValue);
@@ -150,11 +150,13 @@
 
         function extractMovieId(iframeUrl) {
             const urlParts = iframeUrl.split('/');
+            console.log('url=====',iframeUrl)
             return urlParts[urlParts.length - 1];
         }
 
-        function viewMovie(movieId) {
-            const iframeUrl = `https://theatre.algonoew.online:9493/${movieId}`;
+        function viewMovie(movieId,iframeUrl) {
+           // const iframeUrl = `https://theatre.algonoew.online:9493/${movieId}`;
+            console.log('iframe======',iframeUrl)
             const iframe = `<iframe src="${iframeUrl}" width="600" height="450" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
         }
