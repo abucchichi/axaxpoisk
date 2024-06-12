@@ -10,7 +10,7 @@
         }
     body {
         background-color: black;
-        color: rgb(204, 123, 17);
+        color: #afeeee;
         margin: 0;
         font-family: Arial, sans-serif;
 
@@ -27,7 +27,37 @@
     }
 
     #detailedFilmName {
-        font-size: 18px;
+        font-size: 18px;button {
+            background-color: #afeeee; /* Green background */
+            border: none; /* Remove border */
+            color: white; /* White text */
+            padding: 15px 32px; /* Some padding */
+            text-align: center; /* Centered text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make the buttons appear inline */
+            font-size: 16px; /* Increase font size */
+            margin: 4px 2px; /* Some margin */
+            transition-duration: 0.4s; /* Animation duration */
+            cursor: pointer; /* Pointer/hand icon */
+            border-radius: 12px; /* Rounded corners */
+        }
+        
+        button:hover {
+            background-color: white; /* White background on hover */
+            color: black; /* Black text on hover */
+            border: 2px solid #4CAF50; /* Green border on hover */
+        }
+        
+        button:active {
+            background-color: #45a049; /* Darker green on click */
+            color: white;
+        }
+        
+        a button {
+            display: block; /* Make sure buttons inside <a> tags are block level */
+            width: 100%; /* Full width */
+        }
+        
         margin-bottom: 10px;
     }
 
@@ -40,13 +70,13 @@
             font-size: 18px;
             font-style: inherit;
             max-width: 600;
-            color: rgb(217, 231, 19);
+            color: #689696;
         }
         #shortdescription {
             font-size: 18px;
             font-style: inherit;
             max-width: 600;
-            color: rgb(24, 209, 169);
+            color: #afeeee;
         }
         #year {
             font-size: 18px;
@@ -58,7 +88,7 @@
             font-size: 18px;
             font-style: inherit;
             max-width: 600;
-            color: rgb(21, 206, 36)
+            color: #3b6161
         }
 
 
@@ -89,7 +119,7 @@
         }
         .movie-link {
         text-decoration: none; 
-        color: rgb(238, 207, 29); 
+        color: #4bc3c3; 
 
     }
     #container {
@@ -122,7 +152,7 @@
 }
 .actor-link {
     text-decoration: none;
-    color: rgb(12, 196, 95); /* Link color */
+    color: #598c8c; /* Link color */
 }
 .movie {
   margin: 10px;
@@ -137,7 +167,7 @@
 
 .movie:hover {
   transform: scale(1.05); /* Increase the size on hover */
-  box-shadow: 0 0 15px rgb(238, 207, 29); /* Add glow effect on hover */
+  box-shadow: 0 0 15px #afeeee; /* Add glow effect on hover */
 }
 .actor {
   margin: 10px;
@@ -152,17 +182,28 @@
 
 .actor:hover {
   transform: scale(1.05); /* Increase the size on hover */
-  box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
+  box-shadow: 0 0 15px #598c8c; /* Add glow effect on hover */
 }
 #movieIdInput {
     display: none; /* or visibility: hidden; */
 }
 #searchInput {
-    width: 100px; /* Set your desired width */
-    height: 20px; /* Set your desired height */
-    font-size: 14px; /* Set your desired font size */
-}
 
+        color: white;
+        border: 2px solid #afeeee;
+        border-radius: 10px;
+        padding: 10px 25px;
+        background: transparent;
+        height: 30px;
+        max-width: 150px;
+        margin-left: 2px;
+      
+
+      
+}
+#searchInput:active {
+    box-shadow: 2px 2px 55px #afeeee inset;
+  }
 /* Optional: Add some padding for better visual appearance */
 #searchInput {
     padding: 5px;
@@ -171,3 +212,76 @@
     
             display: block; /* You can use inline, inline-block, flex, etc. based on your layout */
         }
+
+
+.button {
+    color: #afeeee;
+    border: 2px solid #afeeee;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background: transparent;
+    height: 30px;
+
+    }
+    
+    .button:hover {
+    box-shadow: 2px 2px 55px #afeeee inset;
+    }
+    
+    .button:active {
+    box-shadow: 2px 2px 55px #afeeee inset;
+    }
+          
+    /* The switch - the box around the slider */
+.switch {
+    
+    margin-left: 5px;
+    font-size: 15px;
+    position: absolute;
+    display: inline-block;
+    width: 3.5em;
+    height: 30px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    --background: #000000;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--background);
+    transition: .5s;
+    border-radius: 10px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 1.4em;
+    width: 1.4em;
+    border-radius: 50%;
+    left: 10%;
+    bottom: 15%;
+    box-shadow: inset 8px -4px 0px 0px #fff000;
+    background: var(--background);
+    transition: .5s;
+  }
+  
+  input:checked + .slider {
+    background-color: #000000;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(100%);
+    box-shadow: inset 15px -4px 0px 15px #fff000;
+  }
