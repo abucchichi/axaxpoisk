@@ -1,7 +1,7 @@
 <script src="central.js"></script>
 <!DOCTYPE html>
 <html lang="ru">
-
+    <link rel="stylesheet" href="styles.css">
 <head>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
     <meta charset="UTF-8">
@@ -44,14 +44,49 @@
         transform: scale(1.05); /* Increase the size on hover */
     box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
     }
-    
+    #searchBar {
+
+background-color: #000000;
+max-width: 150px;
+height: 30px;
+padding: 10px;
+margin-left: 2px;
+color: rgb(0, 255, 255);
+/* text-align: center; */
+border: 2px solid #afeeee;
+border-radius: 10px;
+/* box-shadow: 3px 3px 2px rgb(249, 255, 85); */
+  
+
+  
+}
+
+
+#searchBar:focus {
+color: rgb(0, 255, 255);
+background-color: #000000;
+outline-color: rgb(0, 255, 255);
+box-shadow: -3px -3px 15px rgb(0, 255, 255);
+transition: .1s;
+transition-property: box-shadow;
+}
+
+/* Optional: Add some padding for better visual appearance */
+#searchBar {
+padding: 5px;
+}
     </style>
 </head>
 
 <body>
     <h3 id="actorName"></h3>
     <input type="text" id="searchBar" placeholder="enter actor name">
-    <div id="loadingMessage">loading...</div>
+    <div id="loadingMessage" class="spinner">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div></div>
     <div id="actorMoviesContainer"></div>
     <div id="searchResults"></div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
