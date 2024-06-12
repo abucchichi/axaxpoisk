@@ -18,13 +18,17 @@
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
     
     <input type="text" id="searchInput" placeholder="id / keywords" inputmode="text">
-    <button onclick="searchMovies()">search</button>
+    <button class="button" onclick="searchMovies()">search</button>
     
-    <a href="./filter.html"><button>filter</button></a>
-    <a href="./actor_movies.html"><button>actors</button></a>
-    <button onclick="getRandomMovie()">random</button> 
-    <button id="togglePlayerIDButton">player</button>
-    <button id="toggleButton" onclick="toggleElements()">-</button>
+    <a  href="./filter.html"><button class="button" >filter</button></a>
+    <a href="./actor_movies.html"><button class="button">actors</button></a>
+    <button class="button" onclick="getRandomMovie()">random</button> 
+    <button class="button" id="togglePlayerIDButton">player</button>
+    <label class="switch">
+        <input type="checkbox">
+        <span class="slider"onclick="toggleElements()"></span>
+    </label>
+
     <div id="loading" style="display: none; font-size: 24px; font-weight: bold; color:blueviolet">Loading...</div>
     <div class = 'hideable' id="detailedFilmName"></div>
     <div id="movieContainer"></div>
