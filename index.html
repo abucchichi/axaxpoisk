@@ -25,6 +25,7 @@
     <button onclick="getRandomMovie()">random</button> 
     <button id="togglePlayerIDButton">player</button>
     <button id="toggleButton" onclick="toggleElements()">-</button>
+    <div id="loading" style="display: none; font-size: 24px; font-weight: bold; color:blueviolet">Loading...</div>
     <div class = 'hideable' id="detailedFilmName"></div>
     <div id="movieContainer"></div>
     <div class = 'hideable' id="year"></div>
@@ -132,13 +133,13 @@ window.onload = function() {
         actorsContainer.append(actorLink);
     });
 }
-        function getMovieData() {
-            const movieIdValue = $('#movieIdInput').val();
+function getMovieData() {
+    const movieIdValue = $('#movieIdInput').val();
     const newUrl = `?=${movieIdValue}`;
-            
+    
     window.history.pushState({ path: newUrl }, '', newUrl);
 
-    $.ajax({
+    return $.ajax({
         url: `https://${myLink}/kinobox/index.php`,
         crossDomain: true,
         data: {
@@ -152,7 +153,7 @@ window.onload = function() {
             const movieId = extractMovieId(iframeUrl);
             const filmName = response.data[0].nameRu;
 
-            viewMovie(movieId,iframeUrl);
+            viewMovie(movieId, iframeUrl);
             displayFilmName(filmName);
             getMovieDetails(movieIdValue);
             getSimilarMovies(movieIdValue);
@@ -160,8 +161,13 @@ window.onload = function() {
         } else {
             console.error('No movie data found');
         }
+    }).fail((error) => {
+        console.error('Error fetching movie data:', error);
+    }).always(() => {
+        $('#loading').hide(); 
     });
 }
+
 
         function extractMovieId(iframeUrl) {
             const urlParts = iframeUrl.split('/');
@@ -333,15 +339,14 @@ $(document).on('click', '.actor', function() {
 });
 function searchMovies() {
     clearMovieDetails();
+    $('#loading').show();  
 
     const searchQuery = $('#searchInput').val();
 
     if (!isNaN(searchQuery)) {
-
         $('#movieIdInput').val(searchQuery);
-        getMovieData();
+        getMovieData().always(() => $('#loading').hide());  
     } else {
-
         const newUrl = `?search=${encodeURIComponent(searchQuery)}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
 
@@ -363,15 +368,21 @@ function searchMovies() {
                     .then(results => {
                         const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
                         displaySearchResults(moviesWithValidIframe);
+                        $('#loading').hide();  // Hide the loading indicator after processing
                     })
-                    .catch(error => console.error('Error fetching iframeUrl data:', error));
+                    .catch(error => {
+                        console.error('Error fetching iframeUrl data:', error);
+                        $('#loading').hide();  // Hide the loading indicator on error
+                    });
             },
             error: function (error) {
                 console.error('Error fetching search results:', error);
+                $('#loading').hide();  // Hide the loading indicator on error
             }
         });
     }
 }
+
 
 function checkIframeUrlValidity(filmId) {
     const iframeUrlApiUrl = `https://${myLink}/kinobox/index.php?kinopoisk=${filmId}`;
