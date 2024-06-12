@@ -23,6 +23,7 @@
     <a href="./filter.html"><button>filter</button></a>
     <a href="./actor_movies.html"><button>actors</button></a>
     <button onclick="getRandomMovie()">random</button> 
+    <button id="togglePlayerIDButton">player</button>
     <button id="toggleButton" onclick="toggleElements()">-</button>
     <div class = 'hideable' id="detailedFilmName"></div>
     <div id="movieContainer"></div>
@@ -33,16 +34,39 @@
    <div class = 'hideable' id="movieBlok"></div>
    <div class = 'hideable' id="actorsContainer" style="float: left; padding: 10px;"></div>
     <script>
-        
+var playerID = 0;
+
+
+function togglePlayerID() {
+    playerID = playerID === 0 ? 1 : 0;
+    console.log("playerID toggled to:", playerID);
+
+
+    localStorage.setItem('playerID', playerID);
+
+
+    location.reload();
+}
+
+
+document.getElementById("togglePlayerIDButton").addEventListener("click", togglePlayerID);
+
+
+window.onload = function() {
+    if (localStorage.getItem('playerID') !== null) {
+        playerID = parseInt(localStorage.getItem('playerID'));
+        console.log("playerID restored from localStorage:", playerID);
+    }
+}
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
             getSimilarMovies(movieId);
-            // Load movie from URL when the page loads
+
             loadMovieFromURL();
             $(document).on('click', '.similar-movie-link', function (event) {
         event.preventDefault();
         const movieId = $(this).data('movie-id');
-        // Handle similar movie click
+
         handleSimilarMovieClick(movieId);
     });
         });
@@ -86,10 +110,7 @@
         function displayMovieActors(actors) {
     const actorsContainer = $('#actorsContainer');
 
-    // Clear existing content in the actorsContainer
     actorsContainer.empty();
-
-    // Filter actors with the professionKey ACTOR
     const filteredActors = actors.filter(actor => actor.professionKey === 'ACTOR');
 
     filteredActors.slice(0, 10).forEach(function (actor) {
@@ -106,22 +127,16 @@
         const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
         const descriptionElement = $('<p>').text(description);
         
-        // Append elements to the container
         actorElement.append(posterElement, nameElement, descriptionElement);
         actorLink.append(actorElement);
         actorsContainer.append(actorLink);
     });
 }
-        // Call the function when the movie data is loaded
         function getMovieData() {
             const movieIdValue = $('#movieIdInput').val();
     const newUrl = `?=${movieIdValue}`;
             
-    // Update the URL without triggering a page reload
     window.history.pushState({ path: newUrl }, '', newUrl);
-
-    // Reload the page or trigger navigation to the new URL
-    // window.location.href = newUrl;  // Uncomment this line if you want to reload the page
 
     $.ajax({
         url: `https://${myLink}/kinobox/index.php`,
@@ -133,7 +148,7 @@
         console.log(response);
 
         if (response.data && response.data.length > 0) {
-            const iframeUrl = response.data[1].iframeUrl;
+            const iframeUrl = response.data[playerID].iframeUrl;
             const movieId = extractMovieId(iframeUrl);
             const filmName = response.data[0].nameRu;
 
@@ -155,7 +170,7 @@
         }
 
         function viewMovie(movieId,iframeUrl) {
-           // const iframeUrl = `https://theatre.algonoew.online:9493/${movieId}`;
+
             console.log('iframe======',iframeUrl)
             const iframe = `<iframe src="${iframeUrl}" width="600" height="450" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
@@ -193,7 +208,7 @@
     if (detailedFilmName !== null) {
         element.innerHTML = `${detailedFilmName}`;
     } else {
-        element.innerHTML = ''; // Set the content to an empty string
+        element.innerHTML = '';
     }
 }
 
@@ -262,18 +277,13 @@ function displaySimilarMovies(items) {
         const posterUrl = item.posterUrl;
         const filmId = item.filmId;
 
-        // Create an anchor element to wrap the image and text
         const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
 
-
-
-        // Create HTML elements to display movie information
         const movieElement = $('<div>').addClass('movie');
         const nameElement = $('<p>').text(nameRu);
         const filmElement = $('<p>').text(filmId);
         const posterElement = $('<img>').attr('src', posterUrl);
 
-        // Append elements to the container
         movieElement.append(posterElement, nameElement);
         movieLink.append(movieElement);
         movieBlok.append(movieLink);
@@ -281,24 +291,18 @@ function displaySimilarMovies(items) {
 }
 
 function handleUrlChange() {
-        const movieIdFromURL = getParameterByName(''); // Modify this to get the correct parameter name
+        const movieIdFromURL = getParameterByName(''); 
         if (movieIdFromURL) {
-            // Update the movie ID/keywords input field
             $('#searchInput').val(movieIdFromURL);
-            // Trigger the search function
+
             searchMovies();
         }
     }
 
-    // Call the function on initial page load
     handleUrlChange();
 
-    // Call the function when the URL changes
     $(window).on('popstate', handleUrlChange);
 
-    // Your existing JavaScript code
-
-    // Function to get parameter value from the URL
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
@@ -309,22 +313,16 @@ function handleUrlChange() {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
-// Add click event listener to the posterElement
+
 function getRandomMovie() {
-// Load movie IDs from the JSON file
+
 $.getJSON('movies.json', function(data) {
     const movieIds = data.movieIds;
-
-    // Generate a random index to select a random movie ID
     const randomIndex = Math.floor(Math.random() * movieIds.length);
-
-    // Get the random movie ID
     const randomMovieId = movieIds[randomIndex];
 
-    // Set the random movie ID in the input field
     $('#movieIdInput').val(randomMovieId);
 
-    // Call the getMovieData function to display the random movie
     getMovieData();
 });
 }
@@ -338,21 +336,17 @@ function searchMovies() {
 
     const searchQuery = $('#searchInput').val();
 
-    // Check if the input is a number
     if (!isNaN(searchQuery)) {
-        // If it's a number, search by ID
+
         $('#movieIdInput').val(searchQuery);
         getMovieData();
     } else {
-        // If it's not a number, search by keywords
 
-        // Use history.pushState to update the URL without triggering a page reload
         const newUrl = `?search=${encodeURIComponent(searchQuery)}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
 
         $('#movieBlok').empty();
 
-        // Make a request to search films by keyword
         $.ajax({
             url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
             data: {
@@ -363,12 +357,10 @@ function searchMovies() {
                 'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
             },
             success: function (response) {
-                // Use Promise.all to wait for all requests to complete
                 const promises = response.films.map(movie => checkIframeUrlValidity(movie.filmId));
 
                 Promise.all(promises)
                     .then(results => {
-                        // Filter movies with valid iframeUrl
                         const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
                         displaySearchResults(moviesWithValidIframe);
                     })
@@ -381,7 +373,6 @@ function searchMovies() {
     }
 }
 
-// Function to check iframeUrl validity on the external site
 function checkIframeUrlValidity(filmId) {
     const iframeUrlApiUrl = `https://${myLink}/kinobox/index.php?kinopoisk=${filmId}`;
 
@@ -389,7 +380,6 @@ function checkIframeUrlValidity(filmId) {
         $.ajax({
             url: iframeUrlApiUrl,
             success: function (response) {
-                // Check if iframeUrl is null or undefined
                 resolve(response.data && response.data.length > 0 && response.data[0].iframeUrl !== null && response.data[0].iframeUrl !== undefined);
             },
             error: function (error) {
@@ -400,10 +390,7 @@ function checkIframeUrlValidity(filmId) {
     });
 }
 function clearMovieDetails() {
-    // Clear the movie container
     $('#movieContainer').empty();
-
-    // Clear detailed film information
     $('#filmName').empty();
     $('#detailedFilmName').empty();
     $('#year').empty();
@@ -416,7 +403,6 @@ function clearMovieDetails() {
 function displaySearchResults(films) {
     const movieBlok = $('#movieBlok');
 
-    // Clear existing content in the movieBlok
     movieBlok.empty();
 
     films.forEach(function (film) {
@@ -425,17 +411,14 @@ function displaySearchResults(films) {
         const filmId = film.filmId;
         const filmYear = film.year;
 
-        // Create an anchor element to wrap the image and text
         const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
 
-        // Create HTML elements to display movie information
         const movieElement = $('<div>').addClass('movie');
         const nameElement = $('<p>').text(nameRu);
         const filmElement = $('<p>').text(filmId);
         const nameYear = $('<p>').text(filmYear);
         const posterElement = $('<img>').attr('src', posterUrl);
 
-        // Append elements to the container
         movieElement.append(posterElement, nameElement, nameYear);
         movieLink.append(movieElement);
         movieBlok.append(movieLink);
@@ -448,15 +431,14 @@ function handleEnterKey(event) {
     }
     function handleSimilarMovieClick(movieId) {
     clearMovieDetails();
-    // Call functions to get and display movie data
     getMovieData(movieId);
     getSimilarMovies(movieId);
-    // Add other necessary logic
+
 }
-    // Bind event listener to the input field
+
     $('#searchInput').on('keypress', handleEnterKey);
     function toggleElements() {
-            // Toggle visibility of all elements with class .hideable
+
             $('.hideable').not('.toggleButton').toggle();
         }
     </script>
