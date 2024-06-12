@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Search</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
     body {
       background-color: black;
@@ -52,14 +53,25 @@
       flex-wrap: wrap;
       justify-content: baseline;
       margin-top: 10px;
+      
     }
 
     #optionsContainer label {
       margin-right: 5px;
+      
     }
 
     #optionsContainer select {
       width: 150px;
+      color: #afeeee;
+    border: 2px solid #afeeee;
+    border-radius: 10px;
+    padding: 5px 10px;
+    background: black;
+    height: 30px;
+    }
+    .button{
+      margin-left: 5px;
     }
     .movie a {
   text-decoration: none;
@@ -115,7 +127,7 @@
 
     </select>
 
-    <button onclick="searchMovies()">search</button>
+    <button class="button" onclick="searchMovies()">search</button>
   </div>
 
   <div id="results"></div>
