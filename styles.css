@@ -190,13 +190,13 @@
 #searchInput {
 
     background-color: #000000;
-    max-width: 150px;
+    max-width: 130px;
     height: 30px;
     padding: 10px;
     margin-left: 2px;
     color: rgb(0, 255, 255);
     /* text-align: center; */
-    border: 2px solid #afeeee;
+    border: 1px solid #afeeee;
     border-radius: 10px;
     /* box-shadow: 3px 3px 2px rgb(249, 255, 85); */
       
@@ -226,7 +226,7 @@
 
 .button {
     color: #afeeee;
-    border: 2px solid #afeeee;
+    border: 1px solid #afeeee;
     border-radius: 10px;
     padding: 5px 10px;
     background: transparent;
@@ -296,50 +296,62 @@
     box-shadow: inset 15px -4px 0px 15px #fff000;
   }
   .spinner {
-    margin-top: 20px;
-    margin-left: 20px;
-    width: 60px;
-    height: 60px;
-    position: relative;
-   }
-   
-   .spinner .dot {
+    margin-left: 50px;
+    margin-top: 50px;
+    width: 44px;
+    height: 44px;
+    animation: spinner-y0fdc1 2s infinite ease;
+    transform-style: preserve-3d;
+  }
+  
+  .spinner > div {
+    background-color: rgba(45, 170, 192, 0.2);
+    height: 100%;
     position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-   }
-   
-   .spinner .dot::after {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background-color: #afeeee;
-   }
-   
-   @keyframes spin {
-    to {
-     transform: rotate(360deg);
+    width: 100%;
+    border: 1px solid #afeeee;
+    
+  }
+  
+  .spinner div:nth-of-type(1) {
+    transform: translateZ(-22px) rotateY(180deg);
+  }
+  
+  .spinner div:nth-of-type(2) {
+    transform: rotateY(-270deg) translateX(50%);
+    transform-origin: top right;
+  }
+  
+  .spinner div:nth-of-type(3) {
+    transform: rotateY(270deg) translateX(-50%);
+    transform-origin: center left;
+  }
+  
+  .spinner div:nth-of-type(4) {
+    transform: rotateX(90deg) translateY(-50%);
+    transform-origin: top center;
+  }
+  
+  .spinner div:nth-of-type(5) {
+    transform: rotateX(-90deg) translateY(50%);
+    transform-origin: bottom center;
+  }
+  
+  .spinner div:nth-of-type(6) {
+    transform: translateZ(22px);
+  }
+  
+  @keyframes spinner-y0fdc1 {
+    0% {
+      transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
     }
-   }
-   
-   .spinner .dot {
-    animation: spin 2s infinite;
-   }
-   
-   .spinner .dot:nth-child(2) {
-    animation-delay: 100ms;
-   }
-   
-   .spinner .dot:nth-child(3) {
-    animation-delay: 200ms;
-   }
-   
-   .spinner .dot:nth-child(4) {
-    animation-delay: 300ms;
-   }
-   
-   .spinner .dot:nth-child(5) {
-    animation-delay: 400ms;
-   }
+  
+    50% {
+      transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
+    }
+  
+    100% {
+      transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
+    }
+  }
+  
