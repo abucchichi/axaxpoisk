@@ -47,7 +47,7 @@
    <div class = 'hideable' id="movieBlok"></div>
    <div class = 'hideable' id="actorsContainer" style="float: left; padding: 10px;"></div>
     <script>
-var playerID = 1;
+var playerID = 0;
 
 
 function togglePlayerID() {
@@ -55,7 +55,7 @@ function togglePlayerID() {
     console.log("playerID toggled to:", playerID);
 
 
-    localStorage.setItem('playerID', playerID);
+    // localStorage.setItem('playerID', playerID);
 
 
     location.reload();
