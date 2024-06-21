@@ -53,12 +53,10 @@ var playerID = 0;
 function togglePlayerID() {
     playerID = playerID === 0 ? 1 : 0;
     console.log("playerID toggled to:", playerID);
-
-
-    localStorage.setItem('playerID', playerID);
-
-
-    // location.reload();
+    // localStorage.setItem('playerID', playerID);
+    
+    // Call getMovieData to update the iframe without refreshing the page
+    getMovieData();
 }
 
 
@@ -67,7 +65,7 @@ document.getElementById("togglePlayerIDButton").addEventListener("click", toggle
 
 window.onload = function() {
     if (localStorage.getItem('playerID') !== null) {
-        // playerID = parseInt(localStorage.getItem('playerID'));
+        playerID = parseInt(localStorage.getItem('playerID'));
         console.log("playerID restored from localStorage:", playerID);
     }
 }
@@ -179,7 +177,6 @@ function getMovieData() {
         $('#loading').hide(); 
     });
 }
-
 
         function extractMovieId(iframeUrl) {
             const urlParts = iframeUrl.split('/');
