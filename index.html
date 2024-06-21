@@ -55,10 +55,10 @@ function togglePlayerID() {
     console.log("playerID toggled to:", playerID);
 
 
-    // localStorage.setItem('playerID', playerID);
+    localStorage.setItem('playerID', playerID);
 
 
-    location.reload();
+    // location.reload();
 }
 
 
@@ -67,7 +67,7 @@ document.getElementById("togglePlayerIDButton").addEventListener("click", toggle
 
 window.onload = function() {
     if (localStorage.getItem('playerID') !== null) {
-        playerID = parseInt(localStorage.getItem('playerID'));
+        // playerID = parseInt(localStorage.getItem('playerID'));
         console.log("playerID restored from localStorage:", playerID);
     }
 }
