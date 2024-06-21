@@ -47,30 +47,22 @@
    <div class = 'hideable' id="movieBlok"></div>
    <div class = 'hideable' id="actorsContainer" style="float: left; padding: 10px;"></div>
     <script>
-var playerID = 1;
+    var playerID = 1;
 
+        function togglePlayerID() {
+            playerID = 0;
+            console.log("playerID toggled to:", playerID);
+            localStorage.setItem('playerID', playerID);
+            location.reload();
+        }
 
-function togglePlayerID() {
-    playerID = playerID === 1 ? 0 : 1;
-    console.log("playerID toggled to:", playerID);
+        document.getElementById("togglePlayerIDButton").addEventListener("click", togglePlayerID);
 
-
-    localStorage.setItem('playerID', playerID);
-
-
-    location.reload();
-}
-
-
-document.getElementById("togglePlayerIDButton").addEventListener("click", togglePlayerID);
-
-
-window.onload = function() {
-    if (localStorage.getItem('playerID') !== null) {
-        playerID = parseInt(localStorage.getItem('playerID'));
-        console.log("playerID restored from localStorage:", playerID);
-    }
-}
+        window.onload = function() {
+            playerID = 1;
+            localStorage.setItem('playerID', playerID);
+            console.log("playerID set to 1 on page load");
+        }
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
             getSimilarMovies(movieId);
