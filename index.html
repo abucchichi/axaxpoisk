@@ -153,7 +153,7 @@ function getMovieData() {
     window.history.pushState({ path: newUrl }, '', newUrl);
 
     return $.ajax({
-        url: `https://${myLink}/kinobox/index.php`,
+        url: url: `${myLink}kinobox/index.php`,,
         crossDomain: true,
         data: {
             'kinopoisk': movieIdValue
