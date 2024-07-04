@@ -1,1 +1,1 @@
-var myLink = "w4.kpfr.wiki";
+var myLink = "w5.kpfr.wiki";
