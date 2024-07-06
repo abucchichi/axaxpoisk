@@ -1,5 +1,5 @@
-<script src="central.js"></script>
 <!DOCTYPE html>
+<script src="central.js"></script>
 <html lang="ru">
     <link rel="stylesheet" href="styles.css">
 <head>
@@ -79,64 +79,42 @@ padding: 5px;
 </head>
 
 <body>
-    <h3 id="actorName"></h3>
     <input type="text" id="searchBar" placeholder="enter actor name">
+    <h3 id="actorName"></h3>
     <div id="actorMoviesContainer"></div>
     <div id="searchResults"></div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Flag to track whether loading message is displayed
-            let isLoading = false;
+$(document).ready(function () {
+    let isLoading = false;
+    const urlParams = new URLSearchParams(window.location.search);
+    const staffId = urlParams.get('staffId');
+    if (staffId) fetchAndDisplayActorDetails(staffId);
 
-            // Show loading message
+    $('#searchBar').on('input', function () {
+        const actorName = $(this).val().trim();
+        if (actorName) {
+            searchActor(actorName);
+        } else {
+            $('#searchResults').empty();
+            if (staffId) fetchAndDisplayActorDetails(staffId);
+        }
+    });
+
+    $('body').on('click', '.clickable-actor', function () {
+        if (!isLoading) {
+            isLoading = true;
+            const kinopoiskId = $(this).data('kinopoisk-id');
             $('#loadingMessage').show();
-
-            // Fetch actorId from URL query parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const staffId = urlParams.get('staffId');
-
-            // Fetch actor details using staffId
-            fetchAndDisplayActorDetails(staffId);
-
-            // Search bar input event
-            $('#searchBar').on('input', function () {
-                const actorName = $(this).val();
-                if (actorName.trim() !== '') {
-                    // Perform actor search
-                    searchActor(actorName);
-                } else {
-                    // Clear search results and display default content
-                    $('#searchResults').empty(); // Clear search results
-                    // Fetch actor details using staffId if search bar is empty
-                    fetchAndDisplayActorDetails(staffId);
-                }
-            });
-
-            // Click event handler for clickable actor elements
-            // Click event handler for clickable actor elements
-$('body').on('click', '.clickable-actor', function () {
-    if (!isLoading) {
-        isLoading = true;
-        const kinopoiskId = $(this).data('kinopoisk-id'); // Use kinopoiskId instead of staff-id
-        // Show loading message when a name is clicked
-        $('#loadingMessage').show();
-        // Clear search results
-        $('#searchResults').empty();
-        // Update the URL with the kinopoiskId
-        window.location.href = `?staffId=${kinopoiskId}`;
-    }
+            $('#searchResults').empty();
+            window.location.href = `?staffId=${kinopoiskId}`;
+        }
+    });
 });
-        });
 
-        // Function to fetch actor details based on staffId
-// Function to fetch actor details based on staffId
-// Function to fetch actor details based on staffId
 async function fetchAndDisplayActorDetails(staffId) {
-    // Clear existing content in both searchResultsContainer and actorMoviesContainer
     $('#searchResults').empty();
     $('#actorMoviesContainer').empty();
-
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff/${staffId}`;
     try {
         const response = await $.ajax({
@@ -146,187 +124,81 @@ async function fetchAndDisplayActorDetails(staffId) {
                 'Content-Type': 'application/json'
             }
         });
-
-        // Filter out movies where professionKey is not "ACTOR"
         const actorMovies = response.films.filter(movie => movie.professionKey === 'ACTOR');
-
-        // Filter out movies with null iframeUrl
-        const filteredMovies = await Promise.all(
-            actorMovies.map(async (movie) => {
-                return await checkIframeUrl(movie.filmId);
-            })
-        );
-
-        // Update actorData with filtered movies
+        const filteredMovies = await Promise.all(actorMovies.map(async (movie) => checkIframeUrl(movie.filmId)));
         const finalActorMovies = actorMovies.filter((_, index) => filteredMovies[index]);
-
-        // Hide loading message
         $('#loadingMessage').hide();
-
-        // Display actor movies
         displayActorMovies({ ...response, films: finalActorMovies });
     } catch (error) {
         console.error('Error fetching actor details:', error);
-        // Hide loading message in case of an error
         $('#loadingMessage').hide();
     }
 }
 
-        // Function to check iframeUrl for a movie
-        async function checkIframeUrl(filmId) {
-            const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
+async function checkIframeUrl(filmId) {
+    const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
+    try {
+        const response = await $.ajax({ url: iframeUrlApiUrl });
+        return response.data[0].iframeUrl !== null;
+    } catch (error) {
+        console.error(`Error fetching iframeUrl for filmId ${filmId}:`, error);
+        return false;
+    }
+}
 
-            try {
-                const iframeUrlResponse = await $.ajax({
-                    url: iframeUrlApiUrl,
-                    async: true,
-                });
-
-                // Check if iframeUrl is not null
-                return iframeUrlResponse.data[0].iframeUrl !== null;
-            } catch (error) {
-                console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
-                return false;
-            }
-        }
-
-// Function to search for actors
 function searchActor(actorName) {
-    // Show loading message
     $('#loadingMessage').show();
-
-    // Clear existing content in both searchResultsContainer and actorMoviesContainer
     $('#searchResults').empty();
     $('#actorMoviesContainer').empty();
 
-    const searchUrl = 'https://kinopoiskapiunofficial.tech/api/v1/persons';
-    const searchParams = {
-        name: actorName,
-        page: '1',
-    };
-
     $.ajax({
-        url: searchUrl,
+        url: 'https://kinopoiskapiunofficial.tech/api/v1/persons',
         headers: {
             'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
             'Content-Type': 'application/json'
         },
-        data: searchParams,
+        data: { name: actorName, page: '1' },
         success: function (response) {
-            // Hide loading message
             $('#loadingMessage').hide();
-
-            // Display search results
             displaySearchResults(response.items);
         },
         error: function (error) {
             console.error('Error fetching actor search data:', error);
-            // Hide loading message in case of an error
             $('#loadingMessage').hide();
         }
     });
 }
 
-// Function to display search results
-// Function to display search results
 function displaySearchResults(searchResults) {
-    const searchResultsContainer = $('#searchResults');
-    // Clear previous search results
-    searchResultsContainer.empty();
-    searchResults = searchResults.filter(actor => actor.kinopoiskId);
+    const searchResultsContainer = $('#searchResults').empty();
+    searchResults.filter(actor => actor.kinopoiskId).forEach(function (actor) {
+        const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor').data('kinopoisk-id', actor.kinopoiskId);
+        searchResultsContainer.append(actorElement);
+    });
+}
 
+function displayActorMovies(actorData) {
+    const actorName = actorData.nameRu;
+    const actorMoviesContainer = $('#actorMoviesContainer').empty();
+    $('#actorName').text(actorName);
+    const uniqueMovieNames = new Set();
 
-
-// Inside the displaySearchResults function
-// Inside the displaySearchResults function
-searchResults.forEach(function (actor) {
-    // Create a clickable element for each search result
-    const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor');
-    actorElement.data('kinopoisk-id', actor.kinopoiskId);
-    actorElement.data('staff-id', actor.kinopoiskId);
-
-    // Append actor element to container
-    searchResultsContainer.append(actorElement);
-});
-
-
-    // Prepend search results to the actorMoviesContainer
-
-    // Add click event handler for clickable actor elements using event delegation
-// Click event handler for clickable actor elements
-$('body').on('click', '.clickable-actor', function () {
-    if (!isLoading) {
-        isLoading = true;
-        const kinopoiskId = $(this).data('kinopoisk-id');
-
-        // Check if kinopoiskId is defined before updating the URL
-        if (kinopoiskId !== undefined) {
-            // Show loading message when a name is clicked
-            $('#loadingMessage').show();
-            // Clear search results
-            $('#searchResults').empty();
-            // Update the URL with the kinopoiskId
-            window.location.href = `?staffId=${kinopoiskId}`;
-        } else {
-            console.log('KinopoiskId is undefined for this entry.');
+    actorData.films.slice().reverse().forEach(function (movie) {
+        if (!uniqueMovieNames.has(movie.nameRu)) {
+            const movieElement = $('<div>').addClass('clickable-movie').data('film-id', movie.filmId);
+            const movieLink = $('<a>').attr('href', `./index.html?=${movie.filmId}`).addClass('movie-link');
+            const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.description}`).addClass('movie-info');
+            movieLink.append(movieInfo);
+            movieElement.append(movieLink);
+            actorMoviesContainer.append(movieElement);
+            uniqueMovieNames.add(movie.nameRu);
         }
-    }
-});
-}
+    });
 
-
-        // Function to display actor movies
-        function displayActorMovies(actorData) {
-            const actorName = actorData.nameRu;
-            const actorMoviesContainer = $('#actorMoviesContainer');
-
-            // Clear search results
-            $('#searchResults').empty();
-
-            // Display actor name
-            $('#actorName').text(actorName);
-
-            // Reverse the order of movies
-            const reversedMovies = actorData.films.slice().reverse();
-
-            // Create a set to keep track of unique movie names
-            const uniqueMovieNames = new Set();
-
-            // Display actor movies
-            reversedMovies.forEach(function (movie) {
-    // Check if the movie name is not a duplicate
-    if (!uniqueMovieNames.has(movie.nameRu)) {
-    // Create a clickable element for each movie
-    const movieElement = $('<div>').addClass('clickable-movie');
-    
-    // Create a link element
-    const movieLink = $('<a>').attr('href', `./index.html?=${movie.filmId}`).addClass('movie-link');
-
-    // Create a div for movie info and append it to the link
-    const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.description}`).addClass('movie-info');
-    movieLink.append(movieInfo);
-
-    // Append the link to the movie element
-    movieElement.append(movieLink);
-    movieElement.data('film-id', movie.filmId);
-
-    // Append movie element to container
-    actorMoviesContainer.append(movieElement);
-
-    // Add the movie name to the set
-    uniqueMovieNames.add(movie.nameRu);
-}
-});
-    // Add click event handler for clickable movie elements
     $('.clickable-movie').on('click', function (event) {
-    const filmId = $(this).data('film-id');
-    
-    // Prevent the default behavior to stop the normal navigation
-    event.preventDefault();
-
-    // Open the link in a new tab
-    window.open(`index.html?=${filmId}`, '_blank');
-});
+        event.preventDefault();
+        window.open(`index.html?=${$(this).data('film-id')}`, '_blank');
+    });
 }
         
     </script>
