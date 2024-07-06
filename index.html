@@ -354,7 +354,7 @@ $(document).on('click', '.actor', function() {
 });
 function searchMovies() {
     clearMovieDetails();
-    $('#loading').show();
+    $('#loading').show().css('display', 'inline-block');
 
     const searchQuery = $('#searchInput').val();
 
