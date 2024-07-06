@@ -405,7 +405,7 @@ function searchMovies() {
 
 
 function checkIframeUrlValidity(filmId) {
-    const iframeUrlApiUrl = `https://${myLink}/kinobox/index.php?kinopoisk=${filmId}`;
+    const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
 
     return new Promise((resolve, reject) => {
         $.ajax({
