@@ -1,159 +1,103 @@
 
-        .tooltip {
-            position: absolute;
-            background-color: #333;
-            color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            z-index: 999;
-            max-width: 200px;
-        }
-    body {
-        background-color: black;
-        color: #afeeee;
-        margin: 0;
-        font-family: Arial, sans-serif;
+.tooltip {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 999;
+  max-width: 200px;
+}
+body {
+background-color: black;
+color: #afeeee;
+margin: 0;
+font-family: Arial, sans-serif;
 
-    }
-
-    #movieContainer {
-        max-width: 100%; 
-    }
-
-    #filmName {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    #detailedFilmName {
-        font-size: 18px;button {
-            background-color: #afeeee; /* Green background */
-            border: none; /* Remove border */
-            color: white; /* White text */
-            padding: 15px 32px; /* Some padding */
-            text-align: center; /* Centered text */
-            text-decoration: none; /* Remove underline */
-            display: inline-block; /* Make the buttons appear inline */
-            font-size: 16px; /* Increase font size */
-            margin: 4px 2px; /* Some margin */
-            transition-duration: 0.4s; /* Animation duration */
-            cursor: pointer; /* Pointer/hand icon */
-            border-radius: 12px; /* Rounded corners */
-        }
-        
-        button:hover {
-            background-color: white; /* White background on hover */
-            color: black; /* Black text on hover */
-            border: 2px solid #4CAF50; /* Green border on hover */
-        }
-        
-        button:active {
-            background-color: #45a049; /* Darker green on click */
-            color: white;
-        }
-        
-        a button {
-            display: block; /* Make sure buttons inside <a> tags are block level */
-            width: 100%; /* Full width */
-        }
-        
-        margin-bottom: 10px;
-    }
-
-        #detailedFilmName {
-            font-size: 24px;
-            font-weight: bold;
-            font-style: inherit;
-        }
-        #description {
-            font-size: 18px;
-            font-style: inherit;
-            max-width: 600;
-            color: #689696;
-        }
-        #shortdescription {
-            font-size: 18px;
-            font-style: inherit;
-            max-width: 600;
-            color: #afeeee;
-        }
-        #year {
-            font-size: 18px;
-            font-style: inherit;
-            max-width: 600;
-            color: rgb(228, 12, 12)
-        }
-        #slogan {
-            font-size: 18px;
-            font-style: inherit;
-            max-width: 600;
-            color: #3b6161
-        }
-
-
-        #movieBlok {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content:baseline;
-        }
-
-        .movie {
-            margin: 10px;
-            padding: 10px;
-            background-color: #000000;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            
-        }
-
-        .movie img {
-            max-width: 100px;
-            height: 150px;
-            border-radius: 5px;
-        }
-        
-        .movie p {
-            margin: 10px 0 0;
-        }
-        .movie-link {
-        text-decoration: none; 
-        color: #4bc3c3; 
-
-    }
-    #container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #actorsContainer {
-    display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line */
-    justify-content: baseline;
-    margin-top: 20px;
 }
 
-.actor {
-    margin: 10px;
-    padding: 10px;
-    background-color: #000000;
-    border-radius: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 150px;
+#movieContainer {
+max-width: 100%; 
 }
 
-.actor img {
-    max-width: 100px;
-    height: 150px;
-    border-radius: 5px;
+#filmName {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 10px;
 }
-.actor-link {
-    text-decoration: none;
-    color: #598c8c; /* Link color */
+
+#detailedFilmName {
+font-size: 18px;button {
+  background-color: #afeeee; /* Green background */
+  border: none; /* Remove border */
+  color: white; /* White text */
+  padding: 15px 32px; /* Some padding */
+  text-align: center; /* Centered text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Make the buttons appear inline */
+  font-size: 16px; /* Increase font size */
+  margin: 4px 2px; /* Some margin */
+  transition-duration: 0.4s; /* Animation duration */
+  cursor: pointer; /* Pointer/hand icon */
+  border-radius: 12px; /* Rounded corners */
 }
+
+button:hover {
+  background-color: white; /* White background on hover */
+  color: black; /* Black text on hover */
+  border: 2px solid #4CAF50; /* Green border on hover */
+}
+
+button:active {
+  background-color: #45a049; /* Darker green on click */
+  color: white;
+}
+
+a button {
+  display: block; /* Make sure buttons inside <a> tags are block level */
+  width: 100%; /* Full width */
+}
+
+margin-bottom: 10px;
+}
+
+#detailedFilmName {
+  font-size: 24px;
+  font-weight: bold;
+  font-style: inherit;
+}
+#description {
+  font-size: 18px;
+  font-style: inherit;
+  max-width: 600;
+  color: #689696;
+}
+#shortdescription {
+  font-size: 18px;
+  font-style: inherit;
+  max-width: 600;
+  color: #afeeee;
+}
+#year {
+  font-size: 18px;
+  font-style: inherit;
+  max-width: 600;
+  color: rgb(228, 12, 12)
+}
+#slogan {
+  font-size: 18px;
+  font-style: inherit;
+  max-width: 600;
+  color: #3b6161
+}
+
+
+#movieBlok {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:baseline;
+}
+
 .movie {
   margin: 10px;
   padding: 10px;
@@ -161,197 +105,214 @@
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  max-width: 150px;
+  
+}
+
+.movie img {
+  max-width: 100px;
+  height: 150px;
+  border-radius: 5px;
+}
+
+.movie p {
+  margin: 10px 0 0;
+}
+.movie-link {
+text-decoration: none; 
+color: #4bc3c3; 
+
+}
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#actorsContainer {
+display: flex;
+flex-wrap: wrap; /* Allow items to wrap to the next line */
+justify-content: baseline;
+margin-top: 20px;
+}
+
+.actor {
+margin: 10px;
+padding: 10px;
+background-color: #000000;
+border-radius: 5px;
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+text-align: center;
+max-width: 150px;
+}
+
+.actor img {
+max-width: 100px;
+height: 150px;
+border-radius: 5px;
+}
+.actor-link {
+text-decoration: none;
+color: #598c8c; /* Link color */
+}
+.movie {
+margin: 10px;
+padding: 10px;
+background-color: #000000;
+border-radius: 5px;
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+text-align: center;
+max-width: 150px;
 
 }
 
 .movie:hover {
-  transform: scale(1.05); /* Increase the size on hover */
-  box-shadow: 0 0 15px #afeeee; /* Add glow effect on hover */
+transform: scale(1.05); /* Increase the size on hover */
+box-shadow: 0 0 15px #afeeee; /* Add glow effect on hover */
 }
 .actor {
-  margin: 10px;
-  padding: 10px;
-  background-color: #000000;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 150px;
+margin: 10px;
+padding: 10px;
+background-color: #000000;
+border-radius: 5px;
+box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+text-align: center;
+max-width: 150px;
 
 }
 
 .actor:hover {
-  transform: scale(1.05); /* Increase the size on hover */
-  box-shadow: 0 0 15px #598c8c; /* Add glow effect on hover */
+transform: scale(1.05); /* Increase the size on hover */
+box-shadow: 0 0 15px #598c8c; /* Add glow effect on hover */
 }
 #movieIdInput {
-    display: none; /* or visibility: hidden; */
+display: none; /* or visibility: hidden; */
 }
 #searchInput {
 
-    background-color: #000000;
-    max-width: 130px;
-    height: 30px;
-    padding: 10px;
-    margin-left: 2px;
-    color: rgb(0, 255, 255);
-    /* text-align: center; */
-    border: 1px solid #afeeee;
-    border-radius: 10px;
-    /* box-shadow: 3px 3px 2px rgb(249, 255, 85); */
-      
+background-color: #000000;
+max-width: 130px;
+height: 30px;
+padding: 10px;
+margin-left: 2px;
+color: rgb(0, 255, 255);
+/* text-align: center; */
+border: 1px solid #afeeee;
+border-radius: 10px;
+/* box-shadow: 3px 3px 2px rgb(249, 255, 85); */
 
-      
+
+
 }
 
-  
-  #searchInput:focus {
-    color: rgb(0, 255, 255);
-    background-color: #000000;
-    outline-color: rgb(0, 255, 255);
-    box-shadow: -3px -3px 15px rgb(0, 255, 255);
-    transition: .1s;
-    transition-property: box-shadow;
-  }
+
+#searchInput:focus {
+color: rgb(0, 255, 255);
+background-color: #000000;
+outline-color: rgb(0, 255, 255);
+box-shadow: -3px -3px 15px rgb(0, 255, 255);
+transition: .1s;
+transition-property: box-shadow;
+}
 
 /* Optional: Add some padding for better visual appearance */
 #searchInput {
-    padding: 5px;
+padding: 5px;
 }
 .hideable {
-    
-            display: block; /* You can use inline, inline-block, flex, etc. based on your layout */
-        }
+
+  display: block; /* You can use inline, inline-block, flex, etc. based on your layout */
+}
 
 
 .button {
-    color: #afeeee;
-    border: 1px solid #afeeee;
-    border-radius: 10px;
-    padding: 5px 10px;
-    background: transparent;
-    height: 30px;
+color: #afeeee;
+border: 1px solid #afeeee;
+border-radius: 10px;
+padding: 5px 10px;
+background: transparent;
+height: 30px;
 
-    }
-    
-    .button:hover {
-    box-shadow: 2px 2px 55px #afeeee inset;
-    }
-    
-    .button:active {
-    box-shadow: 2px 2px 55px #afeeee inset;
-    }
-          
-    /* The switch - the box around the slider */
+}
+
+.button:hover {
+box-shadow: 2px 2px 55px #afeeee inset;
+}
+
+.button:active {
+box-shadow: 2px 2px 55px #afeeee inset;
+}
+
+/* The switch - the box around the slider */
 .switch {
-    
-    margin-left: 5px;
-    font-size: 15px;
-    position: absolute;
-    display: inline-block;
-    width: 3.5em;
-    height: 30px;
+
+margin-left: 5px;
+font-size: 15px;
+position: absolute;
+display: inline-block;
+width: 3.5em;
+height: 30px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+
+/* The slider */
+.slider {
+--background: #000000;
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: var(--background);
+transition: .5s;
+border-radius: 10px;
+}
+
+.slider:before {
+position: absolute;
+content: "";
+height: 1.4em;
+width: 1.4em;
+border-radius: 50%;
+left: 10%;
+bottom: 15%;
+box-shadow: inset 8px -4px 0px 0px #fff000;
+background: var(--background);
+transition: .5s;
+}
+
+input:checked + .slider {
+background-color: #000000;
+}
+
+input:checked + .slider:before {
+transform: translateX(100%);
+box-shadow: inset 15px -4px 0px 15px #fff000;
+}
+.loader {
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 3px solid #afeeee;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  100% {
+    transform: rotate(360deg);
   }
-  
-  /* The slider */
-  .slider {
-    --background: #000000;
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: var(--background);
-    transition: .5s;
-    border-radius: 10px;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 1.4em;
-    width: 1.4em;
-    border-radius: 50%;
-    left: 10%;
-    bottom: 15%;
-    box-shadow: inset 8px -4px 0px 0px #fff000;
-    background: var(--background);
-    transition: .5s;
-  }
-  
-  input:checked + .slider {
-    background-color: #000000;
-  }
-  
-  input:checked + .slider:before {
-    transform: translateX(100%);
-    box-shadow: inset 15px -4px 0px 15px #fff000;
-  }
-  .spinner {
-    margin-left: 50px;
-    margin-top: 50px;
-    width: 44px;
-    height: 44px;
-    animation: spinner-y0fdc1 2s infinite ease;
-    transform-style: preserve-3d;
-  }
-  
-  .spinner > div {
-    background-color: rgba(45, 170, 192, 0.2);
-    height: 100%;
-    position: absolute;
-    width: 100%;
-    border: 1px solid #afeeee;
-    
-  }
-  
-  .spinner div:nth-of-type(1) {
-    transform: translateZ(-22px) rotateY(180deg);
-  }
-  
-  .spinner div:nth-of-type(2) {
-    transform: rotateY(-270deg) translateX(50%);
-    transform-origin: top right;
-  }
-  
-  .spinner div:nth-of-type(3) {
-    transform: rotateY(270deg) translateX(-50%);
-    transform-origin: center left;
-  }
-  
-  .spinner div:nth-of-type(4) {
-    transform: rotateX(90deg) translateY(-50%);
-    transform-origin: top center;
-  }
-  
-  .spinner div:nth-of-type(5) {
-    transform: rotateX(-90deg) translateY(50%);
-    transform-origin: bottom center;
-  }
-  
-  .spinner div:nth-of-type(6) {
-    transform: translateZ(22px);
-  }
-  
-  @keyframes spinner-y0fdc1 {
-    0% {
-      transform: rotate(45deg) rotateX(-25deg) rotateY(25deg);
-    }
-  
-    50% {
-      transform: rotate(45deg) rotateX(-385deg) rotateY(25deg);
-    }
-  
-    100% {
-      transform: rotate(45deg) rotateX(-385deg) rotateY(385deg);
-    }
-  }
-  
+} 
