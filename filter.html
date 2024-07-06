@@ -275,7 +275,7 @@ async function displayResultsWithIframeCheck(response) {
 
 // Function to check iframeUrl for a movie
 async function checkIframeUrl(filmId) {
-  const iframeUrlApiUrl = `https://${myLink}/kinobox/index.php?kinopoisk=${filmId}`;
+  const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
 
   try {
     const iframeUrlResponse = await $.ajax({
