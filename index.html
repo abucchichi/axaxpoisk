@@ -354,13 +354,13 @@ $(document).on('click', '.actor', function() {
 });
 function searchMovies() {
     clearMovieDetails();
-    $('#loading').show();  
+    $('#loading').show();
 
     const searchQuery = $('#searchInput').val();
 
     if (!isNaN(searchQuery)) {
         $('#movieIdInput').val(searchQuery);
-        getMovieData().always(() => $('#loading').hide());  
+        getMovieData().always(() => $('#loading').hide());
     } else {
         const newUrl = `?search=${encodeURIComponent(searchQuery)}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
@@ -374,30 +374,31 @@ function searchMovies() {
                 page: '1',
             },
             headers: {
-                'x-api-key': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+                'x-api-key': apiKey,
             },
             success: function (response) {
-                const promises = response.films.map(movie => checkIframeUrlValidity(movie.filmId));
-
-                Promise.all(promises)
-                    .then(results => {
-                        const moviesWithValidIframe = response.films.filter((_, index) => results[index]);
-                        displaySearchResults(moviesWithValidIframe);
-                        $('#loading').hide();  // Hide the loading indicator after processing
-                    })
-                    .catch(error => {
-                        console.error('Error fetching iframeUrl data:', error);
-                        $('#loading').hide();  // Hide the loading indicator on error
-                    });
+                response.films.forEach(movie => {
+                    checkIframeUrlValidity(movie.filmId)
+                        .then(isValid => {
+                            if (isValid) {
+                                displaySearchResult(movie);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching iframeUrl data:', error);
+                        })
+                        .finally(() => {
+                            $('#loading').hide(); // Hide the loading indicator after processing
+                        });
+                });
             },
             error: function (error) {
                 console.error('Error fetching search results:', error);
-                $('#loading').hide();  // Hide the loading indicator on error
+                $('#loading').hide(); // Hide the loading indicator on error
             }
         });
     }
 }
-
 
 function checkIframeUrlValidity(filmId) {
     const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
@@ -426,29 +427,25 @@ function clearMovieDetails() {
     $('#actorsContainer').empty();
 
 }
-function displaySearchResults(films) {
+function displaySearchResult(film) {
     const movieBlok = $('#movieBlok');
 
-    movieBlok.empty();
+    const nameRu = film.nameRu;
+    const posterUrl = film.posterUrl;
+    const filmId = film.filmId;
+    const filmYear = film.year;
 
-    films.forEach(function (film) {
-        const nameRu = film.nameRu;
-        const posterUrl = film.posterUrl;
-        const filmId = film.filmId;
-        const filmYear = film.year;
+    const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
 
-        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+    const movieElement = $('<div>').addClass('movie');
+    const nameElement = $('<p>').text(nameRu);
+    const filmElement = $('<p>').text(filmId);
+    const nameYear = $('<p>').text(filmYear);
+    const posterElement = $('<img>').attr('src', posterUrl);
 
-        const movieElement = $('<div>').addClass('movie');
-        const nameElement = $('<p>').text(nameRu);
-        const filmElement = $('<p>').text(filmId);
-        const nameYear = $('<p>').text(filmYear);
-        const posterElement = $('<img>').attr('src', posterUrl);
-
-        movieElement.append(posterElement, nameElement, nameYear);
-        movieLink.append(movieElement);
-        movieBlok.append(movieLink);
-    });
+    movieElement.append(posterElement, nameElement, nameYear);
+    movieLink.append(movieElement);
+    movieBlok.append(movieLink);
 }
 function handleEnterKey(event) {
         if (event.key === 'Enter') {
