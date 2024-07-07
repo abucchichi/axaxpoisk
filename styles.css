@@ -106,7 +106,7 @@ margin-bottom: 10px;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  
+
 }
 
 .movie img {
@@ -117,6 +117,7 @@ margin-bottom: 10px;
 
 .movie p {
   margin: 10px 0 0;
+  max-width: 100px;
 }
 .movie-link {
 text-decoration: none; 
@@ -144,26 +145,19 @@ border-radius: 5px;
 box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 text-align: center;
 max-width: 150px;
+
 }
 
 .actor img {
 max-width: 100px;
 height: 150px;
 border-radius: 5px;
+
 }
 .actor-link {
 text-decoration: none;
 color: #598c8c; /* Link color */
-}
-.movie {
-margin: 10px;
-padding: 10px;
-background-color: #000000;
-border-radius: 5px;
-box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-text-align: center;
 max-width: 150px;
-
 }
 
 .movie:hover {
