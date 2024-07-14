@@ -29,6 +29,7 @@
         <span class="slider"onclick="toggleElements()"></span>
     </label>
 
+      
 
     <div class = 'hideable' id="detailedFilmName"></div>
     <div id="movieContainer"></div>
@@ -39,7 +40,7 @@
    <br> <div class = 'hideable' id="slogan"></div></br>
    <div class = 'hideable' id="movieBlok"></div>
    <div class = 'hideable' id="actorsContainer" style="float: left; padding: 10px;"></div>
-
+   
     <script>
         
 var playerID = 0;
@@ -66,7 +67,7 @@ window.onload = function() {
 }
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
-            getSimilarMovies(movieId);
+            // getSimilarMovies(movieId);
 
             loadMovieFromURL();
             $(document).on('click', '.similar-movie-link', function (event) {
@@ -151,37 +152,45 @@ function getMovieData() {
             'kinopoisk': movieIdValue
         }
     }).done(function (response) {
-        console.log(response);
+        // console.log(response);
 
         if (response.data && response.data.length > 0) {
-            const iframeUrl = response.data[playerID].iframeUrl;
-            const movieId = extractMovieId(iframeUrl);
-            const filmName = response.data[0].nameRu;
+            const iframeUrl = response.data[playerID] ? response.data[playerID].iframeUrl : null;
 
-            viewMovie(movieId, iframeUrl);
-            displayFilmName(filmName);
-            getMovieDetails(movieIdValue);
-            getSimilarMovies(movieIdValue);
-            getMovieActors(movieIdValue);
+            if (iframeUrl) {
+                const movieId = extractMovieId(iframeUrl);
+                const filmName = response.data[0].nameRu;
+
+                viewMovie(movieId, iframeUrl);
+                displayFilmName(filmName);
+                getMovieDetails(movieIdValue);
+                getSimilarMovies(movieIdValue);
+                getMovieActors(movieIdValue);
+            } else {
+                console.error('No valid iframe URL found');
+                $('#movieContainer').html('<h1>No movie found</h1>');
+            }
         } else {
             console.error('No movie data found');
+            $('#movieContainer').html('<h1>No movie found</h1>');
         }
     }).fail((error) => {
         console.error('Error fetching movie data:', error);
+        $('#movieContainer').html('<h1>Error fetching movie data</h1>');
     }).always(() => {
         $('#loading').hide(); 
     });
 }
 
-        function extractMovieId(iframeUrl) {
-            const urlParts = iframeUrl.split('/');
-            console.log('url=====',iframeUrl)
-            return urlParts[urlParts.length - 1];
-        }
+function extractMovieId(iframeUrl) {
+    const urlParts = iframeUrl.split('/');
+    // console.log('url=====', iframeUrl)
+    return urlParts[urlParts.length - 1];
+}
 
         function viewMovie(movieId,iframeUrl) {
 
-            console.log('iframe======',iframeUrl)
+            // console.log('iframe======',iframeUrl)
             const iframe = `<iframe src="${iframeUrl}" max-width="600" width = "100%"  height="450" frameborder="0" allowfullscreen></iframe>`;
             document.getElementById('movieContainer').innerHTML = iframe;
         }
@@ -199,7 +208,7 @@ function getMovieData() {
                 },
                 contentType: 'application/json'
             }).done(function (response) {
-                console.log(response);
+                // console.log(response);
                 const detailedFilmName = response.nameRu;
                 const description = response.description;
                 const year = response.year;
