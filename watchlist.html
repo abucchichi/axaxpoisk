@@ -22,17 +22,21 @@
         flex-wrap: wrap;
         justify-content: flex-start;
         margin-top: 20px;
+        font-size: 1.17em;
+        font-weight: bold;
+        
     }
 
     .watchlist-item {
-        margin: 5px;
-        padding: 5px;
+        margin: 10px;
+        padding: 10px;
         background-color: #000000;
         border-radius: 5px;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
         width: 150px;
         text-align: center;
         color: #fff;
+        
     }
 
     .watchlist-item:hover {
@@ -182,7 +186,7 @@
             for (const movieId of reversedWatchlist) {
                 const movieDetails = await getMovieDetails(movieId);
                 const movieLink = `<a href="index.html?=${movieId}">${movieDetails.nameRu}</a>`;
-                const movieImg = `<a href="index.html?=${movieId}"><img src="${movieDetails.posterUrl}" alt="${movieDetails.nameRu}" style="max-width: 100px;"></a>`;
+                const movieImg = `<a href="index.html?=${movieId}"><img src="${movieDetails.posterUrl}" alt="${movieDetails.nameRu}" "></a>`;
                 watchlistDiv.innerHTML += `<div class="watchlist-item">${movieImg}<br>${movieLink}</div>`;
             }
         }
