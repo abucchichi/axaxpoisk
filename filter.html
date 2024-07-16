@@ -97,12 +97,28 @@
   transform: scale(1.05); /* Increase the size on hover */
   box-shadow: 0 0 15px #afeeee;; /* Add glow effect on hover */
 }
+#back-btn {
+        color: #afeeee;
+        border: 1px solid #afeeee;
+        border-radius: 10px;
+        padding: 5px 10px;
+        background: transparent;
+        height: 30px;
+    }
+    #back-btn:hover {
+        box-shadow: 2px 2px 55px #afeeee inset;
+    }
+    #back-btn:active {
+        box-shadow: 2px 2px 55px #afeeee inset;
+    }
   </style>
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
 <body>
+  
   <div id="optionsContainer">
+    <button id="back-btn" onclick="goBack()">back</button>
     <label for="countries"></label>
     <select id="countries">
       <option value="">select country</option>
@@ -135,7 +151,9 @@
 
 
   <script>
-    
+    function goBack() {
+            window.history.back();
+        }
         var yearDropdown = document.getElementById('yearFrom');
     for (var year = 2024; year >= 1900; year--) {
       var option = document.createElement('option');
