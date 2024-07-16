@@ -48,7 +48,7 @@
 margin-top: 10px;
 background-color: #000000;
 max-width: 150px;
-height: 20px;
+height: 18px;
 padding: 10px;
 margin-left: 2px;
 color: rgb(0, 255, 255);
@@ -75,10 +75,25 @@ transition-property: box-shadow;
 #searchBar {
 padding: 5px;
 }
+#back-btn {
+        color: #afeeee;
+        border: 1px solid #afeeee;
+        border-radius: 10px;
+        padding: 5px 10px;
+        background: transparent;
+        height: 30px;
+    }
+    #back-btn:hover {
+        box-shadow: 2px 2px 55px #afeeee inset;
+    }
+    #back-btn:active {
+        box-shadow: 2px 2px 55px #afeeee inset;
+    }
     </style>
 </head>
 
 <body>
+    <button id="back-btn" onclick="goBack()">back</button>
     <input type="text" id="searchBar" placeholder="enter actor name">
     <h3 id="actorName"></h3>
     <div id="actorMoviesContainer"></div>
@@ -112,7 +127,9 @@ padding: 5px;
             }
         });
     });
-
+    function goBack() {
+            window.history.back();
+        }
     async function fetchAndDisplayActorDetails(staffId) {
         $('#searchResults').empty();
         $('#actorMoviesContainer').empty();
