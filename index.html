@@ -9,38 +9,134 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>axaxpoisk</title>
-    
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-<link rel="stylesheet" href="styles.css">
+
 <body>
-    
     <div id="filmName"></div>
     <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
-    
     <input type="text" id="searchInput" placeholder="id / keywords" inputmode="text">
     <button class="button" onclick="searchMovies()">search</button>
-    
-    <a  href="./filter.html"><button class="button">filter</button></a>
+    <a href="./filter.html"><button class="button">filter</button></a>
     <a href="./actor_movies.html"><button class="button">actors</button></a>
-    <button class="button" onclick="getRandomMovie()">random</button> 
+    <button class="button" onclick="getRandomMovie()">random</button>
     <button class="button" id="togglePlayerIDButton">player</button>
+    <button class="button" onclick="goToWatchlist()">watchlist</button>
+    
     <label class="switch">
         <input type="checkbox">
-        <span class="slider"onclick="toggleElements()"></span>
+        <span class="slider" onclick="toggleElements()"></span>
     </label>
 
-      
 
-    <div class = 'hideable' id="detailedFilmName"></div>
-    <div id="movieContainer"></div>
-    <span id = "loading" class="loader"></span>
-    <div class = 'hideable' id="year"></div>
-    <br><div class = 'hideable' id="shortdescription"></div></br>
-    <div class = 'hideable' id="description"></div>
-   <br> <div class = 'hideable' id="slogan"></div></br>
-   <div class = 'hideable' id="movieBlok"></div>
-   <div class = 'hideable' id="actorsContainer" style="float: left; padding: 10px;"></div>
-   
+
+
+
+    
+    <div class="hideable" id="detailedFilmName"></div>
+    
+    <div id="movieContainer"></div> 
+    <button class="button" onclick="addToWatchlist()">add to watchlist</button> 
+    <span id="loading" class="loader"></span>
+    
+    <div class="hideable" id="year"></div>
+    
+    <br><div class="hideable" id="shortdescription"></div></br>
+    <div class="hideable" id="description"></div>
+    <br><div class="hideable" id="slogan"></div></br>
+    
+    <div class="hideable" id="movieBlok"></div>
+    <div class="hideable" id="actorsContainer" style="float: left; padding: 10px;"></div>
+    
+    <script>
+        const API_URL = 'https://api-nu-lilac.vercel.app';
+        const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
+
+        async function register() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+        }
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            localStorage.setItem('token', data.token);
+            goToWatchlist();
+        }
+
+        async function addToWatchlist() {
+            const token = localStorage.getItem('token');
+            const movieId = document.getElementById('movieIdInput').value;
+
+            // Check if the movie is already in the watchlist
+            const watchlist = await getWatchlist();
+            if (watchlist.includes(movieId)) {
+                alert("already in watchlist");
+                return;
+            }
+
+            await fetch(`${API_URL}/watchlist`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                body: JSON.stringify({ movieId })
+            });
+            // displayWatchlist();
+        }
+
+        async function getWatchlist() {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/watchlist`, {
+                method: 'GET',
+                headers: { 'Authorization': token }
+            });
+            return await response.json();
+        }
+
+        async function displayWatchlist() {
+            const watchlist = await getWatchlist();
+            const watchlistDiv = document.getElementById('watchlist');
+
+            watchlistDiv.innerHTML = '';
+
+            watchlist.forEach(async (movieId) => {
+                const movieDetails = await getMovieDetails(movieId);
+                const movieLink = `<a href="?=${movieId}">${movieDetails.nameRu}</a>`;
+                watchlistDiv.innerHTML += `<p>${movieLink}</p>`;
+            });
+        }
+
+        async function getMovieDetails(movieId) {
+            const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`, {
+                headers: { 'X-API-KEY': apiKey }
+            });
+            return await response.json();
+        }
+
+        function goToWatchlist() {
+            window.location.href = 'watchlist.html';
+        }
+
+        // Call displayWatchlist on page load if user is logged in
+        if (localStorage.getItem('token')) {
+            // displayWatchlist();
+        }
+        
+    </script>
     <script>
         
 var playerID = 0;
@@ -65,7 +161,7 @@ window.onload = function() {
         console.log("playerID restored from localStorage:", playerID);
     }
 }
-        const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
+        // const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
         $(document).ready(function () {
             // getSimilarMovies(movieId);
 
