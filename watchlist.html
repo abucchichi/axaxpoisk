@@ -114,33 +114,8 @@
     watchlist: <span id="usernameDisplay"></span> 
     
     <div id="watchlist"></div>
-    <button id="logoutButton">Logout</button>
+    
     <script>
-            document.getElementById('logoutButton').addEventListener('click', async () => {
-      try {
-        // Call your logout endpoint
-        const response = await fetch('/logout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('token') // Include token if stored
-          }
-        });
-
-        if (response.ok) {
-          // Remove token from local storage or wherever it's stored
-          localStorage.removeItem('token');
-          // Redirect or perform any other action after logout
-          window.location.href = '/'; // Redirect to homepage or login page
-        } else {
-          console.error('Logout failed:', response.status);
-          // Handle logout failure if needed
-        }
-      } catch (error) {
-        console.error('Error during logout:', error);
-        // Handle network or other errors
-      }
-    });
         async function displayUsername() {
             const username = localStorage.getItem('username');
             if (username) {
@@ -193,7 +168,7 @@
             location.reload();
         }
 
-        const API_URL = 'https://api-nu-lilac.vercel.app';
+        const API_URL =  'https://api-nu-lilac.vercel.app';
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
 
         async function getWatchlist() {
