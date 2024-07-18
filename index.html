@@ -57,9 +57,10 @@
         async function addToWatchlist() {
             const token = localStorage.getItem('token');
             const movieId = document.getElementById('movieIdInput').value;
-
+            
             // Check if the movie is already in the watchlist
             const watchlist = await getWatchlist();
+            alert("added to watchlist");
             if (watchlist.includes(movieId)) {
                 alert("already in watchlist");
                 return;
