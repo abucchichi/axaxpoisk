@@ -146,7 +146,7 @@ window.onload = function() {
             const movieIdFromURL = getParameterByName('');
             if (movieIdFromURL) {
                 $('#movieIdInput').val(movieIdFromURL);
-                getMovieData();
+                // getMovieData();
             }
         }
 
@@ -361,7 +361,7 @@ function displaySimilarMovies(items) {
 
     items.forEach(function (item) {
         const nameRu = item.nameRu;
-        const posterUrl = item.posterUrl;
+        const posterUrl = item.posterUrlPreview;
         const filmId = item.filmId;
 
         const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
@@ -501,7 +501,7 @@ function displaySearchResult(film) {
     const movieBlok = $('#movieBlok');
 
     const nameRu = film.nameRu;
-    const posterUrl = film.posterUrl;
+    const posterUrl = film.posterUrlPreview;
     const filmId = film.filmId;
     const filmYear = film.year;
 
