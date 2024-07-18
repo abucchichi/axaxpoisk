@@ -53,28 +53,6 @@
         const API_URL = 'https://api-nu-lilac.vercel.app';
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
 
-        async function register() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            await fetch(`${API_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-        }
-
-        async function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const response = await fetch(`${API_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-            const data = await response.json();
-            localStorage.setItem('token', data.token);
-            goToWatchlist();
-        }
 
         async function addToWatchlist() {
             const token = localStorage.getItem('token');
@@ -107,18 +85,7 @@
             return await response.json();
         }
 
-        async function displayWatchlist() {
-            const watchlist = await getWatchlist();
-            const watchlistDiv = document.getElementById('watchlist');
 
-            watchlistDiv.innerHTML = '';
-
-            watchlist.forEach(async (movieId) => {
-                const movieDetails = await getMovieDetails(movieId);
-                const movieLink = `<a href="?=${movieId}">${movieDetails.nameRu}</a>`;
-                watchlistDiv.innerHTML += `<p>${movieLink}</p>`;
-            });
-        }
 
         async function getMovieDetails(movieId) {
             const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`, {
@@ -296,27 +263,31 @@ function extractMovieId(iframeUrl) {
         }
 
         function getMovieDetails(movieId) {
-            $.ajax({
-                url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
-                crossDomain: true,
-                headers: {
-                    'x-api-key': apiKey
-                },
-                contentType: 'application/json'
-            }).done(function (response) {
-                // console.log(response);
-                const detailedFilmName = response.nameRu;
-                const description = response.description;
-                const year = response.year;
-                const slogan = response.slogan;
-                const shortdescription = response.shortDescription;
-                displayDetailedFilmName(detailedFilmName);
-                displaydescription(description);
-                displayyear(year);
-                displayslogan(slogan);
-                displayshortdescription(shortdescription);
-            });
-        }
+    $.ajax({
+        url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
+        crossDomain: true,
+        headers: {
+            'x-api-key': apiKey
+        },
+        contentType: 'application/json'
+    }).done(function (response) {
+        // console.log(response);
+        const detailedFilmName = response.nameRu;
+        const description = response.description;
+        const year = response.year;
+        const slogan = response.slogan;
+        const shortdescription = response.shortDescription;
+        displayDetailedFilmName(detailedFilmName);
+        displaydescription(description);
+        displayyear(year);
+        displayslogan(slogan);
+        displayshortdescription(shortdescription);
+        
+        // Call toggleWatchlistButton here
+        toggleWatchlistButton();
+    });
+}
+
 
         function displayDetailedFilmName(detailedFilmName) {
     const element = document.getElementById('detailedFilmName');
@@ -521,7 +492,10 @@ function clearMovieDetails() {
     $('#slogan').empty();
     $('#actorsContainer').empty();
 
+    // Call toggleWatchlistButton here
+    toggleWatchlistButton();
 }
+
 function displaySearchResult(film) {
     const movieBlok = $('#movieBlok');
 
@@ -559,6 +533,22 @@ function handleEnterKey(event) {
 
             $('.hideable').not('.toggleButton').toggle();
         }
+        function toggleWatchlistButton() {
+    const yearElement = $('#year');
+    const watchlistButton = $('button[onclick="addToWatchlist()"]');
+    
+    if (yearElement.text().trim() !== '') {
+        watchlistButton.show();
+    } else {
+        watchlistButton.hide();
+    }
+}
+
+// Hide the button initially on page load
+$(document).ready(function () {
+    $('button[onclick="addToWatchlist()"]').hide();
+});
+
     </script>
 </body>
 
