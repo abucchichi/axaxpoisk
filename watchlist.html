@@ -105,18 +105,42 @@
 </style>
 
 <body>
-    <!-- Existing HTML elements -->
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
     <button id="register-btn" onclick="register()">register</button>
     <button id="login-btn" onclick="login()">login</button>
     <div id="user-info"></div>
     <button id="back-btn" onclick="goBack()">back</button>
-    <h2>watchlist</h2>
-
+    watchlist: <span id="usernameDisplay"></span> 
+    
     <div id="watchlist"></div>
-
+    <button id="logoutButton">Logout</button>
     <script>
+            document.getElementById('logoutButton').addEventListener('click', async () => {
+      try {
+        // Call your logout endpoint
+        const response = await fetch('/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token') // Include token if stored
+          }
+        });
+
+        if (response.ok) {
+          // Remove token from local storage or wherever it's stored
+          localStorage.removeItem('token');
+          // Redirect or perform any other action after logout
+          window.location.href = '/'; // Redirect to homepage or login page
+        } else {
+          console.error('Logout failed:', response.status);
+          // Handle logout failure if needed
+        }
+      } catch (error) {
+        console.error('Error during logout:', error);
+        // Handle network or other errors
+      }
+    });
         async function displayUsername() {
             const username = localStorage.getItem('username');
             if (username) {
@@ -169,12 +193,21 @@
             location.reload();
         }
 
-        const API_URL = 'https://api-nu-lilac.vercel.app';
+        const API_URL = 'http://localhost:3000';
         const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
 
         async function getWatchlist() {
             const token = localStorage.getItem('token');
             const response = await fetch(`${API_URL}/watchlist`, {
+                method: 'GET',
+                headers: { 'Authorization': token }
+            });
+            return await response.json();
+        }
+
+        async function getUsename() {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/username`, {
                 method: 'GET',
                 headers: { 'Authorization': token }
             });
@@ -196,7 +229,14 @@
                 watchlistDiv.innerHTML += `<div class="watchlist-item">${movieImg}<br>${movieLink}${deleteButton}</div>`;
             }
         }
+        async function displayUsername() {
+      const username = await getUsename();
+      const usernameDisplay = document.getElementById('usernameDisplay');
+      usernameDisplay.textContent = username;
+    }
 
+    // Call the function to display the username
+    displayUsername();
         async function getMovieDetails(movieId) {
             const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`, {
                 headers: {
