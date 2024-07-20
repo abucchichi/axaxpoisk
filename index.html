@@ -107,18 +107,13 @@
     </script>
     <script>
         
-var playerID = 1;
-
+var playerID = "COLLAPS";
 
 function togglePlayerID() {
-    playerID = playerID === 1 ? 0 : 1;
+    playerID = playerID === "COLLAPS" ? "ALLOHA" : "COLLAPS";
     console.log("playerID toggled to:", playerID);
-    // localStorage.setItem('playerID', playerID);
-    
-    // Call getMovieData to update the iframe without refreshing the page
     getMovieData();
 }
-
 
 document.getElementById("togglePlayerIDButton").addEventListener("click", togglePlayerID);
 
@@ -216,10 +211,9 @@ function getMovieData() {
             'kinopoisk': movieIdValue
         }
     }).done(function (response) {
-        // console.log(response);
-
         if (response.data && response.data.length > 0) {
-            const iframeUrl = response.data[playerID] ? response.data[playerID].iframeUrl : null;
+            const playerData = response.data.find(item => item.type === playerID);
+            const iframeUrl = playerData ? playerData.iframeUrl : null;
 
             if (iframeUrl) {
                 const movieId = extractMovieId(iframeUrl);
