@@ -177,8 +177,8 @@ document.getElementById("togglePlayerIDButton").addEventListener("click", toggle
     const actorsContainer = $('#actorsContainer');
 
     actorsContainer.empty();
-    const filteredActors = actors.filter(actor => actor.professionKey === 'ACTOR');
-
+    // const filteredActors = actors.filter(actor => actor.professionKey === 'ACTOR');
+    const filteredActors = actors.filter(actor => actor.professionKey);
     filteredActors.slice(0, 10).forEach(function (actor) {
         const name = actor.nameRu;
         const staffId = actor.staffId;
