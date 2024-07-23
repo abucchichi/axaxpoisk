@@ -147,7 +147,7 @@ padding: 5px;
         // Display actor's name immediately
         $('#actorName').text(response.nameRu);
 
-        const movies = response.films;
+        const movies = response.films.reverse(); // Reverse the order of movies
         $('#loadingMessage').hide();
         for (const movie of movies) {
             if (!uniqueMovieNames.has(movie.nameRu)) {
@@ -163,11 +163,13 @@ padding: 5px;
         $('#loadingMessage').hide();
     }
 }
+
     async function checkIframeUrl(filmId) {
         const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
         try {
             const response = await $.ajax({ url: iframeUrlApiUrl });
-            return response.data[0].iframeUrl !== null;
+            return response.data[0].iframeUrl !== null ||
+            response.data[1].iframeUrl !== null ;
         } catch (error) {
             console.error(`Error fetching iframeUrl for filmId ${filmId}:`, error);
             return false;
