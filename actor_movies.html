@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<script src="central.js"></script>
 <html lang="ru">
-    <link rel="stylesheet" href="styles.css">
 <head>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>actor movies</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             background-color: black;
@@ -20,75 +19,79 @@
         #loadingMessage {
             display: none;
         }
-        .clickable-actor,
-    .clickable-movie {
+    .clickable-actor,.clickable-movie {
         text-decoration: none;
         color: rgb(0, 255, 255); /* Link color */
         cursor: pointer;
     }
 
-    .clickable-actor:hover{
+    .clickable-actor:hover,.movie-link:hover{
         color: #fff; /* Change link color on hover if needed */
     }
 
-    .movie-link:hover {
-        color: #fff; /* Change link color on hover if needed */
-    }
 
         .movie-link {
         text-decoration: none;
         color: #afeeee(238, 207, 29); /* Link color */
         cursor: pointer;
-        text-decoration: none; 
         color: #afeeee(238, 207, 29); 
         transform: scale(1.05); /* Increase the size on hover */
     box-shadow: 0 0 15px rgb(12, 196, 95); /* Add glow effect on hover */
     }
-    #searchBar {
-margin-top: 10px;
-background-color: #000000;
-max-width: 150px;
-height: 18px;
-padding: 10px;
-margin-left: 2px;
-color: rgb(0, 255, 255);
-/* text-align: center; */
-border: 1px solid #afeeee;
-border-radius: 10px;
-/* box-shadow: 3px 3px 2px rgb(249, 255, 85); */
-  
 
-  
-}
+        #searchBar {
+            margin-top: 10px;
+            background-color: #000000;
+            max-width: 150px;
+            height: 18px;
+            padding: 10px;
+            margin-left: 2px;
+            color: rgb(0, 255, 255);
+            border: 1px solid #afeeee;
+            border-radius: 10px;
+        }
 
+        #searchBar:focus {
+            color: rgb(0, 255, 255);
+            background-color: #000000;
+            outline-color: rgb(0, 255, 255);
+            box-shadow: -3px -3px 15px rgb(0, 255, 255);
+            transition: .1s;
+            transition-property: box-shadow;
+        }
 
-#searchBar:focus {
-color: rgb(0, 255, 255);
-background-color: #000000;
-outline-color: rgb(0, 255, 255);
-box-shadow: -3px -3px 15px rgb(0, 255, 255);
-transition: .1s;
-transition-property: box-shadow;
-}
+        #back-btn {
+            color: #afeeee;
+            border: 1px solid #afeeee;
+            border-radius: 10px;
+            padding: 5px 10px;
+            background: transparent;
+            height: 30px;
+        }
 
-/* Optional: Add some padding for better visual appearance */
-#searchBar {
-padding: 5px;
-}
-#back-btn {
-        color: #afeeee;
-        border: 1px solid #afeeee;
-        border-radius: 10px;
-        padding: 5px 10px;
-        background: transparent;
-        height: 30px;
-    }
-    #back-btn:hover {
-        box-shadow: 2px 2px 55px #afeeee inset;
-    }
-    #back-btn:active {
-        box-shadow: 2px 2px 55px #afeeee inset;
-    }
+        #back-btn:hover {
+            box-shadow: 2px 2px 55px #afeeee inset;
+        }
+
+        #back-btn:active {
+            box-shadow: 2px 2px 55px #afeeee inset;
+        }
+
+        #actorPoster {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            border: 1px solid #afeeee;
+            padding: 10px;
+            background-color: #000;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        #actorPoster img {
+            width: 100%;
+      
+        }
     </style>
 </head>
 
@@ -99,37 +102,48 @@ padding: 5px;
     <div id="actorMoviesContainer"></div>
     <div id="searchResults"></div>
     <div id="loadingMessage">Loading...</div>
+    <div id="actorPoster">
+        <img id="actorPosterImage" src="" alt="">
+    </div>
+    
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="central.js"></script>
     <script>
-    $(document).ready(function () {
-        let isLoading = false;
-        const urlParams = new URLSearchParams(window.location.search);
-        const staffId = urlParams.get('staffId');
-        if (staffId) fetchAndDisplayActorDetails(staffId);
+        $(document).ready(function () {
+            let isLoading = false;
+            const urlParams = new URLSearchParams(window.location.search);
+            const staffId = urlParams.get('staffId');
+            if (staffId) fetchAndDisplayActorDetails(staffId);
+$('#actorPoster').on('click', function() {
+    $('#actorPosterImage').toggle();
+});
 
-        $('#searchBar').on('input', function () {
-            const actorName = $(this).val().trim();
-            if (actorName) {
-                searchActor(actorName);
-            } else {
-                $('#searchResults').empty();
-                if (staffId) fetchAndDisplayActorDetails(staffId);
-            }
+            $('#searchBar').on('input', function () {
+                const actorName = $(this).val().trim();
+                if (actorName) {
+                    searchActor(actorName);
+                } else {
+                    $('#searchResults').empty();
+                    if (staffId) fetchAndDisplayActorDetails(staffId);
+                }
+            });
+
+            $('body').on('click', '.clickable-actor', function () {
+                if (!isLoading) {
+                    isLoading = true;
+                    const kinopoiskId = $(this).data('kinopoisk-id');
+                    $('#loadingMessage').show();
+                    $('#searchResults').empty();
+                    window.location.href = `?staffId=${kinopoiskId}`;
+                }
+            });
         });
 
-        $('body').on('click', '.clickable-actor', function () {
-            if (!isLoading) {
-                isLoading = true;
-                const kinopoiskId = $(this).data('kinopoisk-id');
-                $('#loadingMessage').show();
-                $('#searchResults').empty();
-                window.location.href = `?staffId=${kinopoiskId}`;
-            }
-        });
-    });
-    function goBack() {
+        function goBack() {
             window.history.back();
         }
+
         async function fetchAndDisplayActorDetails(staffId) {
     $('#searchResults').empty();
     $('#actorMoviesContainer').empty();
@@ -146,6 +160,9 @@ padding: 5px;
 
         // Display actor's name immediately
         $('#actorName').text(response.nameRu);
+
+        // Display actor's poster
+        $('#actorPosterImage').attr('src', response.posterUrl);
 
         const movies = response.films.reverse(); // Reverse the order of movies
         $('#loadingMessage').hide();
@@ -164,64 +181,63 @@ padding: 5px;
     }
 }
 
-    async function checkIframeUrl(filmId) {
-        const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
-        try {
-            const response = await $.ajax({ url: iframeUrlApiUrl });
-            return response.data[0].iframeUrl !== null ||
-            response.data[1].iframeUrl !== null ;
-        } catch (error) {
-            console.error(`Error fetching iframeUrl for filmId ${filmId}:`, error);
-            return false;
-        }
-    }
 
-    function searchActor(actorName) {
-        $('#loadingMessage').show();
-        $('#searchResults').empty();
-        $('#actorMoviesContainer').empty();
-
-        $.ajax({
-            url: 'https://kinopoiskapiunofficial.tech/api/v1/persons',
-            headers: {
-                'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-                'Content-Type': 'application/json'
-            },
-            data: { name: actorName, page: '1' },
-            success: function (response) {
-                $('#loadingMessage').hide();
-                displaySearchResults(response.items);
-            },
-            error: function (error) {
-                console.error('Error fetching actor search data:', error);
-                $('#loadingMessage').hide();
+        async function checkIframeUrl(filmId) {
+            const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
+            try {
+                const response = await $.ajax({ url: iframeUrlApiUrl });
+                return response.data[0].iframeUrl !== null || response.data[1].iframeUrl !== null;
+            } catch (error) {
+                console.error(`Error fetching iframeUrl for filmId ${filmId}:`, error);
+                return false;
             }
-        });
-    }
+        }
 
-    function displaySearchResults(searchResults) {
-        const searchResultsContainer = $('#searchResults').empty();
-        searchResults.filter(actor => actor.kinopoiskId).forEach(function (actor) {
-            const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor').data('kinopoisk-id', actor.kinopoiskId);
-            searchResultsContainer.append(actorElement);
-        });
-    }
+        function searchActor(actorName) {
+            $('#loadingMessage').show();
+            $('#searchResults').empty();
+            $('#actorMoviesContainer').empty();
 
-    function displaySingleMovie(movie) {
-        const actorMoviesContainer = $('#actorMoviesContainer');
-        const movieElement = $('<div>').addClass('clickable-movie').data('film-id', movie.filmId);
-        const movieLink = $('<a>').attr('href', `./index.html?=${movie.filmId}`).addClass('movie-link');
-        const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.professionKey} | ${movie.description}`).addClass('movie-info');
-        movieLink.append(movieInfo);
-        movieElement.append(movieLink);
-        actorMoviesContainer.append(movieElement);
+            $.ajax({
+                url: 'https://kinopoiskapiunofficial.tech/api/v1/persons',
+                headers: {
+                    'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+                    'Content-Type': 'application/json'
+                },
+                data: { name: actorName, page: '1' },
+                success: function (response) {
+                    $('#loadingMessage').hide();
+                    displaySearchResults(response.items);
+                },
+                error: function (error) {
+                    console.error('Error fetching actor search data:', error);
+                    $('#loadingMessage').hide();
+                }
+            });
+        }
 
-        $('.clickable-movie').on('click', function (event) {
-            event.preventDefault();
-            window.open(`index.html?=${$(this).data('film-id')}`, '_blank');
-        });
-    }
+        function displaySearchResults(searchResults) {
+            const searchResultsContainer = $('#searchResults').empty();
+            searchResults.filter(actor => actor.kinopoiskId).forEach(function (actor) {
+                const actorElement = $('<div>').text(actor.nameRu).addClass('clickable-actor').data('kinopoisk-id', actor.kinopoiskId);
+                searchResultsContainer.append(actorElement);
+            });
+        }
+
+        function displaySingleMovie(movie) {
+            const actorMoviesContainer = $('#actorMoviesContainer');
+            const movieElement = $('<div>').addClass('clickable-movie').data('film-id', movie.filmId);
+            const movieLink = $('<a>').attr('href', `./index.html?=${movie.filmId}`).addClass('movie-link');
+            const movieInfo = $('<div>').text(`${movie.nameRu} | ${movie.rating} | ${movie.professionKey} | ${movie.description}`).addClass('movie-info');
+            movieLink.append(movieInfo);
+            movieElement.append(movieLink);
+            actorMoviesContainer.append(movieElement);
+
+            $('.clickable-movie').on('click', function (event) {
+                event.preventDefault();
+                window.open(`index.html?=${$(this).data('film-id')}`, '_blank');
+            });
+        }
     </script>
 </body>
-
 </html>
