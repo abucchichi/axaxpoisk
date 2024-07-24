@@ -164,7 +164,7 @@ $('#actorPoster').on('click', function() {
         // Display actor's poster
         $('#actorPosterImage').attr('src', response.posterUrl);
 
-        const movies = response.films.reverse(); // Reverse the order of movies
+        const movies = response.films
         $('#loadingMessage').hide();
         for (const movie of movies) {
             if (!uniqueMovieNames.has(movie.nameRu)) {
