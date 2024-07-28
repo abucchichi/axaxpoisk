@@ -70,7 +70,8 @@ margin-bottom: 10px;
   max-width: 600;
   color: #afeeee;
 }
-#year {
+
+#year,#ratingAgeLimits,#ratingImdb,#genres {
   font-size: 18px;
   font-style: inherit;
   max-width: 600;
