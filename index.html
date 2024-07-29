@@ -185,9 +185,22 @@ document.getElementById("togglePlayerIDButton").addEventListener("click", toggle
     const actorsContainer = $('#actorsContainer');
 
     actorsContainer.empty();
-    // const filteredActors = actors.filter(actor => actor.professionKey === 'ACTOR');
-    const filteredActors = actors.filter(actor => actor.professionKey);
-    filteredActors.slice(0, 10).forEach(function (actor) {
+
+    // Find the first "DIRECTOR"
+    const firstDirector = actors.find(actor => actor.professionKey === 'DIRECTOR');
+
+    // Create a list with the first director and only actors afterwards
+    let filteredActors = [];
+    if (firstDirector) {
+        filteredActors.push(firstDirector);
+    }
+    // Filter out the actors excluding the first director
+    const onlyActors = actors.filter(actor => actor.professionKey === 'ACTOR');
+
+    // Take actors to fill the rest up to 10
+    filteredActors = filteredActors.concat(onlyActors.slice(0, 10 - filteredActors.length));
+
+    filteredActors.forEach(function (actor) {
         const name = actor.nameRu;
         const staffId = actor.staffId;
         const posterUrl = actor.posterUrl;
@@ -200,12 +213,13 @@ document.getElementById("togglePlayerIDButton").addEventListener("click", toggle
         const professionElement = $('<p>').text(profession);
         const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
         const descriptionElement = $('<p>').text(description);
-        
+
         actorElement.append(posterElement, nameElement, descriptionElement);
         actorLink.append(actorElement);
         actorsContainer.append(actorLink);
     });
 }
+
 function getMovieData() {
     const movieIdValue = $('#movieIdInput').val();
     const newUrl = `?=${movieIdValue}`;
