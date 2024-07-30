@@ -1,1 +1,1 @@
-var myLink = "https://w6.kpfr.wiki/"
+var myLink = "https://k1.kpfr.fun/"
