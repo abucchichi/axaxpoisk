@@ -296,6 +296,8 @@ function extractMovieId(iframeUrl) {
         const ratingImdb = response.ratingImdb;
         const genres = response.genres.map(genre => genre.genre).join(', ');
 
+        document.title = `${detailedFilmName} | axaxpoisk`;
+
         displayDetailedFilmName(detailedFilmName);
         displaydescription(description);
         displayyear(year);
