@@ -296,7 +296,8 @@ function extractMovieId(iframeUrl) {
         const ratingImdb = response.ratingImdb;
         const genres = response.genres.map(genre => genre.genre).join(', ');
 
-        document.title = `${detailedFilmName} | axaxpoisk`;
+        // Update the page title with the movie name
+        document.title = `${detailedFilmName} - axaxpoisk`;
 
         displayDetailedFilmName(detailedFilmName);
         displaydescription(description);
@@ -308,6 +309,15 @@ function extractMovieId(iframeUrl) {
         displaygenres(genres);
         logMovieView(movieId);
         toggleWatchlistButton();
+
+        // Clear existing movie displays
+        $('#movieBlok').empty();
+
+        // Fetch and display sequels and prequels
+        getSequelsAndPrequels(movieId);
+
+        // Fetch and display similar movies
+        // getSimilarMovies(movieId);
     });
 }
 
@@ -416,8 +426,27 @@ function displayshortdescription(shortdescription) {
         element.innerHTML = '';
     }
 }
+function getSequelsAndPrequels(movieId) {
+    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.1/films/${movieId}/sequels_and_prequels`;
 
-        function getSimilarMovies(movieId) {
+    $.ajax({
+        url: apiUrl,
+        headers: {
+            'X-API-KEY': apiKey,
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+            if (response && response.length > 0) {
+                displayRelatedMovies(response,);
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching sequels and prequels:', error);
+        }
+    });
+}
+
+function getSimilarMovies(movieId) {
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
 
     $.ajax({
@@ -427,36 +456,49 @@ function displayshortdescription(shortdescription) {
             'Content-Type': 'application/json'
         },
         success: function (response) {
-            displaySimilarMovies(response.items);
+            if (response.items && response.items.length > 0) {
+                displayRelatedMovies(response.items,);
+            }
         },
         error: function (error) {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching similar movies:', error);
         }
     });
 }
 
-function displaySimilarMovies(items) {
+
+function displayRelatedMovies(items, ) {
     const movieBlok = $('#movieBlok');
 
-    // Clear existing content in the movieBlok
-    movieBlok.empty();
+    // Create a new section for this type of related movies
+    const sectionElement = $('<div>').addClass('related-movies-section');
+    const titleElement = $('<h3>').text();
+    sectionElement.append(titleElement);
+
+    // Create a container for the movies
+    const moviesContainer = $('<div>').addClass('movies-container');
 
     items.forEach(function (item) {
         const nameRu = item.nameRu;
-        const posterUrl = item.posterUrlPreview;
+        const posterUrl = item.posterUrlPreview || item.posterUrl;
         const filmId = item.filmId;
 
         const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
 
         const movieElement = $('<div>').addClass('movie');
         const nameElement = $('<p>').text(nameRu);
-        const filmElement = $('<p>').text(filmId);
         const posterElement = $('<img>').attr('src', posterUrl);
 
         movieElement.append(posterElement, nameElement);
         movieLink.append(movieElement);
-        movieBlok.append(movieLink);
+        moviesContainer.append(movieLink);
     });
+
+    // Append the movies container to the section
+    sectionElement.append(moviesContainer);
+
+    // Append the new section to movieBlok
+    movieBlok.append(sectionElement);
 }
 
 function handleUrlChange() {
