@@ -243,7 +243,7 @@ function getMovieData() {
                 viewMovie(movieId, iframeUrl);
                 displayFilmName(filmName);
                 getMovieDetails(movieIdValue);
-                getSimilarMovies(movieIdValue);
+                // getSimilarMovies(movieIdValue);
                 getMovieActors(movieIdValue);
             } else {
                 console.error('No valid iframe URL found');
@@ -317,7 +317,7 @@ function extractMovieId(iframeUrl) {
         getSequelsAndPrequels(movieId);
 
         // Fetch and display similar movies
-        // getSimilarMovies(movieId);
+        getSimilarMovies(movieId);
     });
 }
 
