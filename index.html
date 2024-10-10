@@ -326,9 +326,10 @@ async function logMovieView(detailedFilmName) {
     const locationResponse = await fetch('https://ipapi.co/json/');
     const locationData = await locationResponse.json();
     
-    movieId = detailedFilmName
+    movieName = detailedFilmName
     const payload = {
         movieId,
+        movieName,
       location: {
         ip: locationData.ip,
         city: locationData.city,
