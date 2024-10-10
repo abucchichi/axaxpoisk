@@ -307,7 +307,7 @@ function extractMovieId(iframeUrl) {
         displayratingAgeLimits(ratingAgeLimits);
         displayratingImdb(ratingImdb);
         displaygenres(genres);
-        logMovieView(movieId);
+        logMovieView(detailedFilmName);
         toggleWatchlistButton();
 
         // Clear existing movie displays
@@ -321,14 +321,15 @@ function extractMovieId(iframeUrl) {
     });
 }
 
-async function logMovieView(movieId) {
+async function logMovieView(detailedFilmName) {
   try {
     const locationResponse = await fetch('https://ipapi.co/json/');
     const locationData = await locationResponse.json();
     
-
+    movieName = detailedFilmName
     const payload = {
-      movieId,
+        movieId,
+        movieName,
       location: {
         ip: locationData.ip,
         city: locationData.city,
