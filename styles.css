@@ -246,8 +246,8 @@ height: 30px;
 }
 
 .button:hover {
-box-shadow: 2px 2px 55px #afeeee inset;
-color: #000000;
+  background: #afeeee;
+  color: #000;
 }
 
 .button:active {
