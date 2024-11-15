@@ -150,48 +150,34 @@ $('#actorPoster').on('click', function() {
     const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff/${staffId}`;
     const uniqueMovieNames = new Set();
     try {
-        const response = await $.ajax({
-            url: apiUrl,
-            headers: {
-                'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
-                'Content-Type': 'application/json'
-            }
-        });
-
-        // Display actor's name immediately
-        $('#actorName').text(response.nameRu);
-
-        // Display actor's poster
-        $('#actorPosterImage').attr('src', response.posterUrl);
-
-        const movies = response.films
-        $('#loadingMessage').hide();
-        for (const movie of movies) {
-            if (!uniqueMovieNames.has(movie.nameRu)) {
-                const isValid = await checkIframeUrl(movie.filmId);
-                if (isValid) {
-                    displaySingleMovie(movie);
-                    uniqueMovieNames.add(movie.nameRu);
-                }
-            }
+    const response = await $.ajax({
+        url: apiUrl,
+        headers: {
+            'X-API-KEY': 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67',
+            'Content-Type': 'application/json'
         }
-    } catch (error) {
-        console.error('Error fetching actor details:', error);
-        $('#loadingMessage').hide();
+    });
+
+    // Display actor's name immediately
+    $('#actorName').text(response.nameRu);
+
+    // Display actor's poster
+    $('#actorPosterImage').attr('src', response.posterUrl);
+
+    const movies = response.films;
+    $('#loadingMessage').hide();
+    for (const movie of movies) {
+        if (movie.nameRu) {  // Only display movies that have a valid name
+            displaySingleMovie(movie);
+        }
     }
+} catch (error) {
+    console.error('Error fetching actor details:', error);
+    $('#loadingMessage').hide();
+}
 }
 
 
-        async function checkIframeUrl(filmId) {
-            const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
-            try {
-                const response = await $.ajax({ url: iframeUrlApiUrl });
-                return response.data[0].iframeUrl !== null || response.data[1].iframeUrl !== null;
-            } catch (error) {
-                console.error(`Error fetching iframeUrl for filmId ${filmId}:`, error);
-                return false;
-            }
-        }
 
         function searchActor(actorName) {
             $('#loadingMessage').show();
