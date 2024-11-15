@@ -243,7 +243,7 @@ function fetchAndDisplayResults(countries, genres, yearFrom, yearTo, page) {
       'page': page
     }
   }).done(function(response) {
-    displayResultsWithIframeCheck(response);
+    displayResults(response);
   });
 }
 
@@ -251,38 +251,25 @@ function fetchAndDisplayResults(countries, genres, yearFrom, yearTo, page) {
 
 
 
-async function displayResultsWithIframeCheck(response) {
+async function displayResults(response) {
   var resultsContainer = document.getElementById('results');
-
-
+  
   if (response && response.items && response.items.length > 0) {
-    var moviesWithValidIframe = await Promise.all(
-      response.items.map(async function (movie) {
-        if (!movie.nameRu || movie.ratingKinopoisk === null) {
-          return null; // Skip invalid movies
-        }
+    response.items.forEach(function (movie) {
+      if (movie.nameRu && movie.ratingKinopoisk !== null) { // Only display movies with valid name and rating
+        var movieHtml = '<div class="movie">';
+        movieHtml += '<a href="index.html?=' + movie.kinopoiskId + '">';
+        movieHtml += '<img src="' + movie.posterUrl + '" alt="Movie Poster">';
+        movieHtml += '<h3 class="movie-title">' + (movie.nameRu || movie.nameEn) + '</h3>';
+        movieHtml += '</a>';
+        movieHtml += '</div>';
 
-        var hasValidIframe = await checkIframeUrl(movie.kinopoiskId);
+        resultsContainer.innerHTML += movieHtml;
+      }
+    });
 
-        if (hasValidIframe) {
-          var movieHtml = '<div class="movie">';
-          movieHtml += '<a href="index.html?=' + movie.kinopoiskId + '">';
-          movieHtml += '<img src="' + movie.posterUrl + '" alt="Movie Poster">';
-          movieHtml += '<h3 class="movie-title">' + (movie.nameRu || movie.nameEn) + '</h3>';
-          movieHtml += '</div>';
-
-          resultsContainer.innerHTML += movieHtml;
-          return movie;
-        } else {
-          return null; // Skip movies with null iframeUrl
-        }
-      })
-    );
-
-    // Filter out null entries (movies with invalid data)
-    var validMovies = moviesWithValidIframe.filter(movie => movie !== null);
-
-    if (validMovies.length > 0) {
+    // Show load more button if there are results
+    if (response.items.length > 0) {
       loadMoreContainer.style.display = 'block';
     } else {
       loadMoreContainer.style.display = 'none';
@@ -295,7 +282,7 @@ async function displayResultsWithIframeCheck(response) {
 
 // Function to check iframeUrl for a movie
 async function checkIframeUrl(filmId) {
-  const iframeUrlApiUrl = `${myLink}kinobox/index.php?kinopoisk=${filmId}`;
+  const iframeUrlApiUrl = `${myLink}/api/players?kinopoisk=${filmId}`;
 
   try {
     const iframeUrlResponse = await $.ajax({
