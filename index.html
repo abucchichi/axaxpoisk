@@ -233,19 +233,23 @@ function getMovieData() {
             'sources': 'collaps,alloha,vibix,videocdn,hdvb,kodik',
         }
     }).done(function (response) {
-        console.log(response)
-        if (response && response.length > 0) {
-            const playerData = response.find(item => item.source === playerID);
-            const iframeUrl = playerData ? playerData.iframeUrl : null;
+        console.log(response);
 
-            if (iframeUrl) {
+        if (response && response.length > 0) {
+            // Find the first source with a non-null iframeUrl
+            const validSource = response.find(item => item.iframeUrl !== null);
+
+            if (validSource) {
+                const iframeUrl = validSource.iframeUrl;
                 const movieId = extractMovieId(iframeUrl);
-                const filmName = response[0].nameRu;
 
                 viewMovie(movieId, iframeUrl);
-                displayFilmName(filmName);
+
+                if (response[0].nameRu) {
+                    displayFilmName(response[0].nameRu);
+                }
+
                 getMovieDetails(movieIdValue);
-                // getSimilarMovies(movieIdValue);
                 getMovieActors(movieIdValue);
             } else {
                 console.error('No valid iframe URL found');
@@ -259,9 +263,10 @@ function getMovieData() {
         console.error('Error fetching movie data:', error);
         $('#movieContainer').html('<h1>Error fetching movie data</h1>');
     }).always(() => {
-        $('#loading').hide(); 
+        $('#loading').hide();
     });
 }
+
 
 function extractMovieId(iframeUrl) {
     const urlParts = iframeUrl.split('/');
