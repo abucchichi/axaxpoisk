@@ -1,528 +1,170 @@
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="central.js"></script>
-<!-- <script src="weather.js"></script> -->
-
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>axaxpoisk</title>
-    <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-</head>
+    <script src="central.js"></script>
+    <!-- <script src="weather.js"></script> -->
 
-<body>
-    <!-- <div id="weatherContainer"></div> -->
-    <div id="filmName"></div>
-    <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
-    <input type="text" id="searchInput" placeholder="id / keywords" inputmode="text">
-    <button class="button" onclick="searchMovies()">search</button>
-    <a href="./filter.html"><button class="button">filter</button></a>
-    <a href="./actor_movies.html"><button class="button">actors</button></a>
-    <button class="button" onclick="getRandomMovie()">random</button>
-    <button class="button" id="togglePlayerIDButton">player</button>
-    <button class="button" onclick="goToWatchlist()">watchlist</button>
+    <!DOCTYPE html>
+    <html lang="ru">
+
+    <head>
+        <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/12/12096.png" type="image/png">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>axaxpoisk</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     
-    <label class="switch">
-        <input type="checkbox">
-        <span class="slider" onclick="toggleElements()"></span>
-    </label>
+        <!-- Add these new scripts -->
+        <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        
+        <!-- Import your CustomPlayer component -->
+        <script type="text/babel" src="CustomPlayer.jsx"></script>
+    </head>
+
+    <body>
+        <!-- <div id="weatherContainer"></div> -->
+        <div id="filmName"></div>
+        <input type="text" id="movieIdInput" placeholder="ID s kinopoiska" inputmode="numeric" pattern="[0-9]*">
+        <input type="text" id="searchInput" placeholder="id / keywords" inputmode="text">
+        <button class="button" onclick="searchMovies()">search</button>
+        <a href="./filter.html"><button class="button">filter</button></a>
+        <a href="./actor_movies.html"><button class="button">actors</button></a>
+        <button class="button" onclick="getRandomMovie()">random</button>
+        <button class="button" id="togglePlayerIDButton">player</button>
+        <button class="button" onclick="goToWatchlist()">watchlist</button>
+        
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider" onclick="toggleElements()"></span>
+        </label>
 
 
 
 
 
-    
-    <div class="hideable" id="detailedFilmName"></div>
-    
-    <div id="movieContainer"></div> 
-    <button class="button" onclick="addToWatchlist()">add to watchlist</button> 
-    <span id="loading" class="loader"></span>
-    <div class="hideable" id="infoContainer">
-        <span id="year"></span>
-        <span id="ratingImdb"></span>
-        <span id="genres"></span>
-        <span id="ratingAgeLimits"></span>
-     
-    </div>
+        
+        <div class="hideable" id="detailedFilmName"></div>
+        
+        <div id="movieContainer"></div> 
+        <button class="button" onclick="addToWatchlist()">add to watchlist</button> 
+        <span id="loading" class="loader"></span>
+        <div class="hideable" id="infoContainer">
+            <span id="year"></span>
+            <span id="ratingImdb"></span>
+            <span id="genres"></span>
+            <span id="ratingAgeLimits"></span>
+        
+        </div>
 
-    
-    <br><div class="hideable" id="shortdescription"></div></br>
-    <div class="hideable" id="description"></div>
-    <br><div class="hideable" id="slogan"></div></br>
+        
+        <br><div class="hideable" id="shortdescription"></div></br>
+        <div class="hideable" id="description"></div>
+        <br><div class="hideable" id="slogan"></div></br>
 
-    <div class="hideable" id="movieBlok"></div>
-    <div class="hideable" id="actorsContainer" style="float: left; padding: 10px;"></div>
-    <div class="hideable" id="year"></div>
+        <div class="hideable" id="movieBlok"></div>
+        <div class="hideable" id="actorsContainer" style="float: left; padding: 10px;"></div>
+        <div class="hideable" id="year"></div>
 
 
-    <script>
-        const API_URL = 'https://verlcelwether.vercel.app';
-        const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
-            
+        <script>
+            const API_URL = 'https://verlcelwether.vercel.app';
+            const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
+                
 
-        async function addToWatchlist() {
-            const token = localStorage.getItem('token');
-            const movieId = document.getElementById('movieIdInput').value;
-            
-            // Check if the movie is already in the watchlist
-            const watchlist = await getWatchlist();
-            alert("added to watchlist");
-            if (watchlist.includes(movieId)) {
-                alert("already in watchlist");
-                return;
+            async function addToWatchlist() {
+                const token = localStorage.getItem('token');
+                const movieId = document.getElementById('movieIdInput').value;
+                
+                // Check if the movie is already in the watchlist
+                const watchlist = await getWatchlist();
+                alert("added to watchlist");
+                if (watchlist.includes(movieId)) {
+                    alert("already in watchlist");
+                    return;
+                }
+
+                await fetch(`${API_URL}/watchlist`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    body: JSON.stringify({ movieId })
+                });
+                // displayWatchlist();
             }
 
-            await fetch(`${API_URL}/watchlist`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                body: JSON.stringify({ movieId })
-            });
-            // displayWatchlist();
-        }
-
-        async function getWatchlist() {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`${API_URL}/watchlist`, {
-                method: 'GET',
-                headers: { 'Authorization': token }
-            });
-            return await response.json();
-        }
+            async function getWatchlist() {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/watchlist`, {
+                    method: 'GET',
+                    headers: { 'Authorization': token }
+                });
+                return await response.json();
+            }
 
 
 
-        // async function getMovieDetails(movieId) {
-        //     const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`, {
-        //         headers: { 'X-API-KEY': apiKey }
-        //     });
-        //     return await response.json();
-        // }
+            // async function getMovieDetails(movieId) {
+            //     const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`, {
+            //         headers: { 'X-API-KEY': apiKey }
+            //     });
+            //     return await response.json();
+            // }
 
-        function goToWatchlist() {
-            window.location.href = 'watchlist.html';
-        }
+            function goToWatchlist() {
+                window.location.href = 'watchlist.html';
+            }
 
-        // Call displayWatchlist on page load if user is logged in
-        if (localStorage.getItem('token')) {
-            // displayWatchlist();
-        }
-        
-    </script>
-    <script>
-        
-var playerID = "Collaps";
+            // Call displayWatchlist on page load if user is logged in
+            if (localStorage.getItem('token')) {
+                // displayWatchlist();
+            }
+            
+        </script>
+        <script>
+            
+    var playerID = "Collaps";
 
-function togglePlayerID() {
-    playerID = playerID === "Collaps" ? "Alloha" : "Collaps";
-    console.log("playerID toggled to:", playerID);
-    getMovieData();
-}
+    function togglePlayerID() {
+        playerID = playerID === "Collaps" ? "Alloha" : "Collaps";
+        console.log("playerID toggled to:", playerID);
+        getMovieData();
+    }
 
-document.getElementById("togglePlayerIDButton").addEventListener("click", togglePlayerID);
+    document.getElementById("togglePlayerIDButton").addEventListener("click", togglePlayerID);
 
 
-// window.onload = function() {
-//     if (localStorage.getItem('playerID') !== null) {
-//         playerID = parseInt(localStorage.getItem('playerID'));
-//         console.log("playerID restored from localStorage:", playerID);
-//     }
-// }
-        // const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
-        $(document).ready(function () {
-            // getSimilarMovies(movieId);
+    // window.onload = function() {
+    //     if (localStorage.getItem('playerID') !== null) {
+    //         playerID = parseInt(localStorage.getItem('playerID'));
+    //         console.log("playerID restored from localStorage:", playerID);
+    //     }
+    // }
+            // const apiKey = 'c20595a1-3d8c-4cbd-92eb-fd7b0fa75c67';
+            $(document).ready(function () {
+                // getSimilarMovies(movieId);
 
-            loadMovieFromURL();
-            $(document).on('click', '.similar-movie-link', function (event) {
-        event.preventDefault();
-        const movieId = $(this).data('movie-id');
+                loadMovieFromURL();
+                $(document).on('click', '.similar-movie-link', function (event) {
+            event.preventDefault();
+            const movieId = $(this).data('movie-id');
 
-        handleSimilarMovieClick(movieId);
-    });
+            handleSimilarMovieClick(movieId);
         });
-
-        function loadMovieFromURL() {
-            const movieIdFromURL = getParameterByName('');
-            if (movieIdFromURL) {
-                $('#movieIdInput').val(movieIdFromURL);
-                // getMovieData();
-            }
-        }
-
-        function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-     function getMovieActors(movieId) {
-            const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=${movieId}`;
-
-            $.ajax({
-                url: apiUrl,
-                headers: {
-                    'X-API-KEY': apiKey,
-                    'Content-Type': 'application/json'
-                },
-                success: function (response) {
-                    displayMovieActors(response);
-                },
-                error: function (error) {
-                    console.error('Error fetching actors data:', error);
-                }
             });
-        }
 
-        function displayMovieActors(actors) {
-    const actorsContainer = $('#actorsContainer');
-
-    actorsContainer.empty();
-
-    const firstDirector = actors.find(actor => actor.professionKey === 'DIRECTOR');
-
-    let filteredActors = [];
-    if (firstDirector) {
-        filteredActors.push(firstDirector);
-    }
-    const onlyActors = actors.filter(actor => actor.professionKey === 'ACTOR');
-
-    filteredActors = filteredActors.concat(onlyActors.slice(0, 10 - filteredActors.length));
-
-    filteredActors.forEach(function (actor) {
-        const name = actor.nameRu;
-        const staffId = actor.staffId;
-        const posterUrl = actor.posterUrl;
-        const profession = actor.professionText;
-        const description = actor.description;
-        const actorLink = $('<a>').attr('href', `actor_movies.html?staffId=${staffId}`).addClass('actor-link');
-
-        const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
-        const nameElement = $('<p>').text(name);
-        const professionElement = $('<p>').text(profession);
-        const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
-        const descriptionElement = $('<p>').text(description);
-
-        actorElement.append(posterElement, nameElement, descriptionElement);
-        actorLink.append(actorElement);
-        actorsContainer.append(actorLink);
-    });
-}
-
-function getMovieData() {
-    const movieIdValue = $('#movieIdInput').val();
-    const newUrl = `?=${movieIdValue}`;
-    
-    window.history.pushState({ path: newUrl }, '', newUrl);
-
-    return $.ajax({
-        url: `${myLink}/api/players`,
-        crossDomain: true,
-        data: {
-            'kinopoisk': movieIdValue,
-            'sources': 'collaps,alloha,vibix,videocdn,hdvb,kodik',
-        }
-    }).done(function (response) {
-        console.log(response);
-
-        if (response && response.length > 0) {
-            // Find the first source with a non-null iframeUrl
-            const validSource = response.find(item => item.iframeUrl !== null);
-
-            if (validSource) {
-                const iframeUrl = validSource.iframeUrl;
-                const movieId = extractMovieId(iframeUrl);
-
-                viewMovie(movieId, iframeUrl);
-
-                if (response[0].nameRu) {
-                    displayFilmName(response[0].nameRu);
+            function loadMovieFromURL() {
+                const movieIdFromURL = getParameterByName('');
+                if (movieIdFromURL) {
+                    $('#movieIdInput').val(movieIdFromURL);
+                    // getMovieData();
                 }
-
-                getMovieDetails(movieIdValue);
-                getMovieActors(movieIdValue);
-            } else {
-                console.error('No valid iframe URL found');
-                $('#movieContainer').html('<h1>No movie found</h1>');
             }
-        } else {
-            console.error('No movie data found');
-            $('#movieContainer').html('<h1>No movie found</h1>');
-        }
-    }).fail((error) => {
-        console.error('Error fetching movie data:', error);
-        $('#movieContainer').html('<h1>Error fetching movie data</h1>');
-    }).always(() => {
-        $('#loading').hide();
-    });
-}
 
-
-function extractMovieId(iframeUrl) {
-    const urlParts = iframeUrl.split('/');
-    // console.log('url=====', iframeUrl)
-    return urlParts[urlParts.length - 1];
-}
-
-        function viewMovie(movieId,iframeUrl) {
-
-            // console.log('iframe======',iframeUrl)
-            const iframe = `<iframe src="${iframeUrl}" max-width="600" width = "100%"  height="450" frameborder="0" allowfullscreen></iframe>`;
-            document.getElementById('movieContainer').innerHTML = iframe;
-        }
-
-        function displayFilmName(filmName) {
-            document.getElementById('filmName')
-        }
-
-        function getMovieDetails(movieId) {
-    $.ajax({
-        url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
-        crossDomain: true,
-        headers: {
-            'x-api-key': apiKey
-        },
-        contentType: 'application/json'
-    }).done(function (response) {
-        const detailedFilmName = response.nameRu;
-        const description = response.description;
-        const year = response.year;
-        const slogan = response.slogan;
-        const shortdescription = response.shortDescription;
-        const ratingAgeLimits = response.ratingAgeLimits;
-        const ratingImdb = response.ratingImdb;
-        const genres = response.genres.map(genre => genre.genre).join(', ');
-
-        // Update the page title with the movie name
-        document.title = `${detailedFilmName} - axaxpoisk`;
-
-        displayDetailedFilmName(detailedFilmName);
-        displaydescription(description);
-        displayyear(year);
-        displayslogan(slogan);
-        displayshortdescription(shortdescription);
-        displayratingAgeLimits(ratingAgeLimits);
-        displayratingImdb(ratingImdb);
-        displaygenres(genres);
-        logMovieView(movieId,detailedFilmName);
-        toggleWatchlistButton();
-
-        // Clear existing movie displays
-        $('#movieBlok').empty();
-
-        // Fetch and display sequels and prequels
-        getSequelsAndPrequels(movieId);
-
-        // Fetch and display similar movies
-        getSimilarMovies(movieId);
-    });
-}
-
-async function logMovieView(movieId,detailedFilmName) {
-  try {
-    const locationResponse = await fetch('https://ipapi.co/json/');
-    const locationData = await locationResponse.json();
-      
-    movieName = detailedFilmName
-    const payload = {
-        movieId,
-        movieName,
-      location: {
-        ip: locationData.ip,
-        city: locationData.city,
-        region: locationData.region,
-
-      }
-    };
-
-    const response = await fetch('https://verlcelwether.vercel.app/log-movie-view', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    console.log(data.message, data.logData);
-  } catch (error) {
-    console.error('Error logging movie view:', error);
-  }
-}
-
-
-function displayratingAgeLimits(ratingAgeLimits) {
-    const element = document.getElementById('ratingAgeLimits');
-    if (ratingAgeLimits !== null) {
-        const transformedRating = ratingAgeLimits.replace('age', '') + '+';
-        element.innerHTML = `| ${transformedRating}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-function displayratingImdb(ratingImdb) {
-    const element = document.getElementById('ratingImdb');
-    if (ratingImdb !== null) {
-        element.innerHTML = ` | ${ratingImdb} | `;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-function displaygenres(genres) {
-    const element = document.getElementById('genres');
-    if (genres !== null) {
-        element.innerHTML = `${genres}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-
-        function displayDetailedFilmName(detailedFilmName) {
-    const element = document.getElementById('detailedFilmName');
-    if (detailedFilmName !== null) {
-        element.innerHTML = `${detailedFilmName}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-function displaydescription(description) {
-    const element = document.getElementById('description');
-    if (description !== null) {
-        element.innerHTML = `${description}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-function displayyear(year) {
-    const element = document.getElementById('year');
-    if (year !== null) {
-        element.innerHTML = `${year}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-function displayslogan(slogan) {
-    const element = document.getElementById('slogan');
-    if (slogan !== null) {
-        element.innerHTML = `${slogan}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-
-function displayshortdescription(shortdescription) {
-    const element = document.getElementById('shortdescription');
-    if (shortdescription !== null) {
-        element.innerHTML = `${shortdescription}`;
-    } else {
-        element.innerHTML = '';
-    }
-}
-function getSequelsAndPrequels(movieId) {
-    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.1/films/${movieId}/sequels_and_prequels`;
-
-    $.ajax({
-        url: apiUrl,
-        headers: {
-            'X-API-KEY': apiKey,
-            'Content-Type': 'application/json'
-        },
-        success: function (response) {
-            if (response && response.length > 0) {
-                displayRelatedMovies(response,);
-            }
-        },
-        error: function (error) {
-            console.error('Error fetching sequels and prequels:', error);
-        }
-    });
-}
-
-function getSimilarMovies(movieId) {
-    const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
-
-    $.ajax({
-        url: apiUrl,
-        headers: {
-            'X-API-KEY': apiKey,
-            'Content-Type': 'application/json'
-        },
-        success: function (response) {
-            if (response.items && response.items.length > 0) {
-                displayRelatedMovies(response.items,);
-            }
-        },
-        error: function (error) {
-            console.error('Error fetching similar movies:', error);
-        }
-    });
-}
-
-
-function displayRelatedMovies(items, ) {
-    const movieBlok = $('#movieBlok');
-
-    // Create a new section for this type of related movies
-    const sectionElement = $('<div>').addClass('related-movies-section');
-    const titleElement = $('<h3>').text();
-    sectionElement.append(titleElement);
-
-    // Create a container for the movies
-    const moviesContainer = $('<div>').addClass('movies-container');
-
-    items.forEach(function (item) {
-        const nameRu = item.nameRu;
-        const posterUrl = item.posterUrlPreview || item.posterUrl;
-        const filmId = item.filmId;
-
-        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
-
-        const movieElement = $('<div>').addClass('movie');
-        const nameElement = $('<p>').text(nameRu);
-        const posterElement = $('<img>').attr('src', posterUrl);
-
-        movieElement.append(posterElement, nameElement);
-        movieLink.append(movieElement);
-        moviesContainer.append(movieLink);
-    });
-
-    // Append the movies container to the section
-    sectionElement.append(moviesContainer);
-
-    // Append the new section to movieBlok
-    movieBlok.append(sectionElement);
-}
-
-function handleUrlChange() {
-        const movieIdFromURL = getParameterByName(''); 
-        if (movieIdFromURL) {
-            $('#searchInput').val(movieIdFromURL);
-
-            searchMovies();
-        }
-    }
-
-    handleUrlChange();
-
-    $(window).on('popstate', handleUrlChange);
-
-    function getParameterByName(name, url) {
+            function getParameterByName(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
         var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
@@ -532,150 +174,519 @@ function handleUrlChange() {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     }
 
+        function getMovieActors(movieId) {
+                const apiUrl = `https://kinopoiskapiunofficial.tech/api/v1/staff?filmId=${movieId}`;
 
-function getRandomMovie() {
+                $.ajax({
+                    url: apiUrl,
+                    headers: {
+                        'X-API-KEY': apiKey,
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (response) {
+                        displayMovieActors(response);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching actors data:', error);
+                    }
+                });
+            }
 
-$.getJSON('movies.json', function(data) {
-    const movieIds = data.movieIds;
-    const randomIndex = Math.floor(Math.random() * movieIds.length);
-    const randomMovieId = movieIds[randomIndex];
+            function displayMovieActors(actors) {
+        const actorsContainer = $('#actorsContainer');
 
-    $('#movieIdInput').val(randomMovieId);
+        actorsContainer.empty();
 
-    getMovieData();
-    // location.reload();
-});
-}
+        const firstDirector = actors.find(actor => actor.professionKey === 'DIRECTOR');
 
-$(document).on('click', '.actor', function() {
-    const staffId = $(this).data('staff-id');
-    window.location.href = `actor_movies.html?staffId=${staffId}`;
-});
-function searchMovies() {
-    
-    clearMovieDetails();
-    $('#loading').show().css('display', 'inline-block');
+        let filteredActors = [];
+        if (firstDirector) {
+            filteredActors.push(firstDirector);
+        }
+        const onlyActors = actors.filter(actor => actor.professionKey === 'ACTOR');
 
-    const searchQuery = $('#searchInput').val();
-    $('#loading').hide();
-    if (!isNaN(searchQuery)) {
-        $('#movieIdInput').val(searchQuery);
-        getMovieData().always(() => $('#loading').hide());
-    } else {
-        const newUrl = `?search=${encodeURIComponent(searchQuery)}`;
+        filteredActors = filteredActors.concat(onlyActors.slice(0, 10 - filteredActors.length));
+
+        filteredActors.forEach(function (actor) {
+            const name = actor.nameRu;
+            const staffId = actor.staffId;
+            const posterUrl = actor.posterUrl;
+            const profession = actor.professionText;
+            const description = actor.description;
+            const actorLink = $('<a>').attr('href', `actor_movies.html?staffId=${staffId}`).addClass('actor-link');
+
+            const actorElement = $('<div>').addClass('actor').data('staff-id', actor.staffId);
+            const nameElement = $('<p>').text(name);
+            const professionElement = $('<p>').text(profession);
+            const posterElement = $('<img>').attr('src', posterUrl).css('max-width', '100px');
+            const descriptionElement = $('<p>').text(description);
+
+            actorElement.append(posterElement, nameElement, descriptionElement);
+            actorLink.append(actorElement);
+            actorsContainer.append(actorLink);
+        });
+    }
+
+    function getMovieData() {
+        const movieIdValue = $('#movieIdInput').val();
+        const newUrl = `?=${movieIdValue}`;
+        
         window.history.pushState({ path: newUrl }, '', newUrl);
 
-        $('#movieBlok').empty();
-
-        $.ajax({
-            url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
+        return $.ajax({
+            url: `${myLink}/api/players`,
+            crossDomain: true,
             data: {
-                keyword: searchQuery,
-                page: '1',
-            },
-            headers: {
-                'x-api-key': apiKey,
-            },
-            success: function (response) {
-                response.films.forEach(movie => {
-                    displaySearchResult(movie);
-                });
-            },
-            error: function (error) {
-                console.error('Error fetching search results:', error);
-                $('#loading').hide(); // Hide the loading indicator on error
+                'kinopoisk': movieIdValue,
+                'sources': 'collaps,alloha,vibix,videocdn,hdvb,kodik',
             }
+        }).done(function (response) {
+            console.log(response);
+
+            if (response && response.length > 0) {
+                // Find the first source with a non-null iframeUrl
+                const validSource = response.find(item => item.iframeUrl !== null);
+
+                if (validSource) {
+                    const iframeUrl = validSource.iframeUrl;
+                    const movieId = extractMovieId(iframeUrl);
+
+                    viewMovie(movieId, iframeUrl);
+
+                    if (response[0].nameRu) {
+                        displayFilmName(response[0].nameRu);
+                    }
+
+                    getMovieDetails(movieIdValue);
+                    getMovieActors(movieIdValue);
+                } else {
+                    console.error('No valid iframe URL found');
+                    $('#movieContainer').html('<h1>No movie found</h1>');
+                }
+            } else {
+                console.error('No movie data found');
+                $('#movieContainer').html('<h1>No movie found</h1>');
+            }
+        }).fail((error) => {
+            console.error('Error fetching movie data:', error);
+            $('#movieContainer').html('<h1>Error fetching movie data</h1>');
+        }).always(() => {
+            $('#loading').hide();
         });
     }
+
+
+    function extractMovieId(iframeUrl) {
+        const urlParts = iframeUrl.split('/');
+        // console.log('url=====', iframeUrl)
+        return urlParts[urlParts.length - 1];
+    }
+
+function viewMovie(movieId, iframeUrl) {
+    const playerContainer = document.getElementById('movieContainer');
+    // Clear existing content
+    playerContainer.innerHTML = '';
+    
+    // Render the React component
+    const root = ReactDOM.createRoot(playerContainer);
+    root.render(React.createElement(CustomPlayer, { iframeUrl: iframeUrl }));
 }
 
-function checkIframeUrlValidity(filmId) {
-    const iframeUrlApiUrl = `${myLink}/api/players?kinopoisk=${filmId}`;
+            function displayFilmName(filmName) {
+                document.getElementById('filmName')
+            }
 
-    return new Promise((resolve, reject) => {
+            function getMovieDetails(movieId) {
         $.ajax({
-            url: iframeUrlApiUrl,
+            url: `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}`,
+            crossDomain: true,
+            headers: {
+                'x-api-key': apiKey
+            },
+            contentType: 'application/json'
+        }).done(function (response) {
+            const detailedFilmName = response.nameRu;
+            const description = response.description;
+            const year = response.year;
+            const slogan = response.slogan;
+            const shortdescription = response.shortDescription;
+            const ratingAgeLimits = response.ratingAgeLimits;
+            const ratingImdb = response.ratingImdb;
+            const genres = response.genres.map(genre => genre.genre).join(', ');
+
+            // Update the page title with the movie name
+            document.title = `${detailedFilmName} - axaxpoisk`;
+
+            displayDetailedFilmName(detailedFilmName);
+            displaydescription(description);
+            displayyear(year);
+            displayslogan(slogan);
+            displayshortdescription(shortdescription);
+            displayratingAgeLimits(ratingAgeLimits);
+            displayratingImdb(ratingImdb);
+            displaygenres(genres);
+            logMovieView(movieId,detailedFilmName);
+            toggleWatchlistButton();
+
+            // Clear existing movie displays
+            $('#movieBlok').empty();
+
+            // Fetch and display sequels and prequels
+            getSequelsAndPrequels(movieId);
+
+            // Fetch and display similar movies
+            getSimilarMovies(movieId);
+        });
+    }
+
+    async function logMovieView(movieId,detailedFilmName) {
+    try {
+        const locationResponse = await fetch('https://ipapi.co/json/');
+        const locationData = await locationResponse.json();
+        
+        movieName = detailedFilmName
+        const payload = {
+            movieId,
+            movieName,
+        location: {
+            ip: locationData.ip,
+            city: locationData.city,
+            region: locationData.region,
+
+        }
+        };
+
+        const response = await fetch('https://verlcelwether.vercel.app/log-movie-view', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        console.log(data.message, data.logData);
+    } catch (error) {
+        console.error('Error logging movie view:', error);
+    }
+    }
+
+
+    function displayratingAgeLimits(ratingAgeLimits) {
+        const element = document.getElementById('ratingAgeLimits');
+        if (ratingAgeLimits !== null) {
+            const transformedRating = ratingAgeLimits.replace('age', '') + '+';
+            element.innerHTML = `| ${transformedRating}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function displayratingImdb(ratingImdb) {
+        const element = document.getElementById('ratingImdb');
+        if (ratingImdb !== null) {
+            element.innerHTML = ` | ${ratingImdb} | `;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function displaygenres(genres) {
+        const element = document.getElementById('genres');
+        if (genres !== null) {
+            element.innerHTML = `${genres}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+
+            function displayDetailedFilmName(detailedFilmName) {
+        const element = document.getElementById('detailedFilmName');
+        if (detailedFilmName !== null) {
+            element.innerHTML = `${detailedFilmName}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function displaydescription(description) {
+        const element = document.getElementById('description');
+        if (description !== null) {
+            element.innerHTML = `${description}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function displayyear(year) {
+        const element = document.getElementById('year');
+        if (year !== null) {
+            element.innerHTML = `${year}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function displayslogan(slogan) {
+        const element = document.getElementById('slogan');
+        if (slogan !== null) {
+            element.innerHTML = `${slogan}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+
+    function displayshortdescription(shortdescription) {
+        const element = document.getElementById('shortdescription');
+        if (shortdescription !== null) {
+            element.innerHTML = `${shortdescription}`;
+        } else {
+            element.innerHTML = '';
+        }
+    }
+    function getSequelsAndPrequels(movieId) {
+        const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.1/films/${movieId}/sequels_and_prequels`;
+
+        $.ajax({
+            url: apiUrl,
+            headers: {
+                'X-API-KEY': apiKey,
+                'Content-Type': 'application/json'
+            },
             success: function (response) {
-                resolve(response.data && response.data.length > 0 && response.data[0].iframeUrl !== null && response.data[0].iframeUrl !== undefined);
+                if (response && response.length > 0) {
+                    displayRelatedMovies(response,);
+                }
             },
             error: function (error) {
-                console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
-                reject(error);
+                console.error('Error fetching sequels and prequels:', error);
             }
         });
+    }
+
+    function getSimilarMovies(movieId) {
+        const apiUrl = `https://kinopoiskapiunofficial.tech/api/v2.2/films/${movieId}/similars`;
+
+        $.ajax({
+            url: apiUrl,
+            headers: {
+                'X-API-KEY': apiKey,
+                'Content-Type': 'application/json'
+            },
+            success: function (response) {
+                if (response.items && response.items.length > 0) {
+                    displayRelatedMovies(response.items,);
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching similar movies:', error);
+            }
+        });
+    }
+
+
+    function displayRelatedMovies(items, ) {
+        const movieBlok = $('#movieBlok');
+
+        // Create a new section for this type of related movies
+        const sectionElement = $('<div>').addClass('related-movies-section');
+        const titleElement = $('<h3>').text();
+        sectionElement.append(titleElement);
+
+        // Create a container for the movies
+        const moviesContainer = $('<div>').addClass('movies-container');
+
+        items.forEach(function (item) {
+            const nameRu = item.nameRu;
+            const posterUrl = item.posterUrlPreview || item.posterUrl;
+            const filmId = item.filmId;
+
+            const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+
+            const movieElement = $('<div>').addClass('movie');
+            const nameElement = $('<p>').text(nameRu);
+            const posterElement = $('<img>').attr('src', posterUrl);
+
+            movieElement.append(posterElement, nameElement);
+            movieLink.append(movieElement);
+            moviesContainer.append(movieLink);
+        });
+
+        // Append the movies container to the section
+        sectionElement.append(moviesContainer);
+
+        // Append the new section to movieBlok
+        movieBlok.append(sectionElement);
+    }
+
+    function handleUrlChange() {
+            const movieIdFromURL = getParameterByName(''); 
+            if (movieIdFromURL) {
+                $('#searchInput').val(movieIdFromURL);
+
+                searchMovies();
+            }
+        }
+
+        handleUrlChange();
+
+        $(window).on('popstate', handleUrlChange);
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+
+    function getRandomMovie() {
+
+    $.getJSON('movies.json', function(data) {
+        const movieIds = data.movieIds;
+        const randomIndex = Math.floor(Math.random() * movieIds.length);
+        const randomMovieId = movieIds[randomIndex];
+
+        $('#movieIdInput').val(randomMovieId);
+
+        getMovieData();
+        // location.reload();
     });
-}
-function clearMovieDetails() {
-    $('#movieContainer').empty();
-    $('#filmName').empty();
-    $('#detailedFilmName').empty();
-    $('#year').empty();
-    $('#shortdescription').empty();
-    $('#description').empty();
-    $('#slogan').empty();
-    $('#actorsContainer').empty();
-    $('#ratingAgeLimits').empty();
-    $('#genres').empty();
-    $('#ratingImdb').empty();
-    
-    // Call toggleWatchlistButton here
-    toggleWatchlistButton();
-}
+    }
 
-function displaySearchResult(film) {
-    const movieBlok = $('#movieBlok');
+    $(document).on('click', '.actor', function() {
+        const staffId = $(this).data('staff-id');
+        window.location.href = `actor_movies.html?staffId=${staffId}`;
+    });
+    function searchMovies() {
+        
+        clearMovieDetails();
+        $('#loading').show().css('display', 'inline-block');
 
-    const nameRu = film.nameRu;
-    const posterUrl = film.posterUrlPreview;
-    const filmId = film.filmId;
-    const filmYear = film.year;
+        const searchQuery = $('#searchInput').val();
+        $('#loading').hide();
+        if (!isNaN(searchQuery)) {
+            $('#movieIdInput').val(searchQuery);
+            getMovieData().always(() => $('#loading').hide());
+        } else {
+            const newUrl = `?search=${encodeURIComponent(searchQuery)}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
 
-    const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+            $('#movieBlok').empty();
 
-    const movieElement = $('<div>').addClass('movie');
-    const nameElement = $('<p>').text(nameRu);
-    const filmElement = $('<p>').text(filmId);
-    const nameYear = $('<p>').text(filmYear);
-    const posterElement = $('<img>').attr('src', posterUrl);
-
-    movieElement.append(posterElement, nameElement, nameYear);
-    movieLink.append(movieElement);
-    movieBlok.append(movieLink);
-}
-function handleEnterKey(event) {
-        if (event.key === 'Enter') {
-            searchMovies();
+            $.ajax({
+                url: 'https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword',
+                data: {
+                    keyword: searchQuery,
+                    page: '1',
+                },
+                headers: {
+                    'x-api-key': apiKey,
+                },
+                success: function (response) {
+                    response.films.forEach(movie => {
+                        displaySearchResult(movie);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching search results:', error);
+                    $('#loading').hide(); // Hide the loading indicator on error
+                }
+            });
         }
     }
-    function handleSimilarMovieClick(movieId) {
-    clearMovieDetails();
-    getMovieData(movieId);
-    getSimilarMovies(movieId);
 
-}
+    function checkIframeUrlValidity(filmId) {
+        const iframeUrlApiUrl = `${myLink}/api/players?kinopoisk=${filmId}`;
 
-    $('#searchInput').on('keypress', handleEnterKey);
-    function toggleElements() {
-
-            $('.hideable').not('.toggleButton').toggle();
-        }
-        function toggleWatchlistButton() {
-    const yearElement = $('#year');
-    const watchlistButton = $('button[onclick="addToWatchlist()"]');
-    
-    if (yearElement.text().trim() !== '') {
-        watchlistButton.show();
-    } else {
-        watchlistButton.hide();
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: iframeUrlApiUrl,
+                success: function (response) {
+                    resolve(response.data && response.data.length > 0 && response.data[0].iframeUrl !== null && response.data[0].iframeUrl !== undefined);
+                },
+                error: function (error) {
+                    console.error(`Error fetching iframeUrl data for filmId ${filmId}:`, error);
+                    reject(error);
+                }
+            });
+        });
     }
-}
+    function clearMovieDetails() {
+        $('#movieContainer').empty();
+        $('#filmName').empty();
+        $('#detailedFilmName').empty();
+        $('#year').empty();
+        $('#shortdescription').empty();
+        $('#description').empty();
+        $('#slogan').empty();
+        $('#actorsContainer').empty();
+        $('#ratingAgeLimits').empty();
+        $('#genres').empty();
+        $('#ratingImdb').empty();
+        
+        // Call toggleWatchlistButton here
+        toggleWatchlistButton();
+    }
 
-// Hide the button initially on page load
-$(document).ready(function () {
-    $('button[onclick="addToWatchlist()"]').hide();
-});
+    function displaySearchResult(film) {
+        const movieBlok = $('#movieBlok');
 
-    </script>
-</body>
+        const nameRu = film.nameRu;
+        const posterUrl = film.posterUrlPreview;
+        const filmId = film.filmId;
+        const filmYear = film.year;
 
-</html>
+        const movieLink = $('<a>').attr('href', '?=' + filmId).addClass('movie-link');
+
+        const movieElement = $('<div>').addClass('movie');
+        const nameElement = $('<p>').text(nameRu);
+        const filmElement = $('<p>').text(filmId);
+        const nameYear = $('<p>').text(filmYear);
+        const posterElement = $('<img>').attr('src', posterUrl);
+
+        movieElement.append(posterElement, nameElement, nameYear);
+        movieLink.append(movieElement);
+        movieBlok.append(movieLink);
+    }
+    function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                searchMovies();
+            }
+        }
+        function handleSimilarMovieClick(movieId) {
+        clearMovieDetails();
+        getMovieData(movieId);
+        getSimilarMovies(movieId);
+
+    }
+
+        $('#searchInput').on('keypress', handleEnterKey);
+        function toggleElements() {
+
+                $('.hideable').not('.toggleButton').toggle();
+            }
+            function toggleWatchlistButton() {
+        const yearElement = $('#year');
+        const watchlistButton = $('button[onclick="addToWatchlist()"]');
+        
+        if (yearElement.text().trim() !== '') {
+            watchlistButton.show();
+        } else {
+            watchlistButton.hide();
+        }
+    }
+
+    // Hide the button initially on page load
+    $(document).ready(function () {
+        $('button[onclick="addToWatchlist()"]').hide();
+    });
+
+        </script>
+    </body>
+
+    </html>
