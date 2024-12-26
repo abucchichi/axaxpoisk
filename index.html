@@ -544,6 +544,7 @@ $.getJSON('movies.json', function(data) {
     
     getMovieData();
     handleUrlChange()
+    $(window).on('popstate', handleUrlChange);
     // location.reload();
 });
 }
