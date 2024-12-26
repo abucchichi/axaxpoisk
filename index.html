@@ -535,19 +535,21 @@ $(window).on('popstate', handleUrlChange);
 
 
 function getRandomMovie() {
-
-$.getJSON('movies.json', function(data) {
-    const movieIds = data.movieIds;
-    const randomIndex = Math.floor(Math.random() * movieIds.length);
-    const randomMovieId = movieIds[randomIndex];
-
-    $('#movieIdInput').val(randomMovieId);
-    
-    getMovieData();
-    handleUrlChange()
-    $(window).on('popstate', handleUrlChange);
-    // location.reload();
-});
+    $.getJSON('movies.json', function(data) {
+        const movieIds = data.movieIds;
+        const randomIndex = Math.floor(Math.random() * movieIds.length);
+        const randomMovieId = movieIds[randomIndex];
+        
+        // Update the input value
+        $('#movieIdInput').val(randomMovieId);
+        
+        // Update the URL with pushState
+        const newUrl = `?=${randomMovieId}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+        
+        // Get the movie data
+        getMovieData();
+    });
 }
 
 $(document).on('click', '.actor', function() {
@@ -674,7 +676,8 @@ function handleEnterKey(event) {
 }
 
 // Hide the button initially on page load
-$(document).ready(function () {
+$(document).ready(function() {
+    $(window).on('popstate', handleUrlChange);
     $('button[onclick="addToWatchlist()"]').hide();
 });
 
