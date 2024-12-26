@@ -305,7 +305,7 @@ function extractMovieId(iframeUrl) {
 
         // Update the page title with the movie name
         document.title = `${detailedFilmName} - axaxpoisk`;
-        
+
         displayDetailedFilmName(detailedFilmName);
         displaydescription(description);
         displayyear(year);
@@ -314,7 +314,7 @@ function extractMovieId(iframeUrl) {
         displayratingAgeLimits(ratingAgeLimits);
         displayratingImdb(ratingImdb);
         displaygenres(genres);
-        
+        logMovieView(movieId,detailedFilmName);
         toggleWatchlistButton();
 
         // Clear existing movie displays
@@ -322,10 +322,9 @@ function extractMovieId(iframeUrl) {
 
         // Fetch and display sequels and prequels
         getSequelsAndPrequels(movieId);
-        
+
         // Fetch and display similar movies
         getSimilarMovies(movieId);
-        logMovieView(movieId,detailedFilmName);
     });
 }
 
@@ -392,7 +391,6 @@ function displaygenres(genres) {
 
 
         function displayDetailedFilmName(detailedFilmName) {
-            
     const element = document.getElementById('detailedFilmName');
     if (detailedFilmName !== null) {
         element.innerHTML = `${detailedFilmName}`;
@@ -519,10 +517,9 @@ function handleUrlChange() {
     } else {
         clearMovieDetails();
     }
-    
 }
-    handleUrlChange()
-    $(window).on('popstate', handleUrlChange);
+handleUrlChange()
+$(window).on('popstate', handleUrlChange);
 
 
     function getParameterByName(name, url) {
@@ -536,44 +533,21 @@ function handleUrlChange() {
     }
 
 
-    function getRandomMovie() {
-    $.getJSON('movies.json', function(data) {
-        const movieIds = data.movieIds;
-        const randomIndex = Math.floor(Math.random() * movieIds.length);
-        const randomMovieId = movieIds[randomIndex];
-        
-        // Update the input value
-        $('#movieIdInput').val(randomMovieId);
-        
-        // Update URL and add to history stack properly
-        const newUrl = `?=${randomMovieId}`;
-        window.history.pushState({ 
-            movieId: randomMovieId,
-            type: 'random'
-        }, '', newUrl);
-        
-        // Get the movie data
-        getMovieData();
-    });
+function getRandomMovie() {
+
+$.getJSON('movies.json', function(data) {
+    const movieIds = data.movieIds;
+    const randomIndex = Math.floor(Math.random() * movieIds.length);
+    const randomMovieId = movieIds[randomIndex];
+
+    $('#movieIdInput').val(randomMovieId);
+    
+    getMovieData();
+    
+    // location.reload();
+});
 }
-window.onpopstate = function(event) {
-    if (event.state) {
-        const movieId = event.state.movieId;
-        if (movieId) {
-            $('#movieIdInput').val(movieId);
-            getMovieData();
-        }
-    } else {
-        // Handle case when there's no state (initial page load)
-        const movieIdFromURL = getParameterByName('');
-        if (movieIdFromURL) {
-            $('#movieIdInput').val(movieIdFromURL);
-            getMovieData();
-        } else {
-            clearMovieDetails();
-        }
-    }
-};
+
 $(document).on('click', '.actor', function() {
     const staffId = $(this).data('staff-id');
     window.location.href = `actor_movies.html?staffId=${staffId}`;
@@ -698,8 +672,7 @@ function handleEnterKey(event) {
 }
 
 // Hide the button initially on page load
-$(document).ready(function() {
-    // $(window).on('popstate', handleUrlChange);
+$(document).ready(function () {
     $('button[onclick="addToWatchlist()"]').hide();
 });
 
