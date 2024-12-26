@@ -536,7 +536,7 @@ function handleUrlChange() {
     }
 
 
-function getRandomMovie() {
+    function getRandomMovie() {
     $.getJSON('movies.json', function(data) {
         const movieIds = data.movieIds;
         const randomIndex = Math.floor(Math.random() * movieIds.length);
@@ -545,15 +545,35 @@ function getRandomMovie() {
         // Update the input value
         $('#movieIdInput').val(randomMovieId);
         
-        // Update the URL with pushState
+        // Update URL and add to history stack properly
         const newUrl = `?=${randomMovieId}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
+        window.history.pushState({ 
+            movieId: randomMovieId,
+            type: 'random'
+        }, '', newUrl);
         
         // Get the movie data
         getMovieData();
     });
 }
-
+window.onpopstate = function(event) {
+    if (event.state) {
+        const movieId = event.state.movieId;
+        if (movieId) {
+            $('#movieIdInput').val(movieId);
+            getMovieData();
+        }
+    } else {
+        // Handle case when there's no state (initial page load)
+        const movieIdFromURL = getParameterByName('');
+        if (movieIdFromURL) {
+            $('#movieIdInput').val(movieIdFromURL);
+            getMovieData();
+        } else {
+            clearMovieDetails();
+        }
+    }
+};
 $(document).on('click', '.actor', function() {
     const staffId = $(this).data('staff-id');
     window.location.href = `actor_movies.html?staffId=${staffId}`;
