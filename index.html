@@ -510,17 +510,17 @@ function displayRelatedMovies(items, ) {
 }
 
 function handleUrlChange() {
-        const movieIdFromURL = getParameterByName(''); 
-        if (movieIdFromURL) {
-            $('#searchInput').val(movieIdFromURL);
-
-            searchMovies();
-        }
+    const movieIdFromURL = getParameterByName(''); 
+    if (movieIdFromURL) {
+        $('#movieIdInput').val(movieIdFromURL);
+        getMovieData(); // Ensure this function updates all necessary UI elements.
+    } else {
+        clearMovieDetails();
     }
+}
+handleUrlChange()
+$(window).on('popstate', handleUrlChange);
 
-    handleUrlChange();
-
-    $(window).on('popstate', handleUrlChange);
 
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
