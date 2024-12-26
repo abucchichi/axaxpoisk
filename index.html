@@ -314,7 +314,7 @@ function extractMovieId(iframeUrl) {
         displayratingAgeLimits(ratingAgeLimits);
         displayratingImdb(ratingImdb);
         displaygenres(genres);
-        logMovieView(movieId,detailedFilmName);
+        
         toggleWatchlistButton();
 
         // Clear existing movie displays
@@ -325,6 +325,7 @@ function extractMovieId(iframeUrl) {
 
         // Fetch and display similar movies
         getSimilarMovies(movieId);
+        logMovieView(movieId,detailedFilmName);
     });
 }
 
