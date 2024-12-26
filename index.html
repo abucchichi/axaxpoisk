@@ -541,8 +541,9 @@ $.getJSON('movies.json', function(data) {
     const randomMovieId = movieIds[randomIndex];
 
     $('#movieIdInput').val(randomMovieId);
-
+    
     getMovieData();
+    handleUrlChange()
     // location.reload();
 });
 }
