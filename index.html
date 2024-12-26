@@ -552,8 +552,8 @@ function getRandomMovie() {
         // Get the movie data
         getMovieData();
     });
-    // handleUrlChange()
-    // $(window).on('popstate', handleUrlChange);
+    handleUrlChange()
+    $(window).on('popstate', handleUrlChange);
 }
 
 $(document).on('click', '.actor', function() {
