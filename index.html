@@ -305,7 +305,7 @@ function extractMovieId(iframeUrl) {
 
         // Update the page title with the movie name
         document.title = `${detailedFilmName} - axaxpoisk`;
-
+        
         displayDetailedFilmName(detailedFilmName);
         displaydescription(description);
         displayyear(year);
@@ -322,7 +322,7 @@ function extractMovieId(iframeUrl) {
 
         // Fetch and display sequels and prequels
         getSequelsAndPrequels(movieId);
-
+        
         // Fetch and display similar movies
         getSimilarMovies(movieId);
         logMovieView(movieId,detailedFilmName);
@@ -392,6 +392,7 @@ function displaygenres(genres) {
 
 
         function displayDetailedFilmName(detailedFilmName) {
+            
     const element = document.getElementById('detailedFilmName');
     if (detailedFilmName !== null) {
         element.innerHTML = `${detailedFilmName}`;
@@ -518,9 +519,10 @@ function handleUrlChange() {
     } else {
         clearMovieDetails();
     }
+    
 }
 handleUrlChange()
-$(window).on('popstate', handleUrlChange);
+    $(window).on('popstate', handleUrlChange);
 
 
     function getParameterByName(name, url) {
@@ -550,6 +552,8 @@ function getRandomMovie() {
         // Get the movie data
         getMovieData();
     });
+    // handleUrlChange()
+    // $(window).on('popstate', handleUrlChange);
 }
 
 $(document).on('click', '.actor', function() {
@@ -677,7 +681,7 @@ function handleEnterKey(event) {
 
 // Hide the button initially on page load
 $(document).ready(function() {
-    $(window).on('popstate', handleUrlChange);
+    // $(window).on('popstate', handleUrlChange);
     $('button[onclick="addToWatchlist()"]').hide();
 });
 
