@@ -38,6 +38,12 @@
 
     
     <div class="hideable" id="detailedFilmName"></div>
+    <div id="playersContainer" style="position: fixed; top: 10%; right: 0; width: 250px; padding: 10px; background-color: #f4f4f4; border-left: 2px solid #ccc;">
+        <h3>Players</h3>
+        <ul id="playerList" style="list-style: none; padding: 0;">
+            <!-- Players will be added here dynamically -->
+        </ul>
+    </div>
     
     <div id="movieContainer"></div> 
     <button class="button" onclick="addToWatchlist()">add to watchlist</button> 
@@ -235,29 +241,28 @@ function getMovieData() {
     }).done(function (response) {
         console.log(response);
 
+        const playerList = $('#playerList');
+        playerList.empty(); // Clear previous players
+
         if (response && response.length > 0) {
-            // Find the first source with a non-null iframeUrl
+            response.forEach(player => {
+                const playerItem = $('<li>')
+                    .text(player.source || 'Unknown Source')
+                    .css('cursor', 'pointer')
+                    .on('click', function() {
+                        viewMovie(player.filmId, player.iframeUrl);
+                    });
+                playerList.append(playerItem);
+            });
+
             const validSource = response.find(item => item.iframeUrl !== null);
-
             if (validSource) {
-                const iframeUrl = validSource.iframeUrl;
-                const movieId = extractMovieId(iframeUrl);
-
-                viewMovie(movieId, iframeUrl);
-
-                if (response[0].nameRu) {
-                    displayFilmName(response[0].nameRu);
-                }
-
-                getMovieDetails(movieIdValue);
-                getMovieActors(movieIdValue);
+                viewMovie(validSource.filmId, validSource.iframeUrl);
             } else {
-                console.error('No valid iframe URL found');
                 $('#movieContainer').html('<h1>No movie found</h1>');
             }
         } else {
-            console.error('No movie data found');
-            $('#movieContainer').html('<h1>No movie found</h1>');
+            $('#movieContainer').html('<h1>No movie data found</h1>');
         }
     }).fail((error) => {
         console.error('Error fetching movie data:', error);
@@ -266,6 +271,7 @@ function getMovieData() {
         $('#loading').hide();
     });
 }
+
 
 
 function extractMovieId(iframeUrl) {
